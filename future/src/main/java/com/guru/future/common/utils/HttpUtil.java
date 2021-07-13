@@ -1,6 +1,7 @@
 package com.guru.future.common.utils;
 
 
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -20,7 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class HttpUtils {
+/**
+ * @author jeff
+ */
+public class HttpUtil {
     public static String doGet(String url, Map<String, String> param) {
         // 创建Httpclient对象
         CloseableHttpClient httpclient = HttpClients.createDefault();
@@ -43,7 +47,7 @@ public class HttpUtils {
             // 执行请求
             response = httpclient.execute(httpGet);
             // 判断返回状态是否为200
-            if (response.getStatusLine().getStatusCode() == 200) {
+            if (HttpStatus.SC_OK == response.getStatusLine().getStatusCode()) {
                 resultString = EntityUtils.toString(response.getEntity(), "UTF-8");
             }
         } catch (Exception e) {
