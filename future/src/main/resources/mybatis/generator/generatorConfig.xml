@@ -87,14 +87,13 @@
 
         <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
 
-        <table tableName="future_basics"
-               domainObjectName="FutureBasicsDO" mapperName="FutureBasicsDAO"
+        <table tableName="future_realtime"
+               domainObjectName="FutureRealtimeDO" mapperName="FutureRealtimeDAO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
                enableSelectByExample="false"
                selectByExampleQueryId="false">
-            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
     </context>
 </generatorConfiguration>
