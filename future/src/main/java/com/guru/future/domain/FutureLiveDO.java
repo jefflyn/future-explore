@@ -35,4 +35,12 @@ public class FutureLiveDO {
 
     private Date updateTime;
 
+    @Override
+    public String toString() {
+        return price +
+                "," + bid1 +
+                "," + ask1 +
+                "," + low +
+                "," + high;
+    }
 }
