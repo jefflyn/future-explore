@@ -144,7 +144,7 @@
                         <version>0.0.1-SNAPSHOT</version>
                         <scope>system</scope>
                         <systemPath>
-                            /Users/ruian/.m2/repository/com/guru/ocean/bule-whale/0.0.1-SNAPSHOT/bule-whale-0.0.1-SNAPSHOT.jar
+                            ${user.home}/.m2/repository/com/guru/ocean/blue-whale/0.0.1-SNAPSHOT/blue-whale-0.0.1-SNAPSHOT.jar
                         </systemPath>
                     </dependency>
                 </dependencies>

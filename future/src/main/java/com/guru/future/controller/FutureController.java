@@ -1,6 +1,7 @@
 package com.guru.future.controller;
 
 import com.guru.future.biz.handler.FutureTaskDispatcher;
+import org.apache.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,13 @@ public class FutureController {
     private FutureTaskDispatcher futureTaskDispatcher;
 
     @GetMapping(value = "/future/start")
-    public void list() {
+    public String start() {
         futureTaskDispatcher.executePulling();
+        return "success";
+    }
+
+    @GetMapping(value = "/future/stop")
+    public Boolean stop() {
+        return futureTaskDispatcher.stopRunning();
     }
 }
