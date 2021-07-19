@@ -5,7 +5,6 @@ import com.guru.future.common.utils.HttpUtil;
 import com.guru.future.common.utils.SinaHqUtil;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**

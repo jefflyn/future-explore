@@ -1,6 +1,7 @@
 package com.guru.future.controller;
 
-import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.handler.FutureTaskDispatcher;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -12,6 +13,10 @@ import javax.annotation.Resource;
 @RestController
 public class FutureController {
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private FutureTaskDispatcher futureTaskDispatcher;
 
+    @GetMapping(value = "/future/start")
+    public void list() {
+        futureTaskDispatcher.executePulling();
+    }
 }
