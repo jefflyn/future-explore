@@ -5,17 +5,15 @@ import com.alibaba.fastjson.JSON;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 public class HttpUtilTest {
-    private String reqUrl = "http://hq.sinajs.cn/list=nf_SA2109,nf_OI2109";
-
 
     @Test
     public void testDoGet() {
+        String reqUrl = "http://hq.sinajs.cn/list=nf_SA2109,nf_OI2109";
         String result = HttpUtil.doGet(reqUrl);
         List<String> contractList = Splitter.on(";\n").splitToList(result);
 

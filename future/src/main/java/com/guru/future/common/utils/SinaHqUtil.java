@@ -9,8 +9,20 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author j
+ */
 public class SinaHqUtil {
     public final static Integer HQ_LIST_SIZE = 29;
+
+    public final static String HQ_CODE_PREFIX = "nf_";
+
+    public static String convert2HqCode(String code) {
+        if (!code.startsWith(SinaHqUtil.HQ_CODE_PREFIX)) {
+            return HQ_CODE_PREFIX + code;
+        }
+        return code;
+    }
 
     public static List<String> parse2List(String content) {
         List<String> result = new ArrayList<>();

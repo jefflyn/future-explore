@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * @author jeff
+ * @author j
  */
 @Component
 public class FutureBasicManager {

@@ -15,7 +15,7 @@ public class NumberUtil {
 
     public static Integer string2Integer(String numberVal) {
         if (numberVal == null) {
-            return Integer.valueOf(0);
+            return 0;
         }
         return NumberUtils.convertNumberToTargetClass(Float.valueOf(numberVal), Integer.class);
     }
