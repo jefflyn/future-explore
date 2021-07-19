@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 配置文件路径 -->
+    <properties resource="mybatis/generator/generator.properties"/>
+    <!--"mybatis-generator:generate  -e"-->
+    <!-- 数据库驱动路径 -->
+    <!--    <classPathEntry location="${user.home}/.m2/repository/mysql/mysql-connector-java/8.0.17/mysql-connector-java-8.0.17.jar"/>-->
+    <context id="default" targetRuntime="MyBatis3">
+        <!-- 关键字加`` -->
+        <property name="autoDelimitKeywords" value="true"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <!--        <plugin type="com.guru.ocean.utils.mysql.plugin.MySQLPaginationPlugin"/>-->
+        <!-- 此处是将 DOMapper.xml 改名为 Mapper.xml -->
+        <!--        <plugin type="com.guru.ocean.utils.mysql.plugin.RenameSqlMapperPlugin">-->
+        <!--            <property name="searchString" value="DOMapper"/>-->
+        <!--            <property name="replaceString" value="Mapper"/>-->
+        <!--        </plugin>-->
+
+        <!--        <plugin type="com.guru.ocean.utils.mysql.plugin.RenameJavaMapperPlugin">-->
+        <!--            <property name="searchString" value="DOMapper"/>-->
+        <!--            <property name="replaceString" value="BaseMapper"/>-->
+        <!--        </plugin>-->
+
+        <!--        <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">-->
+        <!--        <property name="searchString" value="Example$"/>-->
+        <!--        <property name="replaceString" value="Condition"/>-->
+        <!--        </plugin>-->
+
+        <!-- 防止生成的代码中有很多注释，加入下面的配置控制 -->
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <!--数据库连接信息 -->
+        <jdbcConnection driverClass="${jdbc.driver}"
+                        connectionURL="${jdbc.url}"
+                        userId="${jdbc.username}"
+                        password="${jdbc.password}">
+            <property name="useInformationSchema" value="true"/>
+        </jdbcConnection>
+
+        <!-- 非必需，类型处理器，在数据库类型和java类型之间的转换控制 -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="true"/>
+        </javaTypeResolver>
+
+        <!--生成的model 包路径 -->
+        <javaModelGenerator targetPackage="${model.package}"
+                            targetProject="${model.target.project}">
+            <!-- 是否对model添加 构造函数 -->
+            <property name="constructorBased" value="false"/>
+
+            <!-- 是否允许子包，即targetPackage.schemaName.tableName -->
+            <property name="enableSubPackages" value="false"/>
+
+            <!-- immutable:该属性用来配置实体类属性是否可变，如果设置为true，那么constructorBased不管设置成什么，
+            都会使用构造方法入参，并且不会生成setter方法。如果为false，实体类属性就可以改变。默认为false -->
+            <property name="immutable" value="false"/>
+
+            <!-- trimStrings:是否对数据库查询结果进行trim操作，如果设置为true就会生成类似这样
+            public void setUsername(String username)
+            {
+                this.username = username == null ? null : username.trim();
+            }
+            的setter方法。默认值为false。
+            -->
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <!--生成xml mapper文件 路径 -->
+        <sqlMapGenerator targetPackage="${xml.package}"
+                         targetProject="${xml.target.project}">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator type="XMLMAPPER"
+                             targetPackage="${dao.package}"
+                             targetProject="${dao.target.project}">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
+
+        <table tableName="future_live"
+               domainObjectName="FutureLiveDO" mapperName="FutureLiveDAO"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="future_basic"
+               domainObjectName="FutureBasicDO" mapperName="FutureBasicDAO"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="future_daily"
+               domainObjectName="FutureDailyDO" mapperName="FutureDailyDAO"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+    </context>
+</generatorConfiguration>

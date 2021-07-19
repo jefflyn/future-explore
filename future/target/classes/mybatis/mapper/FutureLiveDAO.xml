@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress ALL -->
+<mapper namespace="com.guru.future.mapper.FutureLiveDAO">
+    <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureLiveDO">
+        <id column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="change" jdbcType="DECIMAL" property="change"/>
+        <result column="bid1" jdbcType="DECIMAL" property="bid1"/>
+        <result column="ask1" jdbcType="DECIMAL" property="ask1"/>
+        <result column="low" jdbcType="DECIMAL" property="low"/>
+        <result column="high" jdbcType="DECIMAL" property="high"/>
+        <result column="position" jdbcType="DECIMAL" property="position"/>
+        <result column="amp" jdbcType="DECIMAL" property="amp"/>
+        <result column="wave" jdbcType="VARCHAR" property="wave"/>
+        <result column="lowest_change" jdbcType="DECIMAL" property="lowestChange"/>
+        <result column="highest_change" jdbcType="DECIMAL" property="highestChange"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        code, `name`, price, `change`, bid1, ask1, low, high, `position`, amp, wave, lowest_change,
+    highest_change, update_time
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from future_live
+        where code = #{code,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from future_live
+        where code = #{code,jdbcType=VARCHAR}
+    </delete>
+    <insert id="insert" parameterType="com.guru.future.domain.FutureLiveDO">
+        insert into future_live (code, `name`, price,
+                                 `change`, bid1, ask1,
+                                 low, high, `position`,
+                                 amp, wave, lowest_change,
+                                 highest_change, update_time)
+        values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
+                #{change,jdbcType=DECIMAL}, #{bid1,jdbcType=DECIMAL}, #{ask1,jdbcType=DECIMAL},
+                #{low,jdbcType=DECIMAL}, #{high,jdbcType=DECIMAL}, #{position,jdbcType=DECIMAL},
+                #{amp,jdbcType=DECIMAL}, #{wave,jdbcType=VARCHAR}, #{lowestChange,jdbcType=DECIMAL},
+                #{highestChange,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLiveDO">
+        insert into future_live
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="change != null">
+                `change`,
+            </if>
+            <if test="bid1 != null">
+                bid1,
+            </if>
+            <if test="ask1 != null">
+                ask1,
+            </if>
+            <if test="low != null">
+                low,
+            </if>
+            <if test="high != null">
+                high,
+            </if>
+            <if test="position != null">
+                `position`,
+            </if>
+            <if test="amp != null">
+                amp,
+            </if>
+            <if test="wave != null">
+                wave,
+            </if>
+            <if test="lowestChange != null">
+                lowest_change,
+            </if>
+            <if test="highestChange != null">
+                highest_change,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="change != null">
+                #{change,jdbcType=DECIMAL},
+            </if>
+            <if test="bid1 != null">
+                #{bid1,jdbcType=DECIMAL},
+            </if>
+            <if test="ask1 != null">
+                #{ask1,jdbcType=DECIMAL},
+            </if>
+            <if test="low != null">
+                #{low,jdbcType=DECIMAL},
+            </if>
+            <if test="high != null">
+                #{high,jdbcType=DECIMAL},
+            </if>
+            <if test="position != null">
+                #{position,jdbcType=DECIMAL},
+            </if>
+            <if test="amp != null">
+                #{amp,jdbcType=DECIMAL},
+            </if>
+            <if test="wave != null">
+                #{wave,jdbcType=VARCHAR},
+            </if>
+            <if test="lowestChange != null">
+                #{lowestChange,jdbcType=DECIMAL},
+            </if>
+            <if test="highestChange != null">
+                #{highestChange,jdbcType=DECIMAL},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.guru.future.domain.FutureLiveDO">
+        update future_live
+        <set>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="change != null">
+                `change` = #{change,jdbcType=DECIMAL},
+            </if>
+            <if test="bid1 != null">
+                bid1 = #{bid1,jdbcType=DECIMAL},
+            </if>
+            <if test="ask1 != null">
+                ask1 = #{ask1,jdbcType=DECIMAL},
+            </if>
+            <if test="low != null">
+                low = #{low,jdbcType=DECIMAL},
+            </if>
+            <if test="high != null">
+                high = #{high,jdbcType=DECIMAL},
+            </if>
+            <if test="position != null">
+                `position` = #{position,jdbcType=DECIMAL},
+            </if>
+            <if test="amp != null">
+                amp = #{amp,jdbcType=DECIMAL},
+            </if>
+            <if test="wave != null">
+                wave = #{wave,jdbcType=VARCHAR},
+            </if>
+            <if test="lowestChange != null">
+                lowest_change = #{lowestChange,jdbcType=DECIMAL},
+            </if>
+            <if test="highestChange != null">
+                highest_change = #{highestChange,jdbcType=DECIMAL},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where code = #{code,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.guru.future.domain.FutureLiveDO">
+        update future_live
+        set `name`         = #{name,jdbcType=VARCHAR},
+            price          = #{price,jdbcType=DECIMAL},
+            `change`       = #{change,jdbcType=DECIMAL},
+            bid1           = #{bid1,jdbcType=DECIMAL},
+            ask1           = #{ask1,jdbcType=DECIMAL},
+            low            = #{low,jdbcType=DECIMAL},
+            high           = #{high,jdbcType=DECIMAL},
+            `position`     = #{position,jdbcType=DECIMAL},
+            amp            = #{amp,jdbcType=DECIMAL},
+            wave           = #{wave,jdbcType=VARCHAR},
+            lowest_change  = #{lowestChange,jdbcType=DECIMAL},
+            highest_change = #{highestChange,jdbcType=DECIMAL},
+            update_time    = #{updateTime,jdbcType=TIMESTAMP}
+        where code = #{code,jdbcType=VARCHAR}
+    </update>
+</mapper>

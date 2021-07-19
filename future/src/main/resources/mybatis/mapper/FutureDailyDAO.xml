@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress ALL -->
+<mapper namespace="com.guru.future.mapper.FutureDailyDAO">
+    <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureDailyDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="symbol" jdbcType="VARCHAR" property="symbol"/>
+        <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="close" jdbcType="DECIMAL" property="close"/>
+        <result column="close_change" jdbcType="DECIMAL" property="closeChange"/>
+        <result column="settle" jdbcType="DECIMAL" property="settle"/>
+        <result column="settle_change" jdbcType="DECIMAL" property="settleChange"/>
+        <result column="open" jdbcType="DECIMAL" property="open"/>
+        <result column="high" jdbcType="DECIMAL" property="high"/>
+        <result column="low" jdbcType="DECIMAL" property="low"/>
+        <result column="hl_diff" jdbcType="DECIMAL" property="hlDiff"/>
+        <result column="amplitude" jdbcType="DECIMAL" property="amplitude"/>
+        <result column="pre_close" jdbcType="DECIMAL" property="preClose"/>
+        <result column="pre_settle" jdbcType="DECIMAL" property="preSettle"/>
+        <result column="deal_vol" jdbcType="INTEGER" property="dealVol"/>
+        <result column="hold_vol" jdbcType="INTEGER" property="holdVol"/>
+        <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, symbol, trade_date, code, `name`, `close`, close_change, settle, settle_change,
+    `open`, high, low, hl_diff, amplitude, pre_close, pre_settle, deal_vol, hold_vol, 
+    exchange, create_time, update_time, remark
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from future_daily
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from future_daily
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.guru.future.domain.FutureDailyDO">
+        insert into future_daily (id, symbol, trade_date,
+                                  code, `name`, `close`,
+                                  close_change, settle, settle_change,
+                                  `open`, high, low, hl_diff,
+                                  amplitude, pre_close, pre_settle,
+                                  deal_vol, hold_vol, exchange,
+                                  create_time, update_time, remark)
+        values (#{id,jdbcType=BIGINT}, #{symbol,jdbcType=VARCHAR}, #{tradeDate,jdbcType=VARCHAR},
+                #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{close,jdbcType=DECIMAL},
+                #{closeChange,jdbcType=DECIMAL}, #{settle,jdbcType=DECIMAL}, #{settleChange,jdbcType=DECIMAL},
+                #{open,jdbcType=DECIMAL}, #{high,jdbcType=DECIMAL}, #{low,jdbcType=DECIMAL}, #{hlDiff,jdbcType=DECIMAL},
+                #{amplitude,jdbcType=DECIMAL}, #{preClose,jdbcType=DECIMAL}, #{preSettle,jdbcType=DECIMAL},
+                #{dealVol,jdbcType=INTEGER}, #{holdVol,jdbcType=INTEGER}, #{exchange,jdbcType=VARCHAR},
+                #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.guru.future.domain.FutureDailyDO">
+        insert into future_daily
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="symbol != null">
+                symbol,
+            </if>
+            <if test="tradeDate != null">
+                trade_date,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="close != null">
+                `close`,
+            </if>
+            <if test="closeChange != null">
+                close_change,
+            </if>
+            <if test="settle != null">
+                settle,
+            </if>
+            <if test="settleChange != null">
+                settle_change,
+            </if>
+            <if test="open != null">
+                `open`,
+            </if>
+            <if test="high != null">
+                high,
+            </if>
+            <if test="low != null">
+                low,
+            </if>
+            <if test="hlDiff != null">
+                hl_diff,
+            </if>
+            <if test="amplitude != null">
+                amplitude,
+            </if>
+            <if test="preClose != null">
+                pre_close,
+            </if>
+            <if test="preSettle != null">
+                pre_settle,
+            </if>
+            <if test="dealVol != null">
+                deal_vol,
+            </if>
+            <if test="holdVol != null">
+                hold_vol,
+            </if>
+            <if test="exchange != null">
+                exchange,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="symbol != null">
+                #{symbol,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null">
+                #{tradeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="close != null">
+                #{close,jdbcType=DECIMAL},
+            </if>
+            <if test="closeChange != null">
+                #{closeChange,jdbcType=DECIMAL},
+            </if>
+            <if test="settle != null">
+                #{settle,jdbcType=DECIMAL},
+            </if>
+            <if test="settleChange != null">
+                #{settleChange,jdbcType=DECIMAL},
+            </if>
+            <if test="open != null">
+                #{open,jdbcType=DECIMAL},
+            </if>
+            <if test="high != null">
+                #{high,jdbcType=DECIMAL},
+            </if>
+            <if test="low != null">
+                #{low,jdbcType=DECIMAL},
+            </if>
+            <if test="hlDiff != null">
+                #{hlDiff,jdbcType=DECIMAL},
+            </if>
+            <if test="amplitude != null">
+                #{amplitude,jdbcType=DECIMAL},
+            </if>
+            <if test="preClose != null">
+                #{preClose,jdbcType=DECIMAL},
+            </if>
+            <if test="preSettle != null">
+                #{preSettle,jdbcType=DECIMAL},
+            </if>
+            <if test="dealVol != null">
+                #{dealVol,jdbcType=INTEGER},
+            </if>
+            <if test="holdVol != null">
+                #{holdVol,jdbcType=INTEGER},
+            </if>
+            <if test="exchange != null">
+                #{exchange,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.guru.future.domain.FutureDailyDO">
+        update future_daily
+        <set>
+            <if test="symbol != null">
+                symbol = #{symbol,jdbcType=VARCHAR},
+            </if>
+            <if test="tradeDate != null">
+                trade_date = #{tradeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                code = #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="close != null">
+                `close` = #{close,jdbcType=DECIMAL},
+            </if>
+            <if test="closeChange != null">
+                close_change = #{closeChange,jdbcType=DECIMAL},
+            </if>
+            <if test="settle != null">
+                settle = #{settle,jdbcType=DECIMAL},
+            </if>
+            <if test="settleChange != null">
+                settle_change = #{settleChange,jdbcType=DECIMAL},
+            </if>
+            <if test="open != null">
+                `open` = #{open,jdbcType=DECIMAL},
+            </if>
+            <if test="high != null">
+                high = #{high,jdbcType=DECIMAL},
+            </if>
+            <if test="low != null">
+                low = #{low,jdbcType=DECIMAL},
+            </if>
+            <if test="hlDiff != null">
+                hl_diff = #{hlDiff,jdbcType=DECIMAL},
+            </if>
+            <if test="amplitude != null">
+                amplitude = #{amplitude,jdbcType=DECIMAL},
+            </if>
+            <if test="preClose != null">
+                pre_close = #{preClose,jdbcType=DECIMAL},
+            </if>
+            <if test="preSettle != null">
+                pre_settle = #{preSettle,jdbcType=DECIMAL},
+            </if>
+            <if test="dealVol != null">
+                deal_vol = #{dealVol,jdbcType=INTEGER},
+            </if>
+            <if test="holdVol != null">
+                hold_vol = #{holdVol,jdbcType=INTEGER},
+            </if>
+            <if test="exchange != null">
+                exchange = #{exchange,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.guru.future.domain.FutureDailyDO">
+        update future_daily
+        set symbol        = #{symbol,jdbcType=VARCHAR},
+            trade_date    = #{tradeDate,jdbcType=VARCHAR},
+            code          = #{code,jdbcType=VARCHAR},
+            `name`        = #{name,jdbcType=VARCHAR},
+            `close`       = #{close,jdbcType=DECIMAL},
+            close_change  = #{closeChange,jdbcType=DECIMAL},
+            settle        = #{settle,jdbcType=DECIMAL},
+            settle_change = #{settleChange,jdbcType=DECIMAL},
+            `open`        = #{open,jdbcType=DECIMAL},
+            high          = #{high,jdbcType=DECIMAL},
+            low           = #{low,jdbcType=DECIMAL},
+            hl_diff       = #{hlDiff,jdbcType=DECIMAL},
+            amplitude     = #{amplitude,jdbcType=DECIMAL},
+            pre_close     = #{preClose,jdbcType=DECIMAL},
+            pre_settle    = #{preSettle,jdbcType=DECIMAL},
+            deal_vol      = #{dealVol,jdbcType=INTEGER},
+            hold_vol      = #{holdVol,jdbcType=INTEGER},
+            exchange      = #{exchange,jdbcType=VARCHAR},
+            create_time   = #{createTime,jdbcType=TIMESTAMP},
+            update_time   = #{updateTime,jdbcType=TIMESTAMP},
+            remark        = #{remark,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+</mapper>
