@@ -87,8 +87,24 @@
 
         <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
 
-        <table tableName="future_realtime"
-               domainObjectName="FutureRealtimeDO" mapperName="FutureRealtimeDAO"
+        <table tableName="future_live"
+               domainObjectName="FutureLiveDO" mapperName="FutureLiveDAO"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="future_basic"
+               domainObjectName="FutureBasicDO" mapperName="FutureBasicDAO"
+               enableCountByExample="false"
+               enableUpdateByExample="false"
+               enableDeleteByExample="false"
+               enableSelectByExample="false"
+               selectByExampleQueryId="false">
+        </table>
+        <table tableName="future_daily"
+               domainObjectName="FutureDailyDO" mapperName="FutureDailyDAO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
