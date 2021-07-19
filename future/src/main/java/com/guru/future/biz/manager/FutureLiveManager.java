@@ -26,8 +26,11 @@ public class FutureLiveManager {
             return false;
         }
         FutureLiveDO existedLiveDO = getLiveDOByCode(futureLiveDO.getCode());
-        if (existedLiveDO != null && !futureLiveDO.toString().equals(existedLiveDO.toString())) {
-            return futureLiveDAO.updateByPrimaryKeySelective(futureLiveDO) > 0;
+        if (existedLiveDO != null) {
+            if (!futureLiveDO.toString().equals(existedLiveDO.toString())) {
+                return futureLiveDAO.updateByPrimaryKeySelective(futureLiveDO) > 0;
+            }
+            return false;
         } else {
             return futureLiveDAO.insertSelective(futureLiveDO) > 0;
         }
