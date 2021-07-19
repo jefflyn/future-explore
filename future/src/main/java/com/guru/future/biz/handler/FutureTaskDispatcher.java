@@ -47,9 +47,10 @@ public class FutureTaskDispatcher {
                         continue;
                     }
                     System.out.println(contract);
-                    System.out.println(JSON.toJSONString(ContractRealtimeDTO.convertFromHqList(SinaHqUtil.parse2List(contract))));
-
+//                    System.out.println(JSON.toJSONString();
+                    ContractRealtimeDTO contractRealtimeDTO = ContractRealtimeDTO.convertFromHqList(SinaHqUtil.parse2List(contract));
                     // async live data
+                    futureLiveService.refreshLiveData(contractRealtimeDTO);
 
                     // async daily data
 
