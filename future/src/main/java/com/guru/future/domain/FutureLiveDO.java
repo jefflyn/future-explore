@@ -37,10 +37,10 @@ public class FutureLiveDO {
 
     @Override
     public String toString() {
-        return price +
-                "," + bid1 +
-                "," + ask1 +
-                "," + low +
-                "," + high;
+        return price.floatValue() +
+                "," + bid1.floatValue() +
+                "," + ask1.floatValue() +
+                "," + low.floatValue() +
+                "," + high.floatValue();
     }
 }
