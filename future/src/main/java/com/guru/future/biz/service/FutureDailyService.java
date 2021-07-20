@@ -1,6 +1,5 @@
 package com.guru.future.biz.service;
 
-import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.FutureLiveManager;
@@ -13,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +31,7 @@ public class FutureDailyService {
     @Async
     public void addTradeDaily(List<ContractRealtimeDTO> contractRealtimeDTOList) {
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
-        Map<String, FutureDailyDO> dailyMap = futureDailyManager.getFutureDailyMap(DateUtil.currentTradeDate(), Lists.newArrayList(basicMap.keySet()));
+        Map<String, FutureDailyDO> dailyMap = futureDailyManager.getFutureDailyMap(DateUtil.currentTradeDate(), new ArrayList<>(basicMap.keySet()));
 
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureDailyDO futureDailyDO = ContractRealtimeConverter.convert2DailyDO(contractRealtimeDTO);
