@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @Service
 public class FutureLiveService {
@@ -16,8 +17,10 @@ public class FutureLiveService {
     private FutureLiveManager futureLiveManager;
 
     @Async
-    public void refreshLiveData(ContractRealtimeDTO contractRealtimeDTO) {
-        FutureLiveDO futureLiveDO = FutureLiveConverter.convertFromContractRealtimeDTO(contractRealtimeDTO);
-        futureLiveManager.upsertFutureLive(futureLiveDO);
+    public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList) {
+        for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
+            FutureLiveDO futureLiveDO = FutureLiveConverter.convertFromContractRealtimeDTO(contractRealtimeDTO);
+            futureLiveManager.upsertFutureLive(futureLiveDO);
+        }
     }
 }

@@ -1,10 +1,9 @@
 package com.guru.future.biz.handler;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.base.Strings;
-import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureSinaManager;
+import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.SinaHqUtil;
 import org.springframework.scheduling.annotation.Async;
@@ -12,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author j
@@ -36,28 +37,30 @@ public class FutureTaskDispatcher {
     }
 
     @Async
-    public void executePulling() {
+    public void executePulling() throws InterruptedException {
         keepRunning = true;
         List<String> codeList = futureBasicManager.getAllCodes();
         while (keepRunning) {
             List<String> contractList = futureSinaManager.fetchContractInfo(codeList);
             if (!CollectionUtils.isEmpty(codeList)) {
+                List<ContractRealtimeDTO> contractRealtimeDTOList = new ArrayList<>();
                 for (String contract : contractList) {
                     if (Strings.isNullOrEmpty(contract)) {
                         continue;
                     }
-                    System.out.println(contract);
+//                    System.out.println(contract);
 //                    System.out.println(JSON.toJSONString();
                     ContractRealtimeDTO contractRealtimeDTO = ContractRealtimeDTO.convertFromHqList(SinaHqUtil.parse2List(contract));
-                    // async live data
-                    futureLiveService.refreshLiveData(contractRealtimeDTO);
-
-                    // async daily data
-
-                    // async log
-
+                    contractRealtimeDTOList.add(contractRealtimeDTO);
                 }
+                // async live data
+                futureLiveService.refreshLiveData(contractRealtimeDTOList);
+
+                // async daily data
+
+                // async log
             }
+            TimeUnit.SECONDS.sleep(2L);
         }
     }
 }

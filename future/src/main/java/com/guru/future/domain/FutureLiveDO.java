@@ -1,6 +1,7 @@
 package com.guru.future.domain;
 
 import lombok.Data;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -37,10 +38,10 @@ public class FutureLiveDO {
 
     @Override
     public String toString() {
-        return price.floatValue() +
-                "," + bid1.floatValue() +
-                "," + ask1.floatValue() +
-                "," + low.floatValue() +
-                "," + high.floatValue();
+        return ObjectUtils.defaultIfNull(price, 0).floatValue() +
+                "," + ObjectUtils.defaultIfNull(bid1, 0).floatValue() +
+                "," + ObjectUtils.defaultIfNull(ask1, 0).floatValue() +
+                "," + ObjectUtils.defaultIfNull(low, 0).floatValue() +
+                "," + ObjectUtils.defaultIfNull(high, 0).floatValue();
     }
 }

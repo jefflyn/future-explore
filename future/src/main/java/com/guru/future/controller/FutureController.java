@@ -1,7 +1,6 @@
 package com.guru.future.controller;
 
 import com.guru.future.biz.handler.FutureTaskDispatcher;
-import org.apache.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +17,11 @@ public class FutureController {
 
     @GetMapping(value = "/future/start")
     public String start() {
-        futureTaskDispatcher.executePulling();
+        try {
+            futureTaskDispatcher.executePulling();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return "success";
     }
 

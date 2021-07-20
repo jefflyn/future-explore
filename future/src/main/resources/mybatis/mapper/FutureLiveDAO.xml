@@ -43,7 +43,7 @@
                 #{change,jdbcType=DECIMAL}, #{bid1,jdbcType=DECIMAL}, #{ask1,jdbcType=DECIMAL},
                 #{low,jdbcType=DECIMAL}, #{high,jdbcType=DECIMAL}, #{position,jdbcType=DECIMAL},
                 #{amp,jdbcType=DECIMAL}, #{wave,jdbcType=VARCHAR}, #{lowestChange,jdbcType=DECIMAL},
-                #{highestChange,jdbcType=DECIMAL}, #{updateTime,jdbcType=TIMESTAMP})
+                #{highestChange,jdbcType=DECIMAL}, now())
     </insert>
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLiveDO">
         insert into future_live
@@ -175,8 +175,8 @@
             <if test="highestChange != null">
                 highest_change = #{highestChange,jdbcType=DECIMAL},
             </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            <if test="code != null">
+                update_time = now(),
             </if>
         </set>
         where code = #{code,jdbcType=VARCHAR}
@@ -195,7 +195,7 @@
             wave           = #{wave,jdbcType=VARCHAR},
             lowest_change  = #{lowestChange,jdbcType=DECIMAL},
             highest_change = #{highestChange,jdbcType=DECIMAL},
-            update_time    = #{updateTime,jdbcType=TIMESTAMP}
+            update_time    = now()
         where code = #{code,jdbcType=VARCHAR}
     </update>
 </mapper>
