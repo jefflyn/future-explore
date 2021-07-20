@@ -58,7 +58,7 @@ public class FutureTaskDispatcher {
 //                    System.out.println(JSON.toJSONString();
                     ContractRealtimeDTO contractRealtimeDTO = ContractRealtimeDTO.convertFromHqList(SinaHqUtil.parse2List(contract));
                     contractRealtimeDTOList.add(contractRealtimeDTO);
-                    if (contractRealtimeDTOList.size() == RandomUtils.nextInt(1, 200)) {
+                    if (contractRealtimeDTOList.size() == RandomUtils.nextInt(1, 500)) {
                         log.info(contract);
                     }
                 }
