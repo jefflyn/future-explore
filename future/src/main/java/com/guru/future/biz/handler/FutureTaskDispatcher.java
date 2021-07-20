@@ -6,6 +6,9 @@ import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.SinaHqUtil;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -20,6 +23,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/7/19 5:31 下午
  **/
 @Service
+@Slf4j
 public class FutureTaskDispatcher {
     private Boolean keepRunning = true;
 
@@ -37,10 +41,13 @@ public class FutureTaskDispatcher {
     }
 
     @Async
-    public void executePulling() throws InterruptedException {
+    public void executePulling(Boolean refresh) throws InterruptedException {
         keepRunning = true;
         List<String> codeList = futureBasicManager.getAllCodes();
         while (keepRunning) {
+            if (ObjectUtils.defaultIfNull(refresh, false)) {
+                codeList = futureBasicManager.getAllCodes();
+            }
             List<String> contractList = futureSinaManager.fetchContractInfo(codeList);
             if (!CollectionUtils.isEmpty(codeList)) {
                 List<ContractRealtimeDTO> contractRealtimeDTOList = new ArrayList<>();
@@ -48,10 +55,12 @@ public class FutureTaskDispatcher {
                     if (Strings.isNullOrEmpty(contract)) {
                         continue;
                     }
-//                    System.out.println(contract);
 //                    System.out.println(JSON.toJSONString();
                     ContractRealtimeDTO contractRealtimeDTO = ContractRealtimeDTO.convertFromHqList(SinaHqUtil.parse2List(contract));
                     contractRealtimeDTOList.add(contractRealtimeDTO);
+                    if (contractRealtimeDTOList.size() == RandomUtils.nextInt(1, 200)) {
+                        log.info(contract);
+                    }
                 }
                 // async live data
                 futureLiveService.refreshLiveData(contractRealtimeDTOList);

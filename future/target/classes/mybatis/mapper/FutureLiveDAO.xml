@@ -87,7 +87,7 @@
             <if test="highestChange != null">
                 highest_change,
             </if>
-            <if test="updateTime != null">
+            <if test="code != null">
                 update_time,
             </if>
         </trim>
@@ -131,8 +131,8 @@
             <if test="highestChange != null">
                 #{highestChange,jdbcType=DECIMAL},
             </if>
-            <if test="updateTime != null">
-                #{updateTime,jdbcType=TIMESTAMP},
+            <if test="code != null">
+                now(),
             </if>
         </trim>
     </insert>

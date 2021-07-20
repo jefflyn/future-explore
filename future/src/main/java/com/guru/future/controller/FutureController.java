@@ -16,9 +16,9 @@ public class FutureController {
     private FutureTaskDispatcher futureTaskDispatcher;
 
     @GetMapping(value = "/future/start")
-    public String start() {
+    public String start(Boolean refresh) {
         try {
-            futureTaskDispatcher.executePulling();
+            futureTaskDispatcher.executePulling(refresh);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

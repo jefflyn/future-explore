@@ -13,7 +13,7 @@ public class FutureTaskDispatcherTest extends TestBase {
     @Test
     public void testExecutePulling() {
         try {
-            futureTaskDispatcher.executePulling();
+            futureTaskDispatcher.executePulling(false);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
