@@ -196,11 +196,11 @@
             <if test="exchange != null">
                 #{exchange,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null">
-                #{createTime,jdbcType=TIMESTAMP},
+            <if test="code != null">
+                now(),
             </if>
-            <if test="updateTime != null">
-                #{updateTime,jdbcType=TIMESTAMP},
+            <if test="code != null">
+                now(),
             </if>
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
@@ -265,11 +265,8 @@
             <if test="exchange != null">
                 exchange = #{exchange,jdbcType=VARCHAR},
             </if>
-            <if test="createTime != null">
-                create_time = #{createTime,jdbcType=TIMESTAMP},
-            </if>
-            <if test="updateTime != null">
-                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            <if test="code != null">
+                update_time = now(),
             </if>
             <if test="remark != null">
                 remark = #{remark,jdbcType=VARCHAR},

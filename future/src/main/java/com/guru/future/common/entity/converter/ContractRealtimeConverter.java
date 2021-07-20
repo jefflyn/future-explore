@@ -7,7 +7,6 @@ import com.guru.future.domain.FutureLiveDO;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
 
 public class ContractRealtimeConverter {
 
@@ -71,8 +70,6 @@ public class ContractRealtimeConverter {
         dailyDO.setDealVol(contractRealtimeDTO.getDealVol());
         dailyDO.setHoldVol(contractRealtimeDTO.getHoldVol());
         dailyDO.setExchange(contractRealtimeDTO.getExchange());
-        dailyDO.setCreateTime(new Date());
-        dailyDO.setUpdateTime(new Date());
         dailyDO.setRemark("");
 
         return dailyDO;
