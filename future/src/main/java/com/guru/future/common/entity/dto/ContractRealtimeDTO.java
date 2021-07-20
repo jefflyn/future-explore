@@ -13,12 +13,12 @@ public class ContractRealtimeDTO {
     /**
      * 0：code
      */
-    private String contractCode;
+    private String code;
 
     /**
      * 1：名字
      */
-    private String contractName;
+    private String name;
 
     /**
      * 2：不明数字
@@ -113,8 +113,8 @@ public class ContractRealtimeDTO {
     public static ContractRealtimeDTO convertFromHqList(List<String> list) {
         ContractRealtimeDTO contractRealtimeDTO = new ContractRealtimeDTO();
         if (!CollectionUtils.isEmpty(list) && SinaHqUtil.HQ_LIST_SIZE.equals(list.size())) {
-            contractRealtimeDTO.setContractCode(list.get(0));
-            contractRealtimeDTO.setContractName(list.get(1));
+            contractRealtimeDTO.setCode(list.get(0));
+            contractRealtimeDTO.setName(list.get(1));
             contractRealtimeDTO.setUnknownNumber(Integer.valueOf(list.get(2)));
             contractRealtimeDTO.setOpen(NumberUtil.string2Decimal(list.get(3)));
             contractRealtimeDTO.setHigh(NumberUtil.string2Decimal(list.get(4)));

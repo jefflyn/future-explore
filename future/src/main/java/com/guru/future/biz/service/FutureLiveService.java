@@ -2,7 +2,7 @@ package com.guru.future.biz.service;
 
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureLiveManager;
-import com.guru.future.common.entity.converter.FutureLiveConverter;
+import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureLiveDO;
@@ -30,7 +30,7 @@ public class FutureLiveService {
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList) {
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
-            FutureLiveDO futureLiveDO = FutureLiveConverter.convertFromContractRealtimeDTO(contractRealtimeDTO);
+            FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
             FutureBasicDO futureBasicDO = basicMap.get(futureLiveDO.getCode());
             BigDecimal histHigh = ObjectUtils.defaultIfNull(futureBasicDO.getHigh(), BigDecimal.ZERO);
             BigDecimal histLow = ObjectUtils.defaultIfNull(futureBasicDO.getLow(), BigDecimal.ZERO);
@@ -45,7 +45,7 @@ public class FutureLiveService {
                 // [7345.0 +40.84%, 13040.0 -20.67%]
                 StringBuilder waveStr = new StringBuilder();
                 waveStr.append("[").append(histLow).append(" ").append("+").append(lowChange).append("%").append(", ")
-                        .append(histHigh).append(" ").append("-").append("%]");
+                        .append(histHigh).append(" ").append(highChange).append("%]");
                 futureLiveDO.setWave(waveStr.toString());
             }
             futureLiveManager.upsertFutureLive(futureLiveDO);

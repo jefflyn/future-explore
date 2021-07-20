@@ -3,6 +3,7 @@ package com.guru.future.biz.handler;
 import com.google.common.base.Strings;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureSinaManager;
+import com.guru.future.biz.service.FutureDailyService;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.SinaHqUtil;
@@ -36,6 +37,9 @@ public class FutureTaskDispatcher {
     @Resource
     private FutureLiveService futureLiveService;
 
+    @Resource
+    private FutureDailyService futureDailyService;
+
     public Boolean stopRunning() {
         return keepRunning = false;
     }
@@ -66,7 +70,7 @@ public class FutureTaskDispatcher {
                 futureLiveService.refreshLiveData(contractRealtimeDTOList);
 
                 // async daily data
-
+                futureDailyService.addTradeDaily(contractRealtimeDTOList);
                 // async log
             }
             TimeUnit.SECONDS.sleep(2L);

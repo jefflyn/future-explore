@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Component
 public class FutureSinaManager {
-    private final static String SINA_HQ_URL = "http://hq.sinajs.cn/list=";
+    private final static String SINA_HQ_URL = "https://hq.sinajs.cn/list=";
 
     public List<String> fetchContractInfo(List<String> codeList) {
         StringBuilder reqCodes = new StringBuilder();

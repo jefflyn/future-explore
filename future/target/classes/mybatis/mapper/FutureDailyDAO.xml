@@ -31,33 +31,43 @@
     `open`, high, low, hl_diff, amplitude, pre_close, pre_settle, deal_vol, hold_vol, 
     exchange, create_time, update_time, remark
     </sql>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from future_daily
         where id = #{id,jdbcType=BIGINT}
     </select>
+
+    <select id="selectByQuery" resultType="com.guru.future.domain.FutureDailyDO">
+        select
+        <include refid="Base_Column_List"/>
+        from future_daily
+        where
+        <if test="symbol != null">
+            and symbol = #{symbol}
+        </if>
+        <if test="code != null">
+            and code = = #{code}
+        </if>
+        <if test="codes != null and codes.size() > 0">
+            and code in
+            <foreach collection="codes" open="(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+        <if test="tradeDate != null">
+            and trade_date = #{tradeDate}
+        </if>
+
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete
         from future_daily
         where id = #{id,jdbcType=BIGINT}
     </delete>
-    <insert id="insert" parameterType="com.guru.future.domain.FutureDailyDO">
-        insert into future_daily (id, symbol, trade_date,
-                                  code, `name`, `close`,
-                                  close_change, settle, settle_change,
-                                  `open`, high, low, hl_diff,
-                                  amplitude, pre_close, pre_settle,
-                                  deal_vol, hold_vol, exchange,
-                                  create_time, update_time, remark)
-        values (#{id,jdbcType=BIGINT}, #{symbol,jdbcType=VARCHAR}, #{tradeDate,jdbcType=VARCHAR},
-                #{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{close,jdbcType=DECIMAL},
-                #{closeChange,jdbcType=DECIMAL}, #{settle,jdbcType=DECIMAL}, #{settleChange,jdbcType=DECIMAL},
-                #{open,jdbcType=DECIMAL}, #{high,jdbcType=DECIMAL}, #{low,jdbcType=DECIMAL}, #{hlDiff,jdbcType=DECIMAL},
-                #{amplitude,jdbcType=DECIMAL}, #{preClose,jdbcType=DECIMAL}, #{preSettle,jdbcType=DECIMAL},
-                #{dealVol,jdbcType=INTEGER}, #{holdVol,jdbcType=INTEGER}, #{exchange,jdbcType=VARCHAR},
-                #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
-    </insert>
+
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureDailyDO">
         insert into future_daily
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -197,6 +207,7 @@
             </if>
         </trim>
     </insert>
+
     <update id="updateByPrimaryKeySelective" parameterType="com.guru.future.domain.FutureDailyDO">
         update future_daily
         <set>
@@ -266,29 +277,5 @@
         </set>
         where id = #{id,jdbcType=BIGINT}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.guru.future.domain.FutureDailyDO">
-        update future_daily
-        set symbol        = #{symbol,jdbcType=VARCHAR},
-            trade_date    = #{tradeDate,jdbcType=VARCHAR},
-            code          = #{code,jdbcType=VARCHAR},
-            `name`        = #{name,jdbcType=VARCHAR},
-            `close`       = #{close,jdbcType=DECIMAL},
-            close_change  = #{closeChange,jdbcType=DECIMAL},
-            settle        = #{settle,jdbcType=DECIMAL},
-            settle_change = #{settleChange,jdbcType=DECIMAL},
-            `open`        = #{open,jdbcType=DECIMAL},
-            high          = #{high,jdbcType=DECIMAL},
-            low           = #{low,jdbcType=DECIMAL},
-            hl_diff       = #{hlDiff,jdbcType=DECIMAL},
-            amplitude     = #{amplitude,jdbcType=DECIMAL},
-            pre_close     = #{preClose,jdbcType=DECIMAL},
-            pre_settle    = #{preSettle,jdbcType=DECIMAL},
-            deal_vol      = #{dealVol,jdbcType=INTEGER},
-            hold_vol      = #{holdVol,jdbcType=INTEGER},
-            exchange      = #{exchange,jdbcType=VARCHAR},
-            create_time   = #{createTime,jdbcType=TIMESTAMP},
-            update_time   = #{updateTime,jdbcType=TIMESTAMP},
-            remark        = #{remark,jdbcType=VARCHAR}
-        where id = #{id,jdbcType=BIGINT}
-    </update>
+
 </mapper>

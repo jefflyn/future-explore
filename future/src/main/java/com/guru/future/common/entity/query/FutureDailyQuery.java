@@ -9,12 +9,12 @@ import java.util.List;
  * @date 2021/7/19 3:09 下午
  **/
 @Data
-public class FutureBasicQuery {
+public class FutureDailyQuery {
     private String symbol;
 
-    private String name;
+    private String code;
 
-    private String type;
+    private String tradeDate;
 
     private List<String> codes;
 
