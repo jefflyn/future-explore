@@ -45,7 +45,7 @@ public class ContractRealtimeConverter {
 
     public static FutureDailyDO convert2DailyDO(ContractRealtimeDTO contractRealtimeDTO) {
         FutureDailyDO dailyDO = new FutureDailyDO();
-        dailyDO.setSymbol(contractRealtimeDTO.getCode().replaceAll("[^0-9]", ""));
+        dailyDO.setSymbol(contractRealtimeDTO.getCode().replaceAll("[^A-Za-z]", ""));
         dailyDO.setTradeDate(DateUtil.currentTradeDate());
         dailyDO.setCode(contractRealtimeDTO.getCode());
         dailyDO.setName(contractRealtimeDTO.getName());

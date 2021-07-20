@@ -43,23 +43,23 @@
         select
         <include refid="Base_Column_List"/>
         from future_daily
-        where
-        <if test="symbol != null">
-            and symbol = #{symbol}
-        </if>
-        <if test="code != null">
-            and code = = #{code}
-        </if>
-        <if test="codes != null and codes.size() > 0">
-            and code in
-            <foreach collection="codes" open="(" close=")" separator="," item="item">
-                #{item}
-            </foreach>
-        </if>
-        <if test="tradeDate != null">
-            and trade_date = #{tradeDate}
-        </if>
-
+        <where>
+            <if test="symbol != null">
+                and symbol = #{symbol}
+            </if>
+            <if test="code != null">
+                and code = = #{code}
+            </if>
+            <if test="codes != null and codes.size() > 0">
+                and code in
+                <foreach collection="codes" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="tradeDate != null">
+                and trade_date = #{tradeDate}
+            </if>
+        </where>
     </select>
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
