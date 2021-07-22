@@ -5,6 +5,7 @@ import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.FutureLiveManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
+import com.guru.future.common.utils.DateUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureDailyDO;
 import org.springframework.scheduling.annotation.Async;
@@ -29,6 +30,9 @@ public class FutureDailyService {
 
     @Async
     public void addTradeDaily(String tradeDate, List<ContractRealtimeDTO> contractRealtimeDTOList) {
+        if (DateUtil.isTradeTime()) {
+            return;
+        }
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
         Map<String, FutureDailyDO> dailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
 
