@@ -128,10 +128,10 @@
             <if test="exchange != null">
                 exchange,
             </if>
-            <if test="createTime != null">
+            <if test="code != null">
                 create_time,
             </if>
-            <if test="updateTime != null">
+            <if test="code != null">
                 update_time,
             </if>
             <if test="remark != null">
