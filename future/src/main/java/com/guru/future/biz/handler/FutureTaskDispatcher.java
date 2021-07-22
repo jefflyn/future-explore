@@ -55,6 +55,7 @@ public class FutureTaskDispatcher {
             List<String> contractList = futureSinaManager.fetchContractInfo(codeList);
             if (!CollectionUtils.isEmpty(codeList)) {
                 List<ContractRealtimeDTO> contractRealtimeDTOList = new ArrayList<>();
+                String tradeDate = "";
                 for (String contract : contractList) {
                     if (Strings.isNullOrEmpty(contract)) {
                         continue;
@@ -62,15 +63,19 @@ public class FutureTaskDispatcher {
 //                    System.out.println(JSON.toJSONString();
                     ContractRealtimeDTO contractRealtimeDTO = ContractRealtimeDTO.convertFromHqList(SinaHqUtil.parse2List(contract));
                     contractRealtimeDTOList.add(contractRealtimeDTO);
-                    if (contractRealtimeDTOList.size() == RandomUtils.nextInt(1, 500)) {
+                    if (contractRealtimeDTOList.size() == RandomUtils.nextInt(1, 1000)) {
                         log.info(contract);
+                    }
+                    if (Strings.isNullOrEmpty(tradeDate)) {
+                        tradeDate = contractRealtimeDTO.getTradeDate();
                     }
                 }
                 // async live data
                 futureLiveService.refreshLiveData(contractRealtimeDTOList);
 
                 // async daily data
-                futureDailyService.addTradeDaily(contractRealtimeDTOList);
+                futureDailyService.addTradeDaily(tradeDate, contractRealtimeDTOList);
+
                 // async log
             }
             TimeUnit.SECONDS.sleep(2L);
