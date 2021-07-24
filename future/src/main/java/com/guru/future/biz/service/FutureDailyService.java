@@ -41,7 +41,13 @@ public class FutureDailyService {
             FutureDailyDO existedDailyDO = dailyMap.get(futureDailyDO.getCode());
             if (existedDailyDO != null) {
                 futureDailyDO.setId(existedDailyDO.getId());
-                futureDailyManager.updateFutureDaily(futureDailyDO);
+                /**
+                 * after morning close: update pre_close
+                 * after noon close: update pre_close
+                 */
+                if (!futureDailyDO.toString().equals(existedDailyDO.toString())) {
+                    futureDailyManager.updateFutureDaily(futureDailyDO);
+                }
             } else {
                 futureDailyManager.addFutureDaily(futureDailyDO);
             }

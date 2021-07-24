@@ -1,6 +1,7 @@
 package com.guru.future.domain;
 
 import lombok.Data;
+import org.apache.commons.lang3.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -50,4 +51,10 @@ public class FutureDailyDO {
     private Date updateTime;
 
     private String remark;
+
+    @Override
+    public String toString() {
+        return tradeDate + "," + code +
+                "," + ObjectUtils.defaultIfNull(close, 0).floatValue();
+    }
 }
