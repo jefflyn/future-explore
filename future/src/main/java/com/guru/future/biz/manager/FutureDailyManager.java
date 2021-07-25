@@ -27,7 +27,7 @@ public class FutureDailyManager {
 
     @Transactional
     public Boolean updateFutureDaily(FutureDailyDO futureDailyDO) {
-        return futureDailyDAO.updateByPrimaryKeySelective(futureDailyDO) > 0;
+        return futureDailyDAO.updateByCodeTradeDateSelective(futureDailyDO) > 0;
     }
 
     public Map<String, FutureDailyDO> getFutureDailyMap(String tradeDate, List<String> codes) {

@@ -6,6 +6,7 @@ import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.biz.service.FutureDailyService;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
+import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.SinaHqUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -49,13 +50,15 @@ public class FutureTaskDispatcher {
         keepRunning = true;
         List<String> codeList = futureBasicManager.getAllCodes();
         while (keepRunning) {
+            if (DateUtil.isSysBreakTime()) {
+                continue;
+            }
             if (ObjectUtils.defaultIfNull(refresh, false)) {
                 codeList = futureBasicManager.getAllCodes();
             }
             List<String> contractList = futureSinaManager.fetchContractInfo(codeList);
             if (!CollectionUtils.isEmpty(codeList)) {
                 List<ContractRealtimeDTO> contractRealtimeDTOList = new ArrayList<>();
-                String tradeDate = "";
                 for (String contract : contractList) {
                     if (Strings.isNullOrEmpty(contract)) {
                         continue;
@@ -66,15 +69,12 @@ public class FutureTaskDispatcher {
                     if (contractRealtimeDTOList.size() == RandomUtils.nextInt(1, 1000)) {
                         log.info(contract);
                     }
-                    if (Strings.isNullOrEmpty(tradeDate)) {
-                        tradeDate = contractRealtimeDTO.getTradeDate();
-                    }
                 }
                 // async live data
                 futureLiveService.refreshLiveData(contractRealtimeDTOList);
 
                 // async daily data
-                futureDailyService.addTradeDaily(tradeDate, contractRealtimeDTOList);
+                futureDailyService.upsertTradeDaily(contractRealtimeDTOList);
 
                 // async log
             }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,16 +30,17 @@ public class FutureDailyService {
     private FutureLiveManager futureLiveManager;
 
     @Async
-    public void addTradeDaily(String tradeDate, List<ContractRealtimeDTO> contractRealtimeDTOList) {
-        if (DateUtil.isTradeTime()) {
-            return;
-        }
+    public void upsertTradeDaily(List<ContractRealtimeDTO> contractRealtimeDTOList) {
+        Date date = new Date();
+        String tradeDate = DateUtil.isNight() ? DateUtil.getNextTradeDate(date) : DateUtil.currentDate();
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
-        Map<String, FutureDailyDO> dailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
+        Map<String, FutureDailyDO> updateDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
+        Map<String, FutureDailyDO> currentDailyMap = futureDailyManager.getFutureDailyMap(DateUtil.currentDate(), new ArrayList<>(basicMap.keySet()));
+
 
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureDailyDO futureDailyDO = ContractRealtimeConverter.convert2DailyDO(contractRealtimeDTO);
-            FutureDailyDO existedDailyDO = dailyMap.get(futureDailyDO.getCode());
+            FutureDailyDO existedDailyDO = updateDailyMap.get(futureDailyDO.getCode());
             if (existedDailyDO != null) {
                 futureDailyDO.setId(existedDailyDO.getId());
                 /**
@@ -49,6 +51,7 @@ public class FutureDailyService {
                     futureDailyManager.updateFutureDaily(futureDailyDO);
                 }
             } else {
+                currentDailyMap.get(futureDailyDO.getCode());
                 futureDailyManager.addFutureDaily(futureDailyDO);
             }
         }

@@ -14,6 +14,6 @@ public interface FutureDailyDAO {
 
     List<FutureDailyDO> selectByQuery(FutureDailyQuery query);
 
-    int updateByPrimaryKeySelective(FutureDailyDO record);
+    int updateByCodeTradeDateSelective(FutureDailyDO record);
 
 }
