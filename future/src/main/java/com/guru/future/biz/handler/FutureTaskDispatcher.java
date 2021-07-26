@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Slf4j
 public class FutureTaskDispatcher {
+    public static Boolean REFRESH = false;
     private Boolean keepRunning = true;
 
     @Resource
@@ -45,15 +46,20 @@ public class FutureTaskDispatcher {
         return keepRunning = false;
     }
 
+    public static void setRefresh(){
+        REFRESH = true;
+    }
+
     @Async
     public void executePulling(Boolean refresh) throws InterruptedException {
         keepRunning = true;
+        REFRESH = refresh;
         List<String> codeList = futureBasicManager.getAllCodes();
         while (keepRunning) {
             if (DateUtil.isSysBreakTime()) {
                 continue;
             }
-            if (ObjectUtils.defaultIfNull(refresh, false)) {
+            if (REFRESH) {
                 codeList = futureBasicManager.getAllCodes();
             }
             List<String> contractList = futureSinaManager.fetchContractInfo(codeList);

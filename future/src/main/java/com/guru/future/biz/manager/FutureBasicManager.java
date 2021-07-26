@@ -37,4 +37,8 @@ public class FutureBasicManager {
     public List<FutureBasicDO> getAll() {
         return futureBasicsDAO.selectByQuery(null);
     }
+
+    public Boolean updateBasic(FutureBasicDO updateBasicDO){
+        return futureBasicsDAO.updateByPrimaryKeySelective(updateBasicDO) > 0;
+    }
 }
