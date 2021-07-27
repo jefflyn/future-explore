@@ -48,7 +48,7 @@ public class FutureTaskDispatcher {
     @Async
     public void executePulling(Boolean refresh) throws InterruptedException {
         keepRunning = true;
-        REFRESH = refresh;
+        REFRESH = refresh == null ? false : refresh;
         List<String> codeList = futureBasicManager.getAllCodes();
         while (keepRunning) {
             if (DateUtil.isSysBreakTime()) {

@@ -12,7 +12,7 @@ public interface FutureBasicDAO {
 
     FutureBasicDO selectByPrimaryKey(String symbol);
 
-    int updateByPrimaryKeySelective(FutureBasicDO record);
+    int updateByCodeSelective(FutureBasicDO record);
 
     List<FutureBasicDO> selectByQuery(FutureBasicQuery query);
 }

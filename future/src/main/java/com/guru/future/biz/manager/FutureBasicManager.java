@@ -39,6 +39,6 @@ public class FutureBasicManager {
     }
 
     public Boolean updateBasic(FutureBasicDO updateBasicDO) {
-        return futureBasicsDAO.updateByPrimaryKeySelective(updateBasicDO) > 0;
+        return futureBasicsDAO.updateByCodeSelective(updateBasicDO) > 0;
     }
 }

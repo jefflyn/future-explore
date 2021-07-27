@@ -173,7 +173,7 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.guru.future.domain.FutureBasicDO">
+    <update id="updateByCodeSelective" parameterType="com.guru.future.domain.FutureBasicDO">
         update future_basic
         <set>
             <if test="name != null">
