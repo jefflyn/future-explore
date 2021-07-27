@@ -20,7 +20,7 @@ public class FutureController {
     private FutureDailyService futureDailyService;
 
     @GetMapping(value = "/future/live/start")
-    public String start(@RequestParam Boolean refresh) {
+    public String start(@RequestParam(required = false) Boolean refresh) {
         try {
             futureTaskDispatcher.executePulling(refresh);
         } catch (InterruptedException e) {

@@ -65,6 +65,10 @@ public class FutureTaskDispatcher {
             // async live data
             futureLiveService.refreshLiveData(contractRealtimeDTOList);
 
+            if (DateUtil.isNight()) {
+                futureDailyService.upsertTradeDaily(contractRealtimeDTOList);
+            }
+
             // async log
         }
         TimeUnit.SECONDS.sleep(2L);
