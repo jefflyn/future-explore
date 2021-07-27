@@ -52,7 +52,7 @@ public class FutureTaskDispatcher {
         List<String> codeList = futureBasicManager.getAllCodes();
         while (keepRunning) {
             if (DateUtil.isSysBreakTime()) {
-                continue;
+//                continue;
             }
             if (REFRESH) {
                 codeList = futureBasicManager.getAllCodes();

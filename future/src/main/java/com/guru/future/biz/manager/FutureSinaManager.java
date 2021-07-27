@@ -41,8 +41,11 @@ public class FutureSinaManager {
                 }
 //                    System.out.println(JSON.toJSONString();
                 ContractRealtimeDTO contractRealtimeDTO = ContractRealtimeDTO.convertFromHqList(SinaHqUtil.parse2List(contract));
+                if (contractRealtimeDTO.getCode() == null) {
+                    log.warn("skip {}", contract);
+                }
                 contractRealtimeDTOList.add(contractRealtimeDTO);
-                if (contractRealtimeDTOList.size() == RandomUtils.nextInt(1, 1000)) {
+                if (contractRealtimeDTOList.size() == RandomUtils.nextInt(1, 2000)) {
                     log.info(contract);
                 }
             }

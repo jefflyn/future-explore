@@ -38,7 +38,7 @@ public class FutureLiveDO {
 
     @Override
     public String toString() {
-        return ObjectUtils.defaultIfNull(price, 0).floatValue() +
+        return code + "," + ObjectUtils.defaultIfNull(price, 0).floatValue() +
                 "," + ObjectUtils.defaultIfNull(bid1, 0).floatValue() +
                 "," + ObjectUtils.defaultIfNull(ask1, 0).floatValue() +
                 "," + ObjectUtils.defaultIfNull(low, 0).floatValue() +

@@ -53,7 +53,6 @@ public class FutureDailyService {
             FutureDailyDO futureDailyDO = ContractRealtimeConverter.convert2DailyDO(contractRealtimeDTO);
             FutureDailyDO existedDailyDO = updateDailyMap.get(futureDailyDO.getCode());
             if (existedDailyDO != null) {
-                futureDailyDO.setId(existedDailyDO.getId());
                 /**
                  * after morning close: update pre_close
                  * after noon close: update pre_close
@@ -62,6 +61,7 @@ public class FutureDailyService {
                     futureDailyManager.updateFutureDaily(futureDailyDO);
                 }
             } else {
+
                 currentDailyMap.get(futureDailyDO.getCode());
                 futureDailyManager.addFutureDaily(futureDailyDO);
             }

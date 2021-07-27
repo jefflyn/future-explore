@@ -3,6 +3,7 @@ package com.guru.future.controller;
 import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.service.FutureDailyService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -19,7 +20,7 @@ public class FutureController {
     private FutureDailyService futureDailyService;
 
     @GetMapping(value = "/future/live/start")
-    public String start(Boolean refresh) {
+    public String start(@RequestParam Boolean refresh) {
         try {
             futureTaskDispatcher.executePulling(refresh);
         } catch (InterruptedException e) {
