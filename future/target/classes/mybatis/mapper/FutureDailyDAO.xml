@@ -208,21 +208,9 @@
         </trim>
     </insert>
 
-    <update id="updateByPrimaryKeySelective" parameterType="com.guru.future.domain.FutureDailyDO">
+    <update id="updateByCodeTradeDateSelective" parameterType="com.guru.future.domain.FutureDailyDO">
         update future_daily
         <set>
-            <if test="symbol != null">
-                symbol = #{symbol,jdbcType=VARCHAR},
-            </if>
-            <if test="tradeDate != null">
-                trade_date = #{tradeDate,jdbcType=VARCHAR},
-            </if>
-            <if test="code != null">
-                code = #{code,jdbcType=VARCHAR},
-            </if>
-            <if test="name != null">
-                `name` = #{name,jdbcType=VARCHAR},
-            </if>
             <if test="close != null">
                 `close` = #{close,jdbcType=DECIMAL},
             </if>
@@ -272,7 +260,7 @@
                 remark = #{remark,jdbcType=VARCHAR},
             </if>
         </set>
-        where id = #{id,jdbcType=BIGINT}
+        where code = #{code,jdbcType=VARCHAR} and trade_date = #{tradeDate,jdbcType=VARCHAR}
     </update>
 
 </mapper>

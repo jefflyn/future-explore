@@ -2,7 +2,7 @@ package com.guru.future.biz.service;
 
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureDailyManager;
-import com.guru.future.biz.manager.FutureLiveManager;
+import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
@@ -10,6 +10,7 @@ import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureDailyDO;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -27,7 +28,17 @@ public class FutureDailyService {
     @Resource
     private FutureDailyManager futureDailyManager;
     @Resource
-    private FutureLiveManager futureLiveManager;
+    private FutureSinaManager futureSinaManager;
+
+    @Async
+    public void addTradeDaily() {
+        List<String> codeList = futureBasicManager.getAllCodes();
+        if (CollectionUtils.isEmpty(codeList)) {
+            return;
+        }
+        List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getRealtimeFromSina(codeList);
+        this.upsertTradeDaily(contractRealtimeDTOList);
+    }
 
     @Async
     public void upsertTradeDaily(List<ContractRealtimeDTO> contractRealtimeDTOList) {

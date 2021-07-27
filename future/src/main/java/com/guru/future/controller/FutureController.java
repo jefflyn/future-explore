@@ -1,6 +1,7 @@
 package com.guru.future.controller;
 
 import com.guru.future.biz.handler.FutureTaskDispatcher;
+import com.guru.future.biz.service.FutureDailyService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,8 +15,10 @@ import javax.annotation.Resource;
 public class FutureController {
     @Resource
     private FutureTaskDispatcher futureTaskDispatcher;
+    @Resource
+    private FutureDailyService futureDailyService;
 
-    @GetMapping(value = "/future/start")
+    @GetMapping(value = "/future/live/start")
     public String start(Boolean refresh) {
         try {
             futureTaskDispatcher.executePulling(refresh);
@@ -25,8 +28,14 @@ public class FutureController {
         return "success";
     }
 
-    @GetMapping(value = "/future/stop")
+    @GetMapping(value = "/future/live/stop")
     public Boolean stop() {
         return futureTaskDispatcher.stopRunning();
+    }
+
+    @GetMapping(value = "/future/daily/update")
+    public String updateDaily() {
+        futureDailyService.addTradeDaily();
+        return "success";
     }
 }

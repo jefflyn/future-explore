@@ -138,7 +138,8 @@ public class DateUtil {
         String currentTime = DateFormatUtils.format(date, HOUR_MINUTE_PATTERN);
         boolean currentNight = currentTime.compareTo("20:59") >= 0 && currentTime.compareTo("24:00") < 0;
 //        boolean nextMorning = currentTime.compareTo("00:00") >= 0 && currentTime.compareTo("08:59") < 0;
-        return (currentNight || nextMorning);
+        return currentNight;
+//        return (currentNight || nextMorning);
     }
 
     public static Boolean isTradeTime() {

@@ -1,22 +1,18 @@
 package com.guru.future.biz.handler;
 
-import com.google.common.base.Strings;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.biz.service.FutureDailyService;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
-import com.guru.future.common.utils.SinaHqUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.RandomUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -56,29 +52,16 @@ public class FutureTaskDispatcher {
             if (ObjectUtils.defaultIfNull(refresh, false)) {
                 codeList = futureBasicManager.getAllCodes();
             }
-            List<String> contractList = futureSinaManager.fetchContractInfo(codeList);
-            if (!CollectionUtils.isEmpty(codeList)) {
-                List<ContractRealtimeDTO> contractRealtimeDTOList = new ArrayList<>();
-                for (String contract : contractList) {
-                    if (Strings.isNullOrEmpty(contract)) {
-                        continue;
-                    }
-//                    System.out.println(JSON.toJSONString();
-                    ContractRealtimeDTO contractRealtimeDTO = ContractRealtimeDTO.convertFromHqList(SinaHqUtil.parse2List(contract));
-                    contractRealtimeDTOList.add(contractRealtimeDTO);
-                    if (contractRealtimeDTOList.size() == RandomUtils.nextInt(1, 1000)) {
-                        log.info(contract);
-                    }
-                }
-                // async live data
-                futureLiveService.refreshLiveData(contractRealtimeDTOList);
-
-                // async daily data
-                futureDailyService.upsertTradeDaily(contractRealtimeDTOList);
-
-                // async log
+            if (CollectionUtils.isEmpty(codeList)) {
+                return;
             }
-            TimeUnit.SECONDS.sleep(2L);
+            List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getRealtimeFromSina(codeList);
+
+            // async live data
+            futureLiveService.refreshLiveData(contractRealtimeDTOList);
+
+            // async log
         }
+        TimeUnit.SECONDS.sleep(2L);
     }
 }
