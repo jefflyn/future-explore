@@ -1,12 +1,15 @@
 package com.guru.future.biz.service;
 
+import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureLiveManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureLiveDO;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,7 @@ import java.util.Map;
  * @author j
  */
 @Service
+@Slf4j
 public class FutureLiveService {
     @Resource
     private FutureBasicManager futureBasicManager;
@@ -29,13 +33,15 @@ public class FutureLiveService {
     @Async
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList) {
         // not in trade time
-
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
             FutureBasicDO futureBasicDO = basicMap.get(futureLiveDO.getCode());
-            BigDecimal histHigh = ObjectUtils.defaultIfNull(futureBasicDO.getHigh(), BigDecimal.ZERO);
-            BigDecimal histLow = ObjectUtils.defaultIfNull(futureBasicDO.getLow(), BigDecimal.ZERO);
+
+            Pair<BigDecimal, BigDecimal> highLow = updateHistHighLow(contractRealtimeDTO, futureBasicDO);
+            BigDecimal histHigh = highLow.getLeft();
+            BigDecimal histLow = highLow.getRight();
+
             if (histHigh.compareTo(histLow) > 0) {
                 BigDecimal lowChange = (futureLiveDO.getPrice().subtract(histLow)).multiply(BigDecimal.valueOf(100))
                         .divide(histLow, 2, RoundingMode.HALF_UP);
@@ -52,5 +58,29 @@ public class FutureLiveService {
             }
             futureLiveManager.upsertFutureLive(futureLiveDO);
         }
+    }
+
+    private Pair<BigDecimal, BigDecimal> updateHistHighLow(ContractRealtimeDTO contractRealtimeDTO, FutureBasicDO futureBasicDO) {
+        BigDecimal histHigh = ObjectUtils.defaultIfNull(futureBasicDO.getHigh(), BigDecimal.ZERO);
+        BigDecimal histLow = ObjectUtils.defaultIfNull(futureBasicDO.getLow(), BigDecimal.ZERO);
+        if (contractRealtimeDTO.getLow().compareTo(histLow) < 0 || histLow.intValue() == 0) {
+            histHigh = contractRealtimeDTO.getLow();
+            FutureBasicDO updateBasicDO = new FutureBasicDO();
+            updateBasicDO.setCode(contractRealtimeDTO.getCode());
+            updateBasicDO.setLow(contractRealtimeDTO.getLow());
+            futureBasicManager.updateBasic(updateBasicDO);
+            FutureTaskDispatcher.setRefresh();
+            log.info("update hist low, refresh basic data");
+        }
+        if (contractRealtimeDTO.getHigh().compareTo(histHigh) > 0 || histHigh.intValue() == 0) {
+            histLow = contractRealtimeDTO.getHigh();
+            FutureBasicDO updateBasicDO = new FutureBasicDO();
+            updateBasicDO.setCode(contractRealtimeDTO.getCode());
+            updateBasicDO.setHigh(contractRealtimeDTO.getHigh());
+            futureBasicManager.updateBasic(updateBasicDO);
+            FutureTaskDispatcher.setRefresh();
+            log.info("update hist high, refresh basic data");
+        }
+        return Pair.of(histHigh, histLow);
     }
 }
