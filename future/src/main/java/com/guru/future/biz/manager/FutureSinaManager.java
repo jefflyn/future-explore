@@ -2,6 +2,7 @@ package com.guru.future.biz.manager;
 
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.HttpUtil;
 import com.guru.future.common.utils.SinaHqUtil;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,9 @@ import java.util.List;
 public class FutureSinaManager {
     private final static String SINA_HQ_URL = "https://hq.sinajs.cn/list=";
 
+    @Resource
+    private FutureBasicManager futureBasicManager;
+
     public List<String> fetchContractInfo(List<String> codeList) {
         StringBuilder reqCodes = new StringBuilder();
         for (String code : codeList) {
@@ -29,6 +34,14 @@ public class FutureSinaManager {
         String result = HttpUtil.doGet(SINA_HQ_URL + reqCodes);
         List<String> contractList = Splitter.on(";\n").splitToList(result);
         return contractList;
+    }
+
+    public List<ContractRealtimeDTO> getAllRealtimeFromSina() {
+        List<String> codeList = futureBasicManager.getAllCodes();
+        if (CollectionUtils.isEmpty(codeList)) {
+            return Lists.newArrayList();
+        }
+        return this.getRealtimeFromSina(codeList);
     }
 
     public List<ContractRealtimeDTO> getRealtimeFromSina(List<String> codeList) {

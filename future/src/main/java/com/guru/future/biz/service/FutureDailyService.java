@@ -32,11 +32,7 @@ public class FutureDailyService {
 
     @Async
     public void addTradeDaily() {
-        List<String> codeList = futureBasicManager.getAllCodes();
-        if (CollectionUtils.isEmpty(codeList)) {
-            return;
-        }
-        List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getRealtimeFromSina(codeList);
+        List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getAllRealtimeFromSina();
         this.upsertTradeDaily(contractRealtimeDTOList);
     }
 
@@ -49,6 +45,8 @@ public class FutureDailyService {
         if (DateUtil.isNight()) {
             tradeDate = DateUtil.getNextTradeDate(tradeDate);
             lastDailyMap = futureDailyManager.getFutureDailyMap(DateUtil.currentDate(), new ArrayList<>(basicMap.keySet()));
+        } else {
+            lastDailyMap = futureDailyManager.getFutureDailyMap(DateUtil.getLastTradeDate(tradeDate), new ArrayList<>(basicMap.keySet()));
         }
         Map<String, FutureDailyDO> existedDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {

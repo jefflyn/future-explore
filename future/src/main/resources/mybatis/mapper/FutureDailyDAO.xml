@@ -238,12 +238,7 @@
             <if test="amplitude != null">
                 amplitude = #{amplitude,jdbcType=DECIMAL},
             </if>
-            <if test="preClose != null">
-                pre_close = #{preClose,jdbcType=DECIMAL},
-            </if>
-            <if test="preSettle != null">
-                pre_settle = #{preSettle,jdbcType=DECIMAL},
-            </if>
+
             <if test="dealVol != null">
                 deal_vol = #{dealVol,jdbcType=INTEGER},
             </if>
