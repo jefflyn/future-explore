@@ -1,5 +1,6 @@
 package com.guru.future.task;
 
+import com.guru.future.biz.service.FutureDailyService;
 import com.guru.future.biz.service.FutureGapService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,14 +16,20 @@ import javax.annotation.Resource;
 @Configuration
 @EnableScheduling
 public class MonitorOpenGapTask {
-
+    @Resource
+    private FutureDailyService futureDailyService;
     @Resource
     private FutureGapService futureGapService;
 
-    @Scheduled(cron = "0 22 21 * * ?")
+    @Scheduled(cron = "1 59 8,20 * * ?")
     //或直接指定时间间隔，例如：5秒
     //@Scheduled(fixedRate=5000)
     private void monitorOpenGap() {
         futureGapService.monitorOpenGap();
+    }
+
+    @Scheduled(cron = "0 1 3,15,23 * * ?")
+    private void addTradeDaily() {
+        futureDailyService.addTradeDaily();
     }
 }
