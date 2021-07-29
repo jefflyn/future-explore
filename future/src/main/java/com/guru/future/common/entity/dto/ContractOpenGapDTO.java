@@ -23,6 +23,7 @@ public class ContractOpenGapDTO implements Comparable<ContractOpenGapDTO> {
 
     @Override
     public int compareTo(ContractOpenGapDTO contractOpenGapDTO) {
-        return this.gapRate.compareTo(contractOpenGapDTO.gapRate);
+        return Float.valueOf(Math.abs(this.gapRate.floatValue()))
+                .compareTo(Float.valueOf(Math.abs(contractOpenGapDTO.gapRate.floatValue())));
     }
 }

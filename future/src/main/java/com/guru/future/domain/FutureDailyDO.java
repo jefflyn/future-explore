@@ -52,8 +52,7 @@ public class FutureDailyDO {
 
     private String remark;
 
-    @Override
-    public String toString() {
+    public String changFlag() {
         return tradeDate + "," + code +
                 "," + ObjectUtils.defaultIfNull(close, 0).floatValue();
     }

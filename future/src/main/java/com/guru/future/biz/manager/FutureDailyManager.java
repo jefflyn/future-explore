@@ -20,12 +20,12 @@ public class FutureDailyManager {
     @Resource
     private FutureDailyDAO futureDailyDAO;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Boolean addFutureDaily(FutureDailyDO futureDailyDO) {
         return futureDailyDAO.insertSelective(futureDailyDO) > 0;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Boolean updateFutureDaily(FutureDailyDO futureDailyDO) {
         return futureDailyDAO.updateByCodeTradeDateSelective(futureDailyDO) > 0;
     }

@@ -2,8 +2,8 @@ package com.guru.future.biz.service;
 
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureDailyManager;
+import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.biz.manager.FutureSinaManager;
-import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +34,8 @@ public class FutureGapService {
     private FutureDailyManager futureDailyManager;
     @Resource
     private FutureSinaManager futureSinaManager;
+    @Resource
+    private FutureMailManager futureMailManager;
 
     @Async
     public void monitorOpenGap() {
@@ -76,14 +78,28 @@ public class FutureGapService {
                 openGapDTO.setPreClose(lastClose);
                 openGapDTO.setOpen(currentOpen);
                 openGapDTO.setGapRate(gapRate);
-                String remark = "跳空开" + gapRate + "%, 价差=" + priceDiff;
+                String remark = "跳空" + gapRate + "%, 价差" + priceDiff;
                 openGapDTO.setRemark(remark);
                 openGapDTOList.add(openGapDTO);
             }
         }
         if (!CollectionUtils.isEmpty(openGapDTOList)) {
             log.info("{}", openGapDTOList);
-            //TODO
+//            DataFrame<ContractOpenGapDTO> df = new DataFrame<>("category", "code", "name", "preClose", "open", "gapRate", "remark");
+//            df.append(openGapDTOList);
+            StringBuilder openGapStr = new StringBuilder();
+            Collections.sort(openGapDTOList);
+            Collections.reverse(openGapDTOList);
+            for (ContractOpenGapDTO openGapDTO : openGapDTOList) {
+                openGapStr.append(openGapDTO.getCategory()).append(",")
+                        .append(openGapDTO.getCode()).append(",")
+                        .append(openGapDTO.getName()).append(",")
+//                        .append(openGapDTO.getPreClose()).append(",")
+//                        .append(openGapDTO.getOpen()).append(",")
+                        .append(openGapDTO.getGapRate()).append(",")
+                        .append(openGapDTO.getRemark()).append("\n");
+            }
+            futureMailManager.notifyOpenGap(openGapStr.toString());
         }
     }
 }

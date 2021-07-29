@@ -2,6 +2,7 @@ package com.guru.future.biz.service;
 
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureDailyManager;
+import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
@@ -11,7 +12,6 @@ import com.guru.future.domain.FutureDailyDO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -31,6 +31,8 @@ public class FutureDailyService {
     private FutureDailyManager futureDailyManager;
     @Resource
     private FutureSinaManager futureSinaManager;
+    @Resource
+    private FutureMailManager futureMailManager;
 
     @Async
     public void addTradeDaily() {
@@ -55,7 +57,7 @@ public class FutureDailyService {
             FutureDailyDO futureDailyDO = ContractRealtimeConverter.convert2DailyDO(contractRealtimeDTO);
             FutureDailyDO existedDailyDO = existedDailyMap.get(futureDailyDO.getCode());
             if (existedDailyDO != null) {
-                if (!futureDailyDO.toString().equals(existedDailyDO.toString())) {
+                if (!futureDailyDO.changFlag().equals(existedDailyDO.changFlag())) {
                     futureDailyManager.updateFutureDaily(futureDailyDO);
                 }
             } else {

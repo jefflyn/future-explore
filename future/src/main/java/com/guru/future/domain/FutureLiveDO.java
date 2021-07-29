@@ -36,8 +36,7 @@ public class FutureLiveDO {
 
     private Date updateTime;
 
-    @Override
-    public String toString() {
+    public String changeFlag() {
         return code + "," + ObjectUtils.defaultIfNull(price, 0).floatValue() +
                 "," + ObjectUtils.defaultIfNull(bid1, 0).floatValue() +
                 "," + ObjectUtils.defaultIfNull(ask1, 0).floatValue() +

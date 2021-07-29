@@ -26,7 +26,7 @@ public class FutureLiveManager {
         }
         FutureLiveDO existedLiveDO = getLiveDOByCode(futureLiveDO.getCode());
         if (existedLiveDO != null) {
-            if (!futureLiveDO.toString().equals(existedLiveDO.toString())) {
+            if (!futureLiveDO.changeFlag().equals(existedLiveDO.changeFlag())) {
                 return futureLiveDAO.updateByPrimaryKeySelective(futureLiveDO) > 0;
             }
             return false;
