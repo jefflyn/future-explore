@@ -8,6 +8,7 @@ import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureDailyDO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -22,6 +23,7 @@ import java.util.Map;
  * @author j
  */
 @Service
+@Slf4j
 public class FutureDailyService {
     @Resource
     private FutureBasicManager futureBasicManager;
@@ -64,6 +66,7 @@ public class FutureDailyService {
                     futureDailyDO.setPreClose(lastDailyDO.getClose());
                     futureDailyDO.setPreSettle(lastDailyDO.getSettle());
                 }
+                log.warn("futureDailyDO.getTradeDate()={}, lastDailyDO={}", futureDailyDO.getTradeDate(), lastDailyDO);
                 futureDailyManager.addFutureDaily(futureDailyDO);
             }
         }

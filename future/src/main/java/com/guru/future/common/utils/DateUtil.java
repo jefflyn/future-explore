@@ -127,7 +127,7 @@ public class DateUtil {
     }
 
     /**
-     * [20:59-23:59]
+     * [20:59-24:00)
      * [0:00 - 08:59] x
      **/
     public static Boolean isNight() {

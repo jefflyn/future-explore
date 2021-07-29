@@ -45,8 +45,10 @@ public class FutureSinaManager {
                     log.warn("skip {}", contract);
                 }
                 contractRealtimeDTOList.add(contractRealtimeDTO);
-                if (contractRealtimeDTOList.size() == RandomUtils.nextInt(1, 2000)) {
-                    log.info(contract);
+                int randomNumber = RandomUtils.nextInt(1, 500000);
+                if (contractRealtimeDTOList.size() == randomNumber) {
+                    log.info("contractRealtimeDTOList.size()={}, randomNumber={}, contract={}",
+                            contractRealtimeDTOList.size(), randomNumber, contract);
                 }
             }
         }
