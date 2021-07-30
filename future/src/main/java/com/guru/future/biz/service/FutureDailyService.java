@@ -2,7 +2,6 @@ package com.guru.future.biz.service;
 
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureDailyManager;
-import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
@@ -31,8 +30,6 @@ public class FutureDailyService {
     private FutureDailyManager futureDailyManager;
     @Resource
     private FutureSinaManager futureSinaManager;
-    @Resource
-    private FutureMailManager futureMailManager;
 
     @Async
     public void addTradeDaily() {

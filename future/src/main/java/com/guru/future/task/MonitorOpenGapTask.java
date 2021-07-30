@@ -21,15 +21,15 @@ public class MonitorOpenGapTask {
     @Resource
     private FutureGapService futureGapService;
 
-    @Scheduled(cron = "1 59 8,20 * * ?")
+    @Scheduled(cron = "5 59 8,20 * * ?")
     //或直接指定时间间隔，例如：5秒
     //@Scheduled(fixedRate=5000)
     private void monitorOpenGap() {
         futureGapService.monitorOpenGap();
     }
 
-    @Scheduled(cron = "0 1 3,15,23 * * ?")
-    private void addTradeDaily() {
+    @Scheduled(cron = "0 1 3,12,15,23 * * ?")
+    private void updateTradeDaily() {
         futureDailyService.addTradeDaily();
     }
 }

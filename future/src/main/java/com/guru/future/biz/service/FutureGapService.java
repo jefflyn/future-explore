@@ -71,6 +71,7 @@ public class FutureGapService {
             BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(lastClose, 2, RoundingMode.HALF_UP);
 
             if (Math.abs(gapRate.floatValue()) >= 0.5) {
+                log.info("realtimeDTO={}", realtimeDTO);
                 ContractOpenGapDTO openGapDTO = new ContractOpenGapDTO();
                 openGapDTO.setCode(code);
                 openGapDTO.setName(basicDO.getName());
@@ -84,7 +85,6 @@ public class FutureGapService {
             }
         }
         if (!CollectionUtils.isEmpty(openGapDTOList)) {
-            log.info("{}", openGapDTOList);
 //            DataFrame<ContractOpenGapDTO> df = new DataFrame<>("category", "code", "name", "preClose", "open", "gapRate", "remark");
 //            df.append(openGapDTOList);
             StringBuilder openGapStr = new StringBuilder();
