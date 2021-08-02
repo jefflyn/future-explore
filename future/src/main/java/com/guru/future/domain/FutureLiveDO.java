@@ -20,6 +20,8 @@ public class FutureLiveDO {
 
     private BigDecimal ask1;
 
+    private BigDecimal open;
+
     private BigDecimal low;
 
     private BigDecimal high;

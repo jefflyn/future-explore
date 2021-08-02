@@ -79,7 +79,7 @@ public class FutureLiveService {
             updateBasicDO.setHigh(contractRealtimeDTO.getHigh());
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
-            log.info("update hist high, refresh basic data");
+            log.info("{} update hist high, refresh basic data", contractRealtimeDTO.getCode());
         }
         return Pair.of(histHigh, histLow);
     }

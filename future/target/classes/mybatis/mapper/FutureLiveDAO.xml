@@ -9,6 +9,7 @@
         <result column="change" jdbcType="DECIMAL" property="change"/>
         <result column="bid1" jdbcType="DECIMAL" property="bid1"/>
         <result column="ask1" jdbcType="DECIMAL" property="ask1"/>
+        <result column="open" jdbcType="DECIMAL" property="open"/>
         <result column="low" jdbcType="DECIMAL" property="low"/>
         <result column="high" jdbcType="DECIMAL" property="high"/>
         <result column="position" jdbcType="DECIMAL" property="position"/>
@@ -19,7 +20,7 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
     <sql id="Base_Column_List">
-        code, `name`, price, `change`, bid1, ask1, low, high, `position`, amp, wave, lowest_change,
+        code, `name`, price, `change`, bid1, ask1, open, low, high, `position`, amp, wave, lowest_change,
     highest_change, update_time
     </sql>
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -33,18 +34,7 @@
         from future_live
         where code = #{code,jdbcType=VARCHAR}
     </delete>
-    <insert id="insert" parameterType="com.guru.future.domain.FutureLiveDO">
-        insert into future_live (code, `name`, price,
-                                 `change`, bid1, ask1,
-                                 low, high, `position`,
-                                 amp, wave, lowest_change,
-                                 highest_change, update_time)
-        values (#{code,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
-                #{change,jdbcType=DECIMAL}, #{bid1,jdbcType=DECIMAL}, #{ask1,jdbcType=DECIMAL},
-                #{low,jdbcType=DECIMAL}, #{high,jdbcType=DECIMAL}, #{position,jdbcType=DECIMAL},
-                #{amp,jdbcType=DECIMAL}, #{wave,jdbcType=VARCHAR}, #{lowestChange,jdbcType=DECIMAL},
-                #{highestChange,jdbcType=DECIMAL}, now())
-    </insert>
+
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLiveDO">
         insert into future_live
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -65,6 +55,9 @@
             </if>
             <if test="ask1 != null">
                 ask1,
+            </if>
+            <if test="open != null">
+                open,
             </if>
             <if test="low != null">
                 low,
@@ -110,6 +103,9 @@
             <if test="ask1 != null">
                 #{ask1,jdbcType=DECIMAL},
             </if>
+            <if test="open != null">
+                #{open,jdbcType=DECIMAL},
+            </if>
             <if test="low != null">
                 #{low,jdbcType=DECIMAL},
             </if>
@@ -154,6 +150,9 @@
             <if test="ask1 != null">
                 ask1 = #{ask1,jdbcType=DECIMAL},
             </if>
+            <if test="open != null">
+                open = #{open,jdbcType=DECIMAL},
+            </if>
             <if test="low != null">
                 low = #{low,jdbcType=DECIMAL},
             </if>
@@ -181,21 +180,5 @@
         </set>
         where code = #{code,jdbcType=VARCHAR}
     </update>
-    <update id="updateByPrimaryKey" parameterType="com.guru.future.domain.FutureLiveDO">
-        update future_live
-        set `name`         = #{name,jdbcType=VARCHAR},
-            price          = #{price,jdbcType=DECIMAL},
-            `change`       = #{change,jdbcType=DECIMAL},
-            bid1           = #{bid1,jdbcType=DECIMAL},
-            ask1           = #{ask1,jdbcType=DECIMAL},
-            low            = #{low,jdbcType=DECIMAL},
-            high           = #{high,jdbcType=DECIMAL},
-            `position`     = #{position,jdbcType=DECIMAL},
-            amp            = #{amp,jdbcType=DECIMAL},
-            wave           = #{wave,jdbcType=VARCHAR},
-            lowest_change  = #{lowestChange,jdbcType=DECIMAL},
-            highest_change = #{highestChange,jdbcType=DECIMAL},
-            update_time    = now()
-        where code = #{code,jdbcType=VARCHAR}
-    </update>
+
 </mapper>

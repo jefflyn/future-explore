@@ -71,7 +71,7 @@ public class FutureGapService {
             BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(lastClose, 2, RoundingMode.HALF_UP);
 
             if (Math.abs(gapRate.floatValue()) >= 0.5) {
-                log.info("realtimeDTO={}", realtimeDTO);
+//                log.info("realtimeDTO={}", realtimeDTO);
                 ContractOpenGapDTO openGapDTO = new ContractOpenGapDTO();
                 openGapDTO.setCode(code);
                 openGapDTO.setName(basicDO.getName());

@@ -21,6 +21,7 @@ public class ContractRealtimeConverter {
         futureLiveDO.setChange(change);
         futureLiveDO.setBid1(contractRealtimeDTO.getBid());
         futureLiveDO.setAsk1(contractRealtimeDTO.getAsk());
+        futureLiveDO.setOpen(contractRealtimeDTO.getOpen());
         futureLiveDO.setLow(contractRealtimeDTO.getLow());
         futureLiveDO.setHigh(contractRealtimeDTO.getHigh());
         BigDecimal position = BigDecimal.ZERO;

@@ -15,13 +15,13 @@ import javax.annotation.Resource;
 
 @Configuration
 @EnableScheduling
-public class MonitorOpenGapTask {
+public class FutureTask {
     @Resource
     private FutureDailyService futureDailyService;
     @Resource
     private FutureGapService futureGapService;
 
-    @Scheduled(cron = "5 59 8,20 * * ?")
+    @Scheduled(cron = "5 59 8,20 * * MON-FRI")
     //或直接指定时间间隔，例如：5秒
     //@Scheduled(fixedRate=5000)
     private void monitorOpenGap() {
