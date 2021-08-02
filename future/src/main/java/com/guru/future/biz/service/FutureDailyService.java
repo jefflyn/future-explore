@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +41,7 @@ public class FutureDailyService {
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
 
         String tradeDate = DateUtil.currentDate();
-        Map<String, FutureDailyDO> lastDailyMap = new HashMap<>();
+        Map<String, FutureDailyDO> lastDailyMap;
         if (DateUtil.isNight()) {
             tradeDate = DateUtil.getNextTradeDate(tradeDate);
             lastDailyMap = futureDailyManager.getFutureDailyMap(DateUtil.currentDate(), new ArrayList<>(basicMap.keySet()));
