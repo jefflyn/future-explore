@@ -41,7 +41,7 @@ public class ContractRealtimeDTO {
     private BigDecimal low;
 
     /**
-     * 6：昨日收盘价（不对）
+     * 6：昨日收盘价（有误）
      */
     private BigDecimal preClose;
 

@@ -1,12 +1,14 @@
 package com.guru.future.domain;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 public class FutureDailyDO {
     private Long id;
 
@@ -51,6 +53,15 @@ public class FutureDailyDO {
     private Date updateTime;
 
     private String remark;
+
+    public FutureDailyDO(String symbol, String tradeDate, String code, String name, BigDecimal preClose) {
+        this.symbol = symbol;
+        this.tradeDate = tradeDate;
+        this.code = code;
+        this.name = name;
+        this.open = open;
+        this.preClose = preClose;
+    }
 
     public String changFlag() {
         return tradeDate + "," + code +

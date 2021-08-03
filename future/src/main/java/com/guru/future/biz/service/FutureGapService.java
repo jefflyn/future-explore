@@ -45,16 +45,18 @@ public class FutureGapService {
 
     public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) {
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
-        String tradeDate = DateUtil.currentDate();
-        Map<String, FutureDailyDO> lastDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
-
+        String tradeDate = DateUtil.currentTradeDate();
+        if (DateUtil.isNight()) {
+            tradeDate = DateUtil.getNextTradeDate(tradeDate);
+        }
+        Map<String, FutureDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
         List<ContractOpenGapDTO> openGapDTOList = new ArrayList<>();
         for (ContractRealtimeDTO realtimeDTO : contractRealtimeDTOList) {
             String code = realtimeDTO.getCode();
             FutureBasicDO basicDO = basicMap.get(code);
             int nightTrade = basicDO.getNight();
-            FutureDailyDO lastDailyDO = lastDailyMap.get(realtimeDTO.getCode());
-            BigDecimal lastClose = lastDailyDO.getClose();
+            FutureDailyDO lastDailyDO = preDailyMap.get(realtimeDTO.getCode());
+            BigDecimal lastClose = lastDailyDO.getPreClose();
             BigDecimal currentOpen = realtimeDTO.getOpen();
 
             if (DateUtil.isNight()) {
@@ -65,7 +67,6 @@ public class FutureGapService {
                 if (nightTrade == 1) {
                     continue;
                 }
-                lastClose = lastDailyDO.getPreClose();
             }
             BigDecimal priceDiff = currentOpen.subtract(lastClose);
             BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(lastClose, 2, RoundingMode.HALF_UP);

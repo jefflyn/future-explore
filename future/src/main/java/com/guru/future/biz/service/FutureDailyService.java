@@ -40,30 +40,32 @@ public class FutureDailyService {
     public void upsertTradeDaily(List<ContractRealtimeDTO> contractRealtimeDTOList) {
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
 
-        String tradeDate = DateUtil.currentDate();
-        Map<String, FutureDailyDO> lastDailyMap;
-        if (DateUtil.isNight()) {
-            tradeDate = DateUtil.getNextTradeDate(tradeDate);
-            lastDailyMap = futureDailyManager.getFutureDailyMap(DateUtil.currentDate(), new ArrayList<>(basicMap.keySet()));
-        } else {
-            lastDailyMap = futureDailyManager.getFutureDailyMap(DateUtil.getLastTradeDate(tradeDate), new ArrayList<>(basicMap.keySet()));
-        }
+        String tradeDate = DateUtil.currentTradeDate();
+        Map<String, FutureDailyDO> lastDailyMap = futureDailyManager.getFutureDailyMap(DateUtil.getLastTradeDate(tradeDate), new ArrayList<>(basicMap.keySet()));
         Map<String, FutureDailyDO> existedDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
-            FutureDailyDO futureDailyDO = ContractRealtimeConverter.convert2DailyDO(contractRealtimeDTO);
-            FutureDailyDO existedDailyDO = existedDailyMap.get(futureDailyDO.getCode());
+            FutureDailyDO currentDailyDO = ContractRealtimeConverter.convert2DailyDO(contractRealtimeDTO);
+            FutureDailyDO existedDailyDO = existedDailyMap.get(currentDailyDO.getCode());
             if (existedDailyDO != null) {
-                if (!futureDailyDO.changFlag().equals(existedDailyDO.changFlag())) {
-                    futureDailyManager.updateFutureDaily(futureDailyDO);
+                if (!currentDailyDO.changFlag().equals(existedDailyDO.changFlag())) {
+                    futureDailyManager.updateFutureDaily(currentDailyDO);
+                    FutureDailyDO updateNextDailyDO = new FutureDailyDO(currentDailyDO.getSymbol(),
+                            DateUtil.getNextTradeDate(contractRealtimeDTO.getTradeDate()),
+                            currentDailyDO.getCode(), currentDailyDO.getName(), currentDailyDO.getClose());
+                    futureDailyManager.updateFutureDaily(updateNextDailyDO);
                 }
             } else {
-                FutureDailyDO lastDailyDO = lastDailyMap.get(futureDailyDO.getCode());
-                if (lastDailyDO != null && futureDailyDO.getTradeDate().compareTo(lastDailyDO.getTradeDate()) > 0) {
-                    futureDailyDO.setPreClose(lastDailyDO.getClose());
-                    futureDailyDO.setPreSettle(lastDailyDO.getSettle());
+                FutureDailyDO nextDailyDO = new FutureDailyDO(currentDailyDO.getSymbol(),
+                        DateUtil.getNextTradeDate(contractRealtimeDTO.getTradeDate()),
+                        currentDailyDO.getCode(), currentDailyDO.getName(), currentDailyDO.getClose());
+                nextDailyDO.setOpen(currentDailyDO.getOpen());
+                FutureDailyDO lastDailyDO = lastDailyMap.get(currentDailyDO.getCode());
+                if (lastDailyDO != null && currentDailyDO.getTradeDate().compareTo(lastDailyDO.getTradeDate()) > 0) {
+                    currentDailyDO.setPreClose(lastDailyDO.getClose());
+                    currentDailyDO.setPreSettle(lastDailyDO.getSettle());
                 }
-                log.warn("futureDailyDO.getTradeDate()={}, lastDailyDO={}", futureDailyDO.getTradeDate(), lastDailyDO);
-                futureDailyManager.addFutureDaily(futureDailyDO);
+                futureDailyManager.addFutureDaily(currentDailyDO);
+                futureDailyManager.addFutureDaily(nextDailyDO);
             }
         }
     }

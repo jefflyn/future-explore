@@ -1,7 +1,6 @@
 package com.guru.future.common.entity.converter;
 
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
-import com.guru.future.common.utils.DateUtil;
 import com.guru.future.domain.FutureDailyDO;
 import com.guru.future.domain.FutureLiveDO;
 
@@ -46,11 +45,8 @@ public class ContractRealtimeConverter {
     public static FutureDailyDO convert2DailyDO(ContractRealtimeDTO contractRealtimeDTO) {
         FutureDailyDO dailyDO = new FutureDailyDO();
         dailyDO.setSymbol(contractRealtimeDTO.getCode().replaceAll("[^A-Za-z]", ""));
-        if (DateUtil.isNight()) {
-            dailyDO.setTradeDate(DateUtil.getNextTradeDate(contractRealtimeDTO.getTradeDate()));
-        } else {
-            dailyDO.setTradeDate(contractRealtimeDTO.getTradeDate());
-        }
+        dailyDO.setTradeDate(contractRealtimeDTO.getTradeDate());
+
         dailyDO.setCode(contractRealtimeDTO.getCode());
         dailyDO.setName(contractRealtimeDTO.getName());
         dailyDO.setClose(contractRealtimeDTO.getPrice());
@@ -70,7 +66,7 @@ public class ContractRealtimeConverter {
         dailyDO.setAmplitude((contractRealtimeDTO.getHigh().subtract(contractRealtimeDTO.getLow()))
                 .multiply(BigDecimal.valueOf(100))
                 .divide(contractRealtimeDTO.getHigh(), 2, RoundingMode.HALF_UP));
-        dailyDO.setPreClose(contractRealtimeDTO.getPreClose());
+//        dailyDO.setPreClose(contractRealtimeDTO.getPreClose());
         dailyDO.setPreSettle(contractRealtimeDTO.getPreSettle());
         dailyDO.setDealVol(contractRealtimeDTO.getDealVol());
         dailyDO.setHoldVol(contractRealtimeDTO.getHoldVol());

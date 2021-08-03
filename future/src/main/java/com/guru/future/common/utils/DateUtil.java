@@ -57,7 +57,7 @@ public class DateUtil {
         return false;
     }
 
-    public static String currentDate() {
+    public static String currentTradeDate() {
         Date date = new Date();
         if (isHoliday(date)) {
             return getNextTradeDate(date);
