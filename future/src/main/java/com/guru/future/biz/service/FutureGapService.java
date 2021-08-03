@@ -54,22 +54,17 @@ public class FutureGapService {
         for (ContractRealtimeDTO realtimeDTO : contractRealtimeDTOList) {
             String code = realtimeDTO.getCode();
             FutureBasicDO basicDO = basicMap.get(code);
-            int nightTrade = basicDO.getNight();
+//            int nightTrade = basicDO.getNight();
             FutureDailyDO lastDailyDO = preDailyMap.get(realtimeDTO.getCode());
-            BigDecimal lastClose = lastDailyDO.getPreClose();
+            log.info("lastDailyDO={}", lastDailyDO);
+            BigDecimal preClose = lastDailyDO.getPreClose();
+            BigDecimal preOpen = lastDailyDO.getOpen();
             BigDecimal currentOpen = realtimeDTO.getOpen();
-
-            if (DateUtil.isNight()) {
-                if (nightTrade == 0) {
-                    continue;
-                }
-            } else {
-                if (nightTrade == 1) {
-                    continue;
-                }
+            if (currentOpen.compareTo(preOpen) == 0) {
+                continue;
             }
-            BigDecimal priceDiff = currentOpen.subtract(lastClose);
-            BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(lastClose, 2, RoundingMode.HALF_UP);
+            BigDecimal priceDiff = currentOpen.subtract(preClose);
+            BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
 
             if (Math.abs(gapRate.floatValue()) >= 0.5) {
 //                log.info("realtimeDTO={}", realtimeDTO);
@@ -77,7 +72,7 @@ public class FutureGapService {
                 openGapDTO.setCode(code);
                 openGapDTO.setName(basicDO.getName());
                 openGapDTO.setCategory(basicDO.getType());
-                openGapDTO.setPreClose(lastClose);
+                openGapDTO.setPreClose(preClose);
                 openGapDTO.setOpen(currentOpen);
                 openGapDTO.setGapRate(gapRate);
                 String remark = "跳空" + gapRate + "%, 价差" + priceDiff;
