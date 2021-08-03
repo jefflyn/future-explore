@@ -10,17 +10,16 @@ import com.guru.future.common.utils.DateUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureDailyDO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import javax.mail.MessagingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author j
@@ -40,10 +39,14 @@ public class FutureGapService {
     @Async
     public void monitorOpenGap() {
         List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getAllRealtimeFromSina();
-        this.noticeOpenGap(contractRealtimeDTOList);
+        try {
+            this.noticeOpenGap(contractRealtimeDTOList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) {
+    public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) throws Exception {
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
         String tradeDate = DateUtil.currentTradeDate();
         if (DateUtil.isNight()) {
@@ -56,6 +59,9 @@ public class FutureGapService {
             FutureBasicDO basicDO = basicMap.get(code);
 //            int nightTrade = basicDO.getNight();
             FutureDailyDO lastDailyDO = preDailyMap.get(realtimeDTO.getCode());
+            if (lastDailyDO == null) {
+                continue;
+            }
             log.info("lastDailyDO={}", lastDailyDO);
             BigDecimal preClose = lastDailyDO.getPreClose();
             BigDecimal preOpen = lastDailyDO.getOpen();
@@ -83,19 +89,37 @@ public class FutureGapService {
         if (!CollectionUtils.isEmpty(openGapDTOList)) {
 //            DataFrame<ContractOpenGapDTO> df = new DataFrame<>("category", "code", "name", "preClose", "open", "gapRate", "remark");
 //            df.append(openGapDTOList);
-            StringBuilder openGapStr = new StringBuilder();
             Collections.sort(openGapDTOList);
             Collections.reverse(openGapDTOList);
+
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("\r\n");
+            stringBuilder.append("<html><head></head><body><h3>");
+            stringBuilder.append(DateFormatUtils.format(new Date(), DateUtil.COMMON_DATE_PATTERN)).append("</h3>");
+            stringBuilder.append("<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" style=\"border:solid 1px #E8F2F9;font-size=14px;;font-size:12px;\">");
+            stringBuilder.append("<tr style=\"background-color: #428BCA; color:#ffffff\">" +
+                    "<th width=\"120px\">品种</th>" +
+                    "<th width=\"80px\">编码</th>" +
+                    "<th width=\"120px\">名称</th>" +
+                    "<th width=\"60px\">昨收</th>" +
+                    "<th width=\"60px\">今开</th>" +
+                    "<th width=\"80px\">缺口%</th>" +
+//                    "<th width=\"80px\">备注</th>" +
+                    "</tr>");
             for (ContractOpenGapDTO openGapDTO : openGapDTOList) {
-                openGapStr.append(openGapDTO.getCategory()).append(",")
-                        .append(openGapDTO.getCode()).append(",")
-                        .append(openGapDTO.getName()).append(",")
-//                        .append(openGapDTO.getPreClose()).append(",")
-//                        .append(openGapDTO.getOpen()).append(",")
-                        .append(openGapDTO.getGapRate()).append(",")
-                        .append(openGapDTO.getRemark()).append("\n");
+                stringBuilder.append("</tr>");
+                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getCategory() + "</td>");
+                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getCode() + "</td>");
+                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getName() + "</td>");
+                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getPreClose() + "</td>");
+                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getOpen() + "</td>");
+                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getGapRate() + "</td>");
+//                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getRemark() + "</td>");
+                stringBuilder.append("</tr>");
             }
-            futureMailManager.notifyOpenGap(openGapStr.toString());
+            stringBuilder.append("</table>");
+            stringBuilder.append("</body></html>");
+            futureMailManager.notifyOpenGapHtml(stringBuilder.toString());
         }
     }
 }
