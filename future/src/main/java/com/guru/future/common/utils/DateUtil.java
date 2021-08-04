@@ -39,6 +39,7 @@ public class DateUtil {
 
     public static final String TRADE_DATE_PATTERN = "yyyy-MM-dd";
     public static final String HOUR_MINUTE_PATTERN = "HH:mm";
+    public static final String COMMON_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
 
     public static Boolean isHoliday(Date date) {
