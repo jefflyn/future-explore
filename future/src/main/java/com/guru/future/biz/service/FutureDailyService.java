@@ -59,6 +59,8 @@ public class FutureDailyService {
                         DateUtil.getNextTradeDate(contractRealtimeDTO.getTradeDate()),
                         currentDailyDO.getCode(), currentDailyDO.getName(), currentDailyDO.getClose());
                 nextDailyDO.setOpen(currentDailyDO.getOpen());
+                nextDailyDO.setHigh(currentDailyDO.getHigh());
+                nextDailyDO.setLow(currentDailyDO.getLow());
                 FutureDailyDO lastDailyDO = lastDailyMap.get(currentDailyDO.getCode());
                 if (lastDailyDO != null && currentDailyDO.getTradeDate().compareTo(lastDailyDO.getTradeDate()) > 0) {
                     currentDailyDO.setPreClose(lastDailyDO.getClose());

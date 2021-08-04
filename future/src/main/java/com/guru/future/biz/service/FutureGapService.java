@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import javax.mail.MessagingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -65,15 +64,26 @@ public class FutureGapService {
             log.info("lastDailyDO={}", lastDailyDO);
             BigDecimal preClose = lastDailyDO.getPreClose();
             BigDecimal preOpen = lastDailyDO.getOpen();
+            BigDecimal preHigh = lastDailyDO.getHigh();
+            BigDecimal preLow = lastDailyDO.getLow();
             BigDecimal currentOpen = realtimeDTO.getOpen();
             if (currentOpen.compareTo(preOpen) == 0) {
                 continue;
             }
             BigDecimal priceDiff = currentOpen.subtract(preClose);
             BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
-
             if (Math.abs(gapRate.floatValue()) >= 0.5) {
 //                log.info("realtimeDTO={}", realtimeDTO);
+                BigDecimal dayGap = null;
+                if (priceDiff.compareTo(BigDecimal.ZERO) >= 0) {
+                    if (currentOpen.compareTo(preHigh) > 0) {
+                        dayGap = (currentOpen.subtract(preHigh)).multiply(BigDecimal.valueOf(100)).divide(preHigh, 2, RoundingMode.HALF_UP);
+                    }
+                } else {
+                    if (currentOpen.compareTo(preLow) < 0) {
+                        dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
+                    }
+                }
                 ContractOpenGapDTO openGapDTO = new ContractOpenGapDTO();
                 openGapDTO.setCode(code);
                 openGapDTO.setName(basicDO.getName());
@@ -81,8 +91,8 @@ public class FutureGapService {
                 openGapDTO.setPreClose(preClose);
                 openGapDTO.setOpen(currentOpen);
                 openGapDTO.setGapRate(gapRate);
-                String remark = "跳空" + gapRate + "%, 价差" + priceDiff;
-                openGapDTO.setRemark(remark);
+                String remark = "日跳空" + dayGap + "%";
+                openGapDTO.setRemark(dayGap != null ? remark : "");
                 openGapDTOList.add(openGapDTO);
             }
         }
@@ -104,17 +114,17 @@ public class FutureGapService {
                     "<th width=\"60px\">昨收</th>" +
                     "<th width=\"60px\">今开</th>" +
                     "<th width=\"70px\">缺口</th>" +
-//                    "<th width=\"80px\">备注</th>" +
+                    "<th width=\"80px\">备注</th>" +
                     "</tr>");
             for (ContractOpenGapDTO openGapDTO : openGapDTOList) {
                 stringBuilder.append("</tr>");
                 stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getCategory() + "</td>");
                 stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getCode() + "</td>");
-                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getName() + "</td>");
+                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getName() + "</td>");
                 stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getPreClose() + "</td>");
                 stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getOpen() + "</td>");
                 stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getGapRate() + "%</td>");
-//                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getRemark() + "</td>");
+                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getRemark() + "</td>");
                 stringBuilder.append("</tr>");
             }
             stringBuilder.append("</table>");
