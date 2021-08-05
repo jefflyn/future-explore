@@ -56,7 +56,16 @@ public class FutureGapService {
         for (ContractRealtimeDTO realtimeDTO : contractRealtimeDTOList) {
             String code = realtimeDTO.getCode();
             FutureBasicDO basicDO = basicMap.get(code);
-//            int nightTrade = basicDO.getNight();
+            int nightTrade = basicDO.getNight();
+            if (DateUtil.isNight()) {
+                if (nightTrade == 0) {
+                    continue;
+                }
+            } else {
+                if (nightTrade == 1) {
+                    continue;
+                }
+            }
             FutureDailyDO lastDailyDO = preDailyMap.get(realtimeDTO.getCode());
             if (lastDailyDO == null) {
                 continue;
@@ -68,6 +77,7 @@ public class FutureGapService {
             BigDecimal preLow = lastDailyDO.getLow();
             BigDecimal currentOpen = realtimeDTO.getOpen();
             if (currentOpen.compareTo(preOpen) == 0) {
+                log.warn("{}-{}昨开等于今开{}!!!", realtimeDTO.getName(), code, currentOpen);
                 continue;
             }
             BigDecimal priceDiff = currentOpen.subtract(preClose);
@@ -75,24 +85,28 @@ public class FutureGapService {
             if (Math.abs(gapRate.floatValue()) >= 0.5) {
 //                log.info("realtimeDTO={}", realtimeDTO);
                 BigDecimal dayGap = null;
+                BigDecimal suggestTo = null;
                 if (priceDiff.compareTo(BigDecimal.ZERO) >= 0) {
+                    suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.05F)).setScale(1, RoundingMode.HALF_UP);
                     if (currentOpen.compareTo(preHigh) > 0) {
                         dayGap = (currentOpen.subtract(preHigh)).multiply(BigDecimal.valueOf(100)).divide(preHigh, 2, RoundingMode.HALF_UP);
                     }
                 } else {
+                    suggestTo = currentOpen.multiply(BigDecimal.valueOf(0.95F)).setScale(1, RoundingMode.HALF_UP);
                     if (currentOpen.compareTo(preLow) < 0) {
                         dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
                     }
                 }
+                String suggestPrice = currentOpen + "-" + suggestTo;
                 ContractOpenGapDTO openGapDTO = new ContractOpenGapDTO();
                 openGapDTO.setCode(code);
                 openGapDTO.setName(basicDO.getName());
                 openGapDTO.setCategory(basicDO.getType());
-                openGapDTO.setPreClose(preClose);
+                openGapDTO.setPreClose(preClose.setScale(1, RoundingMode.HALF_UP));
                 openGapDTO.setOpen(currentOpen);
                 openGapDTO.setGapRate(gapRate);
-                String remark = "日跳空" + dayGap + "%";
-                openGapDTO.setRemark(dayGap != null ? remark : "");
+                String remark = "日跳空" + dayGap + "%, ";
+                openGapDTO.setRemark(dayGap != null ? remark + suggestPrice : suggestPrice);
                 openGapDTOList.add(openGapDTO);
             }
         }
@@ -108,12 +122,12 @@ public class FutureGapService {
             stringBuilder.append(DateFormatUtils.format(new Date(), DateUtil.COMMON_DATE_PATTERN)).append("</h3>");
             stringBuilder.append("<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" style=\"border:solid 1px #E8F2F9;font-size=14px;;font-size:12px;\">");
             stringBuilder.append("<tr style=\"background-color: #428BCA; color:#ffffff\">" +
-                    "<th width=\"140px\">品种</th>" +
+                    "<th width=\"80px\">品种</th>" +
                     "<th width=\"60px\">编码</th>" +
-                    "<th width=\"120px\">名称</th>" +
+                    "<th width=\"100px\">名称</th>" +
                     "<th width=\"60px\">昨收</th>" +
                     "<th width=\"60px\">今开</th>" +
-                    "<th width=\"70px\">缺口</th>" +
+                    "<th width=\"60px\">缺口</th>" +
                     "<th width=\"80px\">备注</th>" +
                     "</tr>");
             for (ContractOpenGapDTO openGapDTO : openGapDTOList) {
