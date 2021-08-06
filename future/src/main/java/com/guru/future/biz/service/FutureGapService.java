@@ -85,8 +85,8 @@ public class FutureGapService {
                 BigDecimal dayGap = null;
                 BigDecimal suggestFrom = null;
                 BigDecimal suggestTo = null;
-                // 高开
                 if (priceDiff.compareTo(BigDecimal.ZERO) >= 0) {
+                    // 日级别跳空高开
                     if (currentOpen.compareTo(preHigh) > 0) {
                         dayGap = (currentOpen.subtract(preHigh)).multiply(BigDecimal.valueOf(100)).divide(preHigh, 2, RoundingMode.HALF_UP);
                         suggestFrom = preHigh;
@@ -96,13 +96,14 @@ public class FutureGapService {
                         suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.05F));
                     }
                 } else {
+                    // 日级别跳空低开
                     if (currentOpen.compareTo(preLow) < 0) {
                         dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
                         suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.97F));
-                        suggestTo = preLow;
+                        suggestTo = preLow.multiply(BigDecimal.valueOf(1.03F));
                     } else {
-                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.95F));
-                        suggestTo = preClose;
+                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.99F));
+                        suggestTo = preClose.multiply(BigDecimal.valueOf(1.05F));
                     }
                 }
                 suggestFrom = suggestFrom.setScale(1, RoundingMode.HALF_UP);

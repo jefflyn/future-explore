@@ -143,6 +143,13 @@ public class DateUtil {
 //        return (currentNight || nextMorning);
     }
 
+    public static Boolean dayClose() {
+        Date date = new Date();
+        String currentTime = DateFormatUtils.format(date, HOUR_MINUTE_PATTERN);
+        boolean currentNight = currentTime.compareTo("15:00") > 0;
+        return currentNight;
+    }
+
     public static Boolean isTradeTime() {
         Calendar now = Calendar.getInstance();
         // holiday

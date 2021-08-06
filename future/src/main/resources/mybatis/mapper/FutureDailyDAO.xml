@@ -238,7 +238,6 @@
             <if test="amplitude != null">
                 amplitude = #{amplitude,jdbcType=DECIMAL},
             </if>
-
             <if test="dealVol != null">
                 deal_vol = #{dealVol,jdbcType=INTEGER},
             </if>
