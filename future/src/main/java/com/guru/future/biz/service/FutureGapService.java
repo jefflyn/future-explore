@@ -85,25 +85,29 @@ public class FutureGapService {
                 BigDecimal dayGap = null;
                 BigDecimal suggestFrom = null;
                 BigDecimal suggestTo = null;
+                StringBuilder remark = new StringBuilder("");
                 if (priceDiff.compareTo(BigDecimal.ZERO) >= 0) {
+                    suggestFrom = preClose;
                     // 日级别跳空高开
                     if (currentOpen.compareTo(preHigh) > 0) {
                         dayGap = (currentOpen.subtract(preHigh)).multiply(BigDecimal.valueOf(100)).divide(preHigh, 2, RoundingMode.HALF_UP);
-                        suggestFrom = preHigh;
-                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.03F));
+//                        suggestFrom = preHigh;
+                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.5 - dayGap.floatValue()));
+                        remark.append("日跳高 ").append("+").append(dayGap).append("%");
                     } else {
-                        suggestFrom = preClose;
-                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.05F));
+                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.5 - gapRate.floatValue()));
                     }
                 } else {
                     // 日级别跳空低开
+                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
                     if (currentOpen.compareTo(preLow) < 0) {
                         dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
-                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.97F));
-                        suggestTo = preLow.multiply(BigDecimal.valueOf(1.03F));
+//                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
+                        suggestTo = preLow.multiply(BigDecimal.valueOf(1.5 + dayGap.floatValue()));
+                        remark.append("日跳空 ").append(dayGap).append("%");
                     } else {
-                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.99F));
-                        suggestTo = preClose.multiply(BigDecimal.valueOf(1.05F));
+//                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.99F));
+                        suggestTo = preClose.multiply(BigDecimal.valueOf(1.5 + gapRate.floatValue()));
                     }
                 }
                 suggestFrom = suggestFrom.setScale(1, RoundingMode.HALF_UP);
@@ -116,8 +120,7 @@ public class FutureGapService {
                 openGapDTO.setPreClose(preClose.setScale(1, RoundingMode.HALF_UP));
                 openGapDTO.setOpen(currentOpen);
                 openGapDTO.setGapRate(gapRate);
-                String remark = "日跳空 " + dayGap + "%";
-                openGapDTO.setRemark(dayGap != null ? remark : "");
+                openGapDTO.setRemark(remark.toString());
                 openGapDTO.setSuggest(suggestPrice);
                 openGapDTOList.add(openGapDTO);
             }
