@@ -74,7 +74,10 @@ public class FutureDailyService {
         nextDailyDO.setLow(currentDailyDO.getLow());
         nextDailyDO.setPreSettle(currentDailyDO.getSettle());
         try {
-            futureDailyManager.addFutureDaily(nextDailyDO);
+            FutureDailyDO existDaily = futureDailyManager.getFutureDaily(nextDailyDO.getTradeDate(), nextDailyDO.getCode());
+            if (existDaily == null) {
+                futureDailyManager.addFutureDaily(nextDailyDO);
+            }
         } catch (Exception e) {
             log.error("futureDailyManager.addFutureDaily failed! error:", e);
         }

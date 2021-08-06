@@ -5,6 +5,7 @@ import com.guru.future.domain.FutureDailyDO;
 import com.guru.future.mapper.FutureDailyDAO;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,6 +29,17 @@ public class FutureDailyManager {
     @Transactional(rollbackFor = Exception.class)
     public Boolean updateFutureDaily(FutureDailyDO futureDailyDO) {
         return futureDailyDAO.updateByCodeTradeDateSelective(futureDailyDO) > 0;
+    }
+
+    public FutureDailyDO getFutureDaily(String tradeDate, String code) {
+        FutureDailyQuery query = new FutureDailyQuery();
+        query.setTradeDate(tradeDate);
+        query.setCode(code);
+        List<FutureDailyDO> futureDailyDOList = futureDailyDAO.selectByQuery(query);
+        if (CollectionUtils.isEmpty(futureDailyDOList)) {
+            return null;
+        }
+        return futureDailyDOList.get(0);
     }
 
     public Map<String, FutureDailyDO> getFutureDailyMap(String tradeDate, List<String> codes) {
