@@ -20,6 +20,8 @@ public class ContractOpenGapDTO implements Comparable<ContractOpenGapDTO> {
 
     private String remark;
 
+    private String suggest;
+
 
     @Override
     public int compareTo(ContractOpenGapDTO contractOpenGapDTO) {

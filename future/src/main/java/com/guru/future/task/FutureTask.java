@@ -26,7 +26,7 @@ public class FutureTask {
         futureDailyService.addTradeDaily();
     }
 
-    @Scheduled(cron = "5 59 08,20 * * MON-FRI")
+    @Scheduled(cron = "3,30 59 08,09,20 * * MON-FRI")
     //或直接指定时间间隔，例如：5秒
     //@Scheduled(fixedRate=5000)
     private void monitorOpenGap() {
