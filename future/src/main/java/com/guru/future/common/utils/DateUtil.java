@@ -145,9 +145,12 @@ public class DateUtil {
 
     public static Boolean dayClose() {
         Date date = new Date();
+        if (isHoliday(date)) {
+            return false;
+        }
         String currentTime = DateFormatUtils.format(date, HOUR_MINUTE_PATTERN);
-        boolean currentNight = currentTime.compareTo("15:00") > 0;
-        return currentNight;
+        boolean dayClose = currentTime.compareTo("15:00") > 0;
+        return dayClose;
     }
 
     public static Boolean isTradeTime() {

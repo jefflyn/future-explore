@@ -72,6 +72,7 @@ public class FutureDailyService {
         nextDailyDO.setOpen(currentDailyDO.getOpen());
         nextDailyDO.setHigh(currentDailyDO.getHigh());
         nextDailyDO.setLow(currentDailyDO.getLow());
+        nextDailyDO.setPreSettle(currentDailyDO.getSettle());
         try {
             futureDailyManager.addFutureDaily(nextDailyDO);
         } catch (Exception e) {
