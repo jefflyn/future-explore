@@ -18,7 +18,11 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author j
@@ -67,9 +71,9 @@ public class FutureGapService {
             BigDecimal preHigh = lastDailyDO.getHigh();
             BigDecimal preLow = lastDailyDO.getLow();
             BigDecimal currentOpen = realtimeDTO.getOpen();
-            if (currentOpen.compareTo(preOpen) == 0) {
-                continue;
-            }
+//            if (currentOpen.compareTo(preOpen) == 0) {
+//                continue;
+//            }
             BigDecimal priceDiff = currentOpen.subtract(preClose);
             BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
             if (Math.abs(gapRate.floatValue()) >= 0.5) {
@@ -93,6 +97,8 @@ public class FutureGapService {
                 openGapDTO.setGapRate(gapRate);
                 String remark = "日跳空" + dayGap + "%";
                 openGapDTO.setRemark(dayGap != null ? remark : "");
+
+                log.info("ContractOpenGapDTO={}", openGapDTO);
                 openGapDTOList.add(openGapDTO);
             }
         }
