@@ -98,9 +98,10 @@ public class FutureGapService {
                         suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.5 - gapRate.floatValue()));
                     }
                 } else {
+                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(gapRate.floatValue() / 100)));
                     // 日级别跳空低开
-                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
                     if (currentOpen.compareTo(preLow) < 0) {
+                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
                         dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
 //                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
                         suggestTo = preLow.multiply(BigDecimal.valueOf(1.5 + dayGap.floatValue()));
