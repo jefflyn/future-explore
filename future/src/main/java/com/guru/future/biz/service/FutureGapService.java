@@ -113,7 +113,7 @@ public class FutureGapService {
                         if (Math.abs(dayGap.floatValue()) >= 1.5) {
                             suggestTo = preLow.multiply(BigDecimal.valueOf(1.005));
                         } else {
-                            suggestTo = preLow.multiply(BigDecimal.valueOf(1 - (1.5 + gapRate.floatValue()) / 100));
+                            suggestTo = preLow.multiply(BigDecimal.valueOf(1 + (1.5 + dayGap.floatValue()) / 100));
                         }
                         remark.append("日跳空 ").append(dayGap).append("%");
                     } else {
