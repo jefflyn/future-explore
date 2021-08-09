@@ -64,7 +64,8 @@ public class FutureDailyDO {
     }
 
     public String changFlag() {
-        return tradeDate + "," + code +
-                "," + ObjectUtils.defaultIfNull(close, 0).floatValue();
+        return tradeDate + "," + code
+                + "," + ObjectUtils.defaultIfNull(close, 0).floatValue()
+                + "," + ObjectUtils.defaultIfNull(open, 0).floatValue();
     }
 }

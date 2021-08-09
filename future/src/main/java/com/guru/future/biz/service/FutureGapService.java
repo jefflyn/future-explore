@@ -58,7 +58,7 @@ public class FutureGapService {
         Map<String, FutureDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
         List<ContractOpenGapDTO> openGapDTOList = new ArrayList<>();
         for (ContractRealtimeDTO realtimeDTO : contractRealtimeDTOList) {
-            log.info("realtimeDTO={}", realtimeDTO);
+            log.info("{}: realtimeDTO={}", realtimeDTO.getName(), realtimeDTO);
             String code = realtimeDTO.getCode();
             FutureBasicDO basicDO = basicMap.get(code);
             int nightTrade = basicDO.getNight();

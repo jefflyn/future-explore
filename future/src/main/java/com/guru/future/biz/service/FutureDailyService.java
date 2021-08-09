@@ -48,6 +48,7 @@ public class FutureDailyService {
             if (existedDailyDO != null) {
                 if (!currentDailyDO.changFlag().equals(existedDailyDO.changFlag())) {
                     currentDailyDO.setTradeDate(tradeDate);
+                    currentDailyDO.setRemark("update current date");
                     futureDailyManager.updateFutureDaily(currentDailyDO);
                 }
                 if (DateUtil.dayClose()) {
@@ -69,10 +70,12 @@ public class FutureDailyService {
         FutureDailyDO nextDailyDO = new FutureDailyDO(currentDailyDO.getSymbol(),
                 DateUtil.getNextTradeDate(tradeDate),
                 currentDailyDO.getCode(), currentDailyDO.getName(), currentDailyDO.getClose());
+        nextDailyDO.setClose(currentDailyDO.getClose());
         nextDailyDO.setOpen(currentDailyDO.getOpen());
         nextDailyDO.setHigh(currentDailyDO.getHigh());
         nextDailyDO.setLow(currentDailyDO.getLow());
         nextDailyDO.setPreSettle(currentDailyDO.getSettle());
+        nextDailyDO.setRemark("init next daily");
         try {
             FutureDailyDO existDaily = futureDailyManager.getFutureDaily(nextDailyDO.getTradeDate(), nextDailyDO.getCode());
             if (existDaily == null) {
