@@ -94,14 +94,14 @@ public class FutureGapService {
                         if (Math.abs(dayGap.floatValue()) >= 1.5) {
                             suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.005));
                         } else {
-                            suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.5 - dayGap.floatValue() / 100));
+                            suggestTo = currentOpen.multiply(BigDecimal.valueOf(1 + (1.5 - dayGap.floatValue()) / 100));
                         }
                         remark.append("日跳高 ").append("+").append(dayGap).append("%");
                     } else {
                         if (Math.abs(gapRate.floatValue()) >= 1.5) {
                             suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.003));
                         } else {
-                            suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.5 - gapRate.floatValue() / 100));
+                            suggestTo = currentOpen.multiply(BigDecimal.valueOf(1 + (1.5 - gapRate.floatValue()) / 100));
                         }
                     }
                 } else {
