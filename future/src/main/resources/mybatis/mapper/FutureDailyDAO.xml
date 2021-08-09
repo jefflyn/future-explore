@@ -48,7 +48,7 @@
                 and symbol = #{symbol}
             </if>
             <if test="code != null">
-                and code = = #{code}
+                and code = #{code}
             </if>
             <if test="codes != null and codes.size() > 0">
                 and code in
