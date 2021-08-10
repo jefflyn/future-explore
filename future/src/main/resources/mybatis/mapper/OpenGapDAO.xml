@@ -20,16 +20,8 @@
         values
         <foreach collection="list" item="obj" index="index" separator=",">
             (
-            #{obj.tradeDate},
-            #{obj.code},
-            #{obj.name},
-            #{obj.category},
-            #{obj.preClose},
-            #{obj.open},
-            #{obj.gapRate},
-            #{obj.remark},
-            #{obj.buyLow},
-            #{obj.sellHigh}
+            #{obj.tradeDate}, #{obj.code}, #{obj.name}, #{obj.category}, #{obj.preClose},
+            #{obj.open}, #{obj.gapRate}, #{obj.remark}, #{obj.buyLow}, #{obj.sellHigh}
             )
         </foreach>
     </insert>
