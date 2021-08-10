@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guru.future.mapper.OpenGapDAO">
+    <resultMap id="BaseResultMap" type="com.guru.future.domain.OpenGapDO">
+        <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="category" jdbcType="VARCHAR" property="category"/>
+        <result column="pre_close" jdbcType="DECIMAL" property="preClose"/>
+        <result column="open" jdbcType="DECIMAL" property="open"/>
+        <result column="gap_rate" jdbcType="DECIMAL" property="gapRate"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="buy_low" jdbcType="DECIMAL" property="buyLow"/>
+        <result column="sell_high" jdbcType="DECIMAL" property="sellHigh"/>
+    </resultMap>
+
+    <insert id="insertBatch" parameterType="list">
+        insert into open_gap
+        (trade_date, code, name, category, pre_close, open, gap_rate, remark, buy_low, sell_high)
+        values
+        <foreach collection="list" item="obj" index="index" separator=",">
+            (
+            #{obj.tradeDate},
+            #{obj.code},
+            #{obj.name},
+            #{obj.category},
+            #{obj.preClose},
+            #{obj.open},
+            #{obj.gapRate},
+            #{obj.remark},
+            #{obj.buyLow},
+            #{obj.sellHigh}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="insertSelective" parameterType="com.guru.future.domain.OpenGapDO">
+        insert into open_gap
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tradeDate != null">
+                trade_date,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="category != null">
+                category,
+            </if>
+            <if test="preClose != null">
+                pre_close,
+            </if>
+            <if test="open != null">
+                `open`,
+            </if>
+            <if test="gapRate != null">
+                gap_rate,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="buyLow != null">
+                buy_low,
+            </if>
+            <if test="sellHigh != null">
+                sell_high,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tradeDate != null">
+                #{tradeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="category != null">
+                #{category,jdbcType=VARCHAR},
+            </if>
+            <if test="preClose != null">
+                #{preClose,jdbcType=DECIMAL},
+            </if>
+            <if test="open != null">
+                #{open,jdbcType=DECIMAL},
+            </if>
+            <if test="gapRate != null">
+                #{gapRate,jdbcType=DECIMAL},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="buyLow != null">
+                #{buyLow,jdbcType=DECIMAL},
+            </if>
+            <if test="sellHigh != null">
+                #{sellHigh,jdbcType=DECIMAL},
+            </if>
+        </trim>
+    </insert>
+</mapper>

@@ -4,6 +4,8 @@ import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.biz.manager.FutureSinaManager;
+import com.guru.future.biz.manager.OpenGapManager;
+import com.guru.future.common.entity.converter.ContractOpenGapConverter;
 import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
@@ -38,6 +40,8 @@ public class FutureGapService {
     private FutureSinaManager futureSinaManager;
     @Resource
     private FutureMailManager futureMailManager;
+    @Resource
+    private OpenGapManager openGapManager;
 
     @Async
     public void monitorOpenGap() {
@@ -127,18 +131,19 @@ public class FutureGapService {
                 suggestFrom = suggestFrom.setScale(1, RoundingMode.HALF_UP);
                 suggestTo = suggestTo.setScale(1, RoundingMode.HALF_UP);
                 String suggestPrice = suggestFrom + "-" + suggestTo;
-                ContractOpenGapDTO openGapDTO = new ContractOpenGapDTO();
-                openGapDTO.setCode(code);
-                openGapDTO.setName(basicDO.getName());
-                openGapDTO.setCategory(basicDO.getType());
-                openGapDTO.setPreClose(preClose.setScale(1, RoundingMode.HALF_UP));
-                openGapDTO.setOpen(currentOpen);
-                openGapDTO.setGapRate(gapRate);
-                openGapDTO.setRemark(remark.toString());
-                openGapDTO.setSuggest(suggestPrice);
+                ContractOpenGapDTO openGapDTO = ContractOpenGapDTO.builder()
+                        .tradeDate(tradeDate).code(code).name(basicDO.getName()).category(basicDO.getType())
+                        .preClose(preClose.setScale(1, RoundingMode.HALF_UP)).open(currentOpen).gapRate(gapRate)
+                        .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo).suggest(suggestPrice).build();
                 openGapDTOList.add(openGapDTO);
             }
         }
+        this.sendOpenGapMail(openGapDTOList);
+        openGapManager.batchAddOpenGapLog(ContractOpenGapConverter.convert2OpenGapDOList(openGapDTOList));
+    }
+
+    @Async
+    public void sendOpenGapMail(List<ContractOpenGapDTO> openGapDTOList) throws Exception {
         if (!CollectionUtils.isEmpty(openGapDTOList)) {
 //            DataFrame<ContractOpenGapDTO> df = new DataFrame<>("category", "code", "name", "preClose", "open", "gapRate", "remark");
 //            df.append(openGapDTOList);

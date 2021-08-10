@@ -1,10 +1,12 @@
 package com.guru.future.common.entity.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
+@Builder
 public class ContractOpenGapDTO implements Comparable<ContractOpenGapDTO> {
     private String code;
 
@@ -22,6 +24,11 @@ public class ContractOpenGapDTO implements Comparable<ContractOpenGapDTO> {
 
     private String suggest;
 
+    private String tradeDate;
+
+    private BigDecimal buyLow;
+
+    private BigDecimal sellHigh;
 
     @Override
     public int compareTo(ContractOpenGapDTO contractOpenGapDTO) {
