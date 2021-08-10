@@ -21,7 +21,7 @@ public class FutureTask {
     @Resource
     private FutureGapService futureGapService;
 
-    @Scheduled(cron = "0 1 15,03 * * ?")
+    @Scheduled(cron = "0 8 15,03 * * ?")
     private void updateTradeDaily() {
         futureDailyService.addTradeDaily();
     }

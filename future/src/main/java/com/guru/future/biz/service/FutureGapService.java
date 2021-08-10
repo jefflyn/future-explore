@@ -47,7 +47,7 @@ public class FutureGapService {
     public void monitorOpenGap() {
         List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getAllRealtimeFromSina();
         try {
-            this.noticeOpenGap(contractRealtimeDTOList);
+            noticeOpenGap(contractRealtimeDTOList);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,11 +109,12 @@ public class FutureGapService {
                         }
                     }
                 } else {
-                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(gapRate.floatValue() / 100)));
+//                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(gapRate.floatValue() / 100)));
+                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.996));
                     // 日级别跳空低开
                     if (currentOpen.compareTo(preLow) < 0) {
                         dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
-                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
+//                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
                         if (Math.abs(dayGap.floatValue()) >= 1.5) {
                             suggestTo = preLow.multiply(BigDecimal.valueOf(1.005));
                         } else {
@@ -138,7 +139,7 @@ public class FutureGapService {
                 openGapDTOList.add(openGapDTO);
             }
         }
-        this.sendOpenGapMail(openGapDTOList);
+        sendOpenGapMail(openGapDTOList);
         openGapManager.batchAddOpenGapLog(ContractOpenGapConverter.convert2OpenGapDOList(openGapDTOList));
     }
 

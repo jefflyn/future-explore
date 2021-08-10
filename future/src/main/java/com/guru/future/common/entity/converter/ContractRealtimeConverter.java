@@ -54,7 +54,11 @@ public class ContractRealtimeConverter {
                 .multiply(BigDecimal.valueOf(100))
                 .divide(contractRealtimeDTO.getPreSettle(), 2, RoundingMode.HALF_UP));
         dailyDO.setCloseChange(change);
-        dailyDO.setSettle(contractRealtimeDTO.getSettle());
+        if (contractRealtimeDTO.getSettle() == null || BigDecimal.ZERO.compareTo(contractRealtimeDTO.getSettle()) == 0) {
+            dailyDO.setSettle(contractRealtimeDTO.getAvgPrice());
+        } else {
+            dailyDO.setSettle(contractRealtimeDTO.getSettle());
+        }
         BigDecimal settleChange = (contractRealtimeDTO.getPrice().subtract(contractRealtimeDTO.getPreSettle())
                 .multiply(BigDecimal.valueOf(100))
                 .divide(contractRealtimeDTO.getPreSettle(), 2, RoundingMode.HALF_UP));
