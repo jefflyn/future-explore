@@ -46,6 +46,7 @@ public class FutureDailyService {
             FutureDailyDO currentDailyDO = ContractRealtimeConverter.convert2DailyDO(contractRealtimeDTO);
             FutureDailyDO existedDailyDO = existedDailyMap.get(currentDailyDO.getCode());
             if (existedDailyDO != null) {
+                log.info("update log >>> currentDailyDO={}, existedDailyDO={}", currentDailyDO, existedDailyDO);
                 if (!currentDailyDO.changFlag().equals(existedDailyDO.changFlag())) {
                     currentDailyDO.setTradeDate(tradeDate);
                     currentDailyDO.setRemark("update current date");
