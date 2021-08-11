@@ -68,6 +68,7 @@ public class FutureLiveService {
             FutureBasicDO updateBasicDO = new FutureBasicDO();
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setLow(contractRealtimeDTO.getLow());
+            updateBasicDO.setRemark("合同新低");
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
             log.info("update hist low, refresh basic data");
@@ -77,6 +78,7 @@ public class FutureLiveService {
             FutureBasicDO updateBasicDO = new FutureBasicDO();
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setHigh(contractRealtimeDTO.getHigh());
+            updateBasicDO.setRemark("合同新高");
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist high, refresh basic data", contractRealtimeDTO.getCode());

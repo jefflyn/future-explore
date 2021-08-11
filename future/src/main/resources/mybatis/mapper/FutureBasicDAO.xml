@@ -18,13 +18,16 @@
         <result column="fee_today" jdbcType="DECIMAL" property="feeToday"/>
         <result column="night" jdbcType="TINYINT" property="night"/>
         <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
+        <result column="is_target" jdbcType="TINYINT" property="isTarget"/>
         <result column="deleted" jdbcType="TINYINT" property="deleted"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+
     </resultMap>
 
     <sql id="Base_Column_List">
         symbol, `name`, `type`, code, low, high, amount, unit, `limit`, margin_rate, fee_type,
-    fee, fee_today, night, exchange, deleted, update_time
+    fee, fee_today, night, exchange, is_target, deleted, update_time, remark
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -56,12 +59,6 @@
         </if>
 
     </select>
-
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-        delete
-        from future_basic
-        where symbol = #{symbol,jdbcType=VARCHAR}
-    </delete>
 
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureBasicDO">
         insert into future_basic
@@ -223,6 +220,9 @@
             </if>
             <if test="code != null">
                 update_time = now(),
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
             </if>
         </set>
         where code = #{code,jdbcType=VARCHAR}

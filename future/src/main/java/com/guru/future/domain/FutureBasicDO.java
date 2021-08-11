@@ -41,4 +41,7 @@ public class FutureBasicDO {
 
     private Date updateTime;
 
+    private Integer isTarget;
+
+    private String remark;
 }
