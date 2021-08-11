@@ -26,7 +26,7 @@ public class FutureTask {
         futureDailyService.addTradeDaily();
     }
 
-    @Scheduled(cron = "3 59 08 * * MON-FRI")
+    @Scheduled(cron = "6 59 08 * * MON-FRI")
     private void monitorOpenGap() {
         futureGapService.monitorOpenGap();
     }

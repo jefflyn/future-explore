@@ -85,7 +85,7 @@ public class FutureGapService {
             }
             BigDecimal priceDiff = currentOpen.subtract(preClose);
             BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
-            if (Math.abs(gapRate.floatValue()) >= 0.5) {
+            if (Math.abs(gapRate.floatValue()) >= 0.33) {
                 BigDecimal dayGap = null;
                 BigDecimal suggestFrom = null;
                 BigDecimal suggestTo = null;
@@ -139,48 +139,48 @@ public class FutureGapService {
                 openGapDTOList.add(openGapDTO);
             }
         }
-        sendOpenGapMail(openGapDTOList);
-        openGapManager.batchAddOpenGapLog(ContractOpenGapConverter.convert2OpenGapDOList(openGapDTOList));
+        if (!CollectionUtils.isEmpty(openGapDTOList)) {
+            sendOpenGapMail(openGapDTOList);
+            openGapManager.batchAddOpenGapLog(ContractOpenGapConverter.convert2OpenGapDOList(openGapDTOList));
+        } else {
+            log.info(">>> no specified open gap found!!!");
+        }
     }
 
     @Async
     public void sendOpenGapMail(List<ContractOpenGapDTO> openGapDTOList) throws Exception {
-        if (!CollectionUtils.isEmpty(openGapDTOList)) {
-//            DataFrame<ContractOpenGapDTO> df = new DataFrame<>("category", "code", "name", "preClose", "open", "gapRate", "remark");
-//            df.append(openGapDTOList);
-            Collections.sort(openGapDTOList);
-            Collections.reverse(openGapDTOList);
+        Collections.sort(openGapDTOList);
+        Collections.reverse(openGapDTOList);
 
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("\r\n");
-            stringBuilder.append("<html><head></head><body><h3>");
-            stringBuilder.append(DateFormatUtils.format(new Date(), DateUtil.COMMON_DATE_PATTERN)).append("</h3>");
-            stringBuilder.append("<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" style=\"border:solid 1px #E8F2F9;font-size=14px;;font-size:12px;\">");
-            stringBuilder.append("<tr style=\"background-color: #428BCA; color:#ffffff\">" +
-                    "<th width=\"60px\">品种</th>" +
-                    "<th width=\"60px\">编码</th>" +
-                    "<th width=\"80px\">名称</th>" +
-                    "<th width=\"60px\">昨收</th>" +
-                    "<th width=\"60px\">今开</th>" +
-                    "<th width=\"60px\">缺口</th>" +
-                    "<th width=\"80px\">备注</th>" +
-                    "<th width=\"120px\">建议</th>" +
-                    "</tr>");
-            for (ContractOpenGapDTO openGapDTO : openGapDTOList) {
-                stringBuilder.append("</tr>");
-                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getCategory() + "</td>");
-                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getCode() + "</td>");
-                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getName() + "</td>");
-                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getPreClose() + "</td>");
-                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getOpen() + "</td>");
-                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getGapRate() + "%</td>");
-                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getRemark() + "</td>");
-                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getSuggest() + "</td>");
-                stringBuilder.append("</tr>");
-            }
-            stringBuilder.append("</table>");
-            stringBuilder.append("</body></html>");
-            futureMailManager.notifyOpenGapHtml(stringBuilder.toString());
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("\r\n");
+        stringBuilder.append("<html><head></head><body><h3>");
+        stringBuilder.append(DateFormatUtils.format(new Date(), DateUtil.COMMON_DATE_PATTERN)).append("</h3>");
+        stringBuilder.append("<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" style=\"border:solid 1px #E8F2F9;font-size=14px;;font-size:12px;\">");
+        stringBuilder.append("<tr style=\"background-color: #428BCA; color:#ffffff\">" +
+                "<th width=\"60px\">品种</th>" +
+                "<th width=\"60px\">编码</th>" +
+                "<th width=\"80px\">名称</th>" +
+                "<th width=\"60px\">昨收</th>" +
+                "<th width=\"60px\">今开</th>" +
+                "<th width=\"60px\">缺口</th>" +
+                "<th width=\"80px\">备注</th>" +
+                "<th width=\"120px\">建议</th>" +
+                "</tr>");
+        for (ContractOpenGapDTO openGapDTO : openGapDTOList) {
+            stringBuilder.append("</tr>");
+            stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getCategory() + "</td>");
+            stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getCode() + "</td>");
+            stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getName() + "</td>");
+            stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getPreClose() + "</td>");
+            stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getOpen() + "</td>");
+            stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getGapRate() + "%</td>");
+            stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getRemark() + "</td>");
+            stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getSuggest() + "</td>");
+            stringBuilder.append("</tr>");
         }
+        stringBuilder.append("</table>");
+        stringBuilder.append("</body></html>");
+        futureMailManager.notifyOpenGapHtml(stringBuilder.toString());
     }
 }
