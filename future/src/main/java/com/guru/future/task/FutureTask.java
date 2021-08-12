@@ -1,5 +1,6 @@
 package com.guru.future.task;
 
+import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.service.FutureDailyService;
 import com.guru.future.biz.service.FutureGapService;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,13 @@ public class FutureTask {
     private FutureDailyService futureDailyService;
     @Resource
     private FutureGapService futureGapService;
+    @Resource
+    private FutureTaskDispatcher futureTaskDispatcher;
+
+    @Scheduled(cron = "0 0 9,13,21 * * ?")
+    private void realtime() throws InterruptedException {
+        futureTaskDispatcher.executePulling(false);
+    }
 
     @Scheduled(cron = "0 8 15,03 * * ?")
     private void updateTradeDaily() {
@@ -28,6 +36,11 @@ public class FutureTask {
 
     @Scheduled(cron = "6 59 08 * * MON-FRI")
     private void monitorOpenGap() {
+        futureGapService.monitorOpenGap();
+    }
+
+    @Scheduled(cron = "10,15,20,30 59 20 * * MON-FRI")
+    private void monitorPreNightOpenGap() {
         futureGapService.monitorOpenGap();
     }
 

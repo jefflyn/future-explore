@@ -30,11 +30,11 @@
     fee, fee_today, night, exchange, is_target, deleted, update_time, remark
     </sql>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from future_basic
-        where symbol = #{symbol,jdbcType=VARCHAR} and deleted = 0
+        where code = #{code,jdbcType=VARCHAR} and deleted = 0
     </select>
 
     <select id="selectByQuery" resultType="com.guru.future.domain.FutureBasicDO">

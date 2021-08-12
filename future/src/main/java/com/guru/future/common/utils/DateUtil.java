@@ -118,15 +118,6 @@ public class DateUtil {
         return DateFormatUtils.format(currentDate, TRADE_DATE_PATTERN);
     }
 
-    public static Boolean isSysBreakTime() {
-        Calendar now = Calendar.getInstance();
-        int hour = now.get(Calendar.HOUR_OF_DAY);
-
-        boolean breakTime = (hour >= NIGHT_CLOSE_HOUR + 1 && hour < MORNING_OPEN_HOUR)
-                || (hour >= AFTERNOON_CLOSE_HOUR + 1 && hour < NIGHT_OPEN_HOUR);
-        return breakTime;
-    }
-
     /**
      * [20:59-24:00)
      * [0:00 - 08:59] x

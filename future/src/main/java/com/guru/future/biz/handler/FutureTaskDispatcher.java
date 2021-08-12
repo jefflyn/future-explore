@@ -2,7 +2,6 @@ package com.guru.future.biz.handler;
 
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureSinaManager;
-import com.guru.future.biz.service.FutureDailyService;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
@@ -27,15 +26,10 @@ public class FutureTaskDispatcher {
 
     @Resource
     private FutureBasicManager futureBasicManager;
-
     @Resource
     private FutureSinaManager futureSinaManager;
-
     @Resource
     private FutureLiveService futureLiveService;
-
-    @Resource
-    private FutureDailyService futureDailyService;
 
     public Boolean stopRunning() {
         return keepRunning = false;
@@ -50,9 +44,11 @@ public class FutureTaskDispatcher {
         keepRunning = true;
         REFRESH = refresh == null ? false : refresh;
         List<String> codeList = futureBasicManager.getAllCodes();
+        log.info(">>> smell the coffee, let's get this party started!");
         while (keepRunning) {
-            if (DateUtil.isSysBreakTime()) {
-                continue;
+            if (!DateUtil.isTradeTime()) {
+                log.info(">>> music off, party over!");
+                break;
             }
             if (REFRESH) {
                 codeList = futureBasicManager.getAllCodes();

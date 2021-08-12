@@ -8,7 +8,7 @@ import java.util.List;
 public interface FutureBasicDAO {
     int insertSelective(FutureBasicDO record);
 
-    FutureBasicDO selectByPrimaryKey(String symbol);
+    FutureBasicDO selectByCode(String code);
 
     int updateByCodeSelective(FutureBasicDO record);
 

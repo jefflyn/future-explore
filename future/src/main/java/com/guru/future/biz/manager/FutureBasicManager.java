@@ -2,6 +2,7 @@ package com.guru.future.biz.manager;
 
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.mapper.FutureBasicDAO;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -21,12 +22,18 @@ public class FutureBasicManager {
 
     private Map<String, FutureBasicDO> FUTURE_BASIC_MAP = new HashMap<>();
 
+    public FutureBasicDO getBasicByCode(String code) {
+        FutureBasicDO futureBasicDO = futureBasicsDAO.selectByCode(code);
+        return futureBasicDO;
+    }
+
     public Map<String, FutureBasicDO> getBasicMap() {
         if (FUTURE_BASIC_MAP.size() > 0) {
             return FUTURE_BASIC_MAP;
         }
         List<FutureBasicDO> futureBasicDOList = futureBasicsDAO.selectByQuery(null);
-        return futureBasicDOList.stream().collect(Collectors.toMap(FutureBasicDO::getCode, Function.identity()));
+        FUTURE_BASIC_MAP = futureBasicDOList.stream().collect(Collectors.toMap(FutureBasicDO::getCode, Function.identity()));
+        return FUTURE_BASIC_MAP;
     }
 
     public List<String> getAllCodes() {
@@ -39,6 +46,15 @@ public class FutureBasicManager {
     }
 
     public Boolean updateBasic(FutureBasicDO updateBasicDO) {
-        return futureBasicsDAO.updateByCodeSelective(updateBasicDO) > 0;
+        if (futureBasicsDAO.updateByCodeSelective(updateBasicDO) > 0) {
+            refreshBasicCacheMap(updateBasicDO.getCode());
+        }
+        return true;
+    }
+
+    @Async
+    public void refreshBasicCacheMap(String code) {
+        FutureBasicDO futureBasicDO = getBasicByCode(code);
+        FUTURE_BASIC_MAP.put(code, futureBasicDO);
     }
 }
