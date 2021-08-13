@@ -31,9 +31,9 @@ public class FutureLiveService {
     private FutureLiveManager futureLiveManager;
 
     @Async
-    public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList) {
+    public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList, Boolean refresh) {
         // not in trade time
-        Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
+        Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap(refresh);
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
             FutureBasicDO futureBasicDO = basicMap.get(futureLiveDO.getCode());

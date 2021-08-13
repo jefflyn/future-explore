@@ -59,7 +59,7 @@ public class FutureTaskDispatcher {
             List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getRealtimeFromSina(codeList);
 
             // async live data
-            futureLiveService.refreshLiveData(contractRealtimeDTOList);
+            futureLiveService.refreshLiveData(contractRealtimeDTOList, REFRESH);
 
             // async log
         }

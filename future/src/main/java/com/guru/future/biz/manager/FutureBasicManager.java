@@ -28,7 +28,10 @@ public class FutureBasicManager {
     }
 
     public Map<String, FutureBasicDO> getBasicMap() {
-        if (FUTURE_BASIC_MAP.size() > 0) {
+        return getBasicMap(false);
+    }
+    public Map<String, FutureBasicDO> getBasicMap(Boolean refresh) {
+        if (FUTURE_BASIC_MAP.size() > 0 && !refresh) {
             return FUTURE_BASIC_MAP;
         }
         List<FutureBasicDO> futureBasicDOList = futureBasicsDAO.selectByQuery(null);
