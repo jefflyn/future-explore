@@ -29,6 +29,8 @@ public class FutureLiveService {
     private FutureBasicManager futureBasicManager;
     @Resource
     private FutureLiveManager futureLiveManager;
+    @Resource
+    private FutureMonitorService monitorService;
 
     @Async
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList, Boolean refresh) {
@@ -42,6 +44,13 @@ public class FutureLiveService {
             BigDecimal histHigh = highLow.getLeft();
             BigDecimal histLow = highLow.getRight();
 
+            String histHighLowFlag = "";
+            if (futureLiveDO.getHigh().compareTo(histHigh) > 0) {
+                histHighLowFlag = "^";
+            } else if (futureLiveDO.getLow().compareTo(histLow) > 0) {
+                histHighLowFlag = "_";
+            }
+            monitorService.triggerPriceFlash(futureLiveDO, histHighLowFlag);
             if (histHigh.compareTo(histLow) > 0) {
                 BigDecimal lowChange = (futureLiveDO.getPrice().subtract(histLow)).multiply(BigDecimal.valueOf(100))
                         .divide(histLow, 2, RoundingMode.HALF_UP);

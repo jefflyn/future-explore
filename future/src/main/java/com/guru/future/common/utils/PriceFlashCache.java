@@ -65,7 +65,7 @@ public class PriceFlashCache {
     public static Pair<BigDecimal, BigDecimal> getMinAndMaxFromList(String key, int fromIndex, int toIndex) {
         List<BigDecimal> list = subList(key, fromIndex, toIndex);
         if (CollectionUtils.isEmpty(list)) {
-            return null;
+            return Pair.with(null, null);
         }
         return Pair.with(Collections.min(list), Collections.max(list));
     }

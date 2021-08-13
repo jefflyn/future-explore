@@ -110,8 +110,17 @@
         <!--               enableSelectByExample="false"-->
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
-        <table tableName="open_gap"
-               domainObjectName="OpenGapDO" mapperName="OpenGapDAO"
+<!--        <table tableName="open_gap"-->
+<!--               domainObjectName="OpenGapDO" mapperName="OpenGapDAO"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+<!--        </table>-->
+
+        <table tableName="future_log"
+               domainObjectName="FutureLogDO" mapperName="FutureLogDAO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

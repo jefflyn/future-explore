@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guru.future.mapper.FutureLogDAO">
+    <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureLogDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="pct_change" jdbcType="DECIMAL" property="pctChange"/>
+        <result column="position" jdbcType="INTEGER" property="position"/>
+        <result column="log_time" jdbcType="TIMESTAMP" property="logTime"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , `name`, `type`, content, price, pct_change, `position`, log_time, remark
+    </sql>
+
+    <insert id="insert" parameterType="com.guru.future.domain.FutureLogDO">
+        insert into future_log (id, `name`, `type`,
+                                content, price, pct_change,
+                                `position`, log_time, remark)
+        values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
+                #{content,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{pctChange,jdbcType=DECIMAL},
+                #{position,jdbcType=INTEGER}, #{logTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLogDO">
+        insert into future_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="content != null">
+                content,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="pctChange != null">
+                pct_change,
+            </if>
+            <if test="position != null">
+                `position`,
+            </if>
+            <if test="logTime != null">
+                log_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="pctChange != null">
+                #{pctChange,jdbcType=DECIMAL},
+            </if>
+            <if test="position != null">
+                #{position,jdbcType=INTEGER},
+            </if>
+            <if test="logTime != null">
+                #{logTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>
