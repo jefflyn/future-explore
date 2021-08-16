@@ -45,9 +45,9 @@ public class FutureLiveService {
             BigDecimal histLow = highLow.getRight();
 
             String histHighLowFlag = "";
-            if (futureLiveDO.getHigh().compareTo(histHigh) > 0) {
+            if (futureLiveDO.getHigh().compareTo(histHigh) >= 0) {
                 histHighLowFlag = "^";
-            } else if (futureLiveDO.getLow().compareTo(histLow) > 0) {
+            } else if (futureLiveDO.getLow().compareTo(histLow) <= 0) {
                 histHighLowFlag = "_";
             }
             monitorService.triggerPriceFlash(futureLiveDO, histHighLowFlag);

@@ -7,6 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
+import javax.swing.*;
+import java.awt.*;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -40,6 +43,8 @@ public class DateUtil {
     public static final String TRADE_DATE_PATTERN = "yyyy-MM-dd";
     public static final String HOUR_MINUTE_PATTERN = "HH:mm";
     public static final String COMMON_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String TIME_PATTERN = "HH:mm:ss";
+
 
 
     public static Boolean isHoliday(Date date) {
@@ -63,6 +68,11 @@ public class DateUtil {
         if (isHoliday(date)) {
             return getNextTradeDate(date);
         }
+        return DateFormatUtils.format(date, TRADE_DATE_PATTERN);
+    }
+
+    public static String currentTime() {
+        Date date = new Date();
         return DateFormatUtils.format(date, TRADE_DATE_PATTERN);
     }
 
@@ -183,5 +193,24 @@ public class DateUtil {
         System.out.println(DateUtil.getLastTradeDate(new Date()));
         System.out.println(DateUtil.getNextTradeDate(new Date()));
 
+        JFrame frame = null;
+
+        for (int i = 0; i <= 4; i++) {
+            if (frame == null) {
+                frame = new JFrame("price flash");
+                frame.setLayout(new FlowLayout());
+                frame.setBounds(0, 1000, 420, 120);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
+
+            }
+            JLabel jl = new JLabel("");
+            Container c = frame.getContentPane();
+            c.add(jl, 0);
+        }
+        frame.setVisible(true);
+        JLabel jl = new JLabel("");
+        Container c = frame.getContentPane();
+        c.add(jl, 0);
     }
 }

@@ -15,6 +15,8 @@ public class FutureLogDO {
 
     private String content;
 
+    private BigDecimal suggest;
+
     private BigDecimal price;
 
     private BigDecimal pctChange;

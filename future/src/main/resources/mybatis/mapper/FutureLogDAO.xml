@@ -6,6 +6,7 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
         <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="suggest" jdbcType="DECIMAL" property="suggest"/>
         <result column="price" jdbcType="DECIMAL" property="price"/>
         <result column="pct_change" jdbcType="DECIMAL" property="pctChange"/>
         <result column="position" jdbcType="INTEGER" property="position"/>
@@ -14,16 +15,16 @@
     </resultMap>
     <sql id="Base_Column_List">
         id
-        , `name`, `type`, content, price, pct_change, `position`, log_time, remark
+        , `name`, `type`, content, suggest, price, pct_change, `position`, log_time, remark
     </sql>
 
     <insert id="insert" parameterType="com.guru.future.domain.FutureLogDO">
         insert into future_log (id, `name`, `type`,
-                                content, price, pct_change,
+                                content, suggest, price, pct_change,
                                 `position`, log_time, remark)
         values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
-                #{content,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{pctChange,jdbcType=DECIMAL},
-                #{position,jdbcType=INTEGER}, #{logTime,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR})
+                #{content,jdbcType=VARCHAR}, #{suggest}, #{price,jdbcType=DECIMAL}, #{pctChange,jdbcType=DECIMAL},
+                #{position,jdbcType=INTEGER}, now(), #{remark,jdbcType=VARCHAR})
     </insert>
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLogDO">
         insert into future_log
@@ -40,6 +41,9 @@
             <if test="content != null">
                 content,
             </if>
+            <if test="suggest != null">
+                suggest,
+            </if>
             <if test="price != null">
                 price,
             </if>
@@ -48,9 +52,6 @@
             </if>
             <if test="position != null">
                 `position`,
-            </if>
-            <if test="logTime != null">
-                log_time,
             </if>
             <if test="remark != null">
                 remark,
@@ -69,6 +70,9 @@
             <if test="content != null">
                 #{content,jdbcType=VARCHAR},
             </if>
+            <if test="suggest != null">
+                #{suggest,jdbcType=DECIMAL},
+            </if>
             <if test="price != null">
                 #{price,jdbcType=DECIMAL},
             </if>
@@ -77,9 +81,6 @@
             </if>
             <if test="position != null">
                 #{position,jdbcType=INTEGER},
-            </if>
-            <if test="logTime != null">
-                #{logTime,jdbcType=TIMESTAMP},
             </if>
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},

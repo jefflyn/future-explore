@@ -17,12 +17,19 @@ public class PriceFlashCache {
 
     public static void rPush(String key, BigDecimal price) {
         LinkedList<BigDecimal> list = ObjectUtils.defaultIfNull(PRICE_QUEUE.get(key), new LinkedList());
+        if (price.compareTo(ObjectUtils.defaultIfNull(peekLast(key), BigDecimal.ZERO)) == 0) {
+            return;
+        }
         list.add(price);
         PRICE_QUEUE.put(key, list);
     }
 
     public static void delete(String key) {
         PRICE_QUEUE.put(key, new LinkedList());
+    }
+
+    public static List get(String key) {
+        return PRICE_QUEUE.get(key);
     }
 
     public static BigDecimal lPop(String key) {
@@ -36,6 +43,11 @@ public class PriceFlashCache {
     public static BigDecimal peekFirst(String key) {
         LinkedList<BigDecimal> list = ObjectUtils.defaultIfNull(PRICE_QUEUE.get(key), new LinkedList());
         return list.peekFirst();
+    }
+
+    public static BigDecimal peekLast(String key) {
+        LinkedList<BigDecimal> list = ObjectUtils.defaultIfNull(PRICE_QUEUE.get(key), new LinkedList());
+        return list.peekLast();
     }
 
     /**

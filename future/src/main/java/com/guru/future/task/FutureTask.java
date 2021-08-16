@@ -24,12 +24,12 @@ public class FutureTask {
     @Resource
     private FutureTaskDispatcher futureTaskDispatcher;
 
-    @Scheduled(cron = "0 0 9,13,21 * * ?")
+    @Scheduled(cron = "3 0 9,13,21 * * ?")
     private void realtime() throws InterruptedException {
         futureTaskDispatcher.executePulling(false);
     }
 
-    @Scheduled(cron = "0 8 15,03 * * ?")
+    @Scheduled(cron = "8 8 15,03 * * ?")
     private void updateTradeDaily() {
         futureDailyService.addTradeDaily();
     }
@@ -39,7 +39,7 @@ public class FutureTask {
         futureGapService.monitorOpenGap();
     }
 
-    @Scheduled(cron = "10,15,20,30 59 20 * * MON-FRI")
+    @Scheduled(cron = "30,50 59 20 * * MON-FRI")
     private void monitorPreNightOpenGap() {
         futureGapService.monitorOpenGap();
     }
