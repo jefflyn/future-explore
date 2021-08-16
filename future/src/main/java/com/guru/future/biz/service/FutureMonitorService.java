@@ -64,10 +64,10 @@ public class FutureMonitorService {
         }
         float diff = Math.abs((price.subtract(lastPrice)).multiply(BigDecimal.valueOf(100))
                 .divide(lastPrice, 2, RoundingMode.HALF_UP).floatValue());
-        if (key.contains("OI")) {
-            log.info("price queue={}", PriceFlashCache.get(key));
-            log.info("current price={}, queue price={}, blastTip={}", price, lastPrice, blastTip);
-        }
+//        if (key.contains("OI")) {
+//            log.info("price queue={}", PriceFlashCache.get(key));
+//            log.info("current price={}, queue price={}, blastTip={}", price, lastPrice, blastTip);
+//        }
         if (diff >= TRIGGER_DIFF || Strings.isNotBlank(blastTip)) {
             String diffStr = diff + "%";
             boolean isUp = price.compareTo(lastPrice) > 0;
@@ -80,7 +80,7 @@ public class FutureMonitorService {
                     .append(suggestParam);
             // show msg frame
             this.createMsgFrame(DateUtil.currentTime() + " "
-                    +futureLiveDO.getName() + " " + content.toString() + " " + suggestPrice);
+                    + futureLiveDO.getName() + " " + content.toString() + " " + suggestPrice);
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setName(futureLiveDO.getName());
             futureLogDO.setType(logType);
@@ -90,6 +90,7 @@ public class FutureMonitorService {
             futureLogDO.setPctChange(futureLiveDO.getChange());
             futureLogDO.setPosition(futureLiveDO.getPosition().intValue());
             futureLogDO.setRemark(logType + histHighLowFlag);
+            log.info("add log:{}", futureLiveDO.toString());
             futureLogManager.addFutureLog(futureLogDO);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(key);
@@ -99,15 +100,19 @@ public class FutureMonitorService {
     private JFrame frame = null;
 
     private void createMsgFrame(String msg) {
-        if (frame == null) {
-            frame = new JFrame("price flash");
-            frame.setLayout(new FlowLayout());
-            frame.setBounds(0, 1000, 420, 120);
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
+        try {
+            if (frame == null) {
+                frame = new JFrame("price flash");
+                frame.setLayout(new FlowLayout());
+                frame.setBounds(0, 1000, 420, 120);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setVisible(true);
+            }
+            JLabel jl = new JLabel(msg);
+            Container c = frame.getContentPane();
+            c.add(jl, 0);
+        } catch (Exception e) {
+            log.error("create price flash msg frame failed, error={}", e);
         }
-        JLabel jl = new JLabel(msg);
-        Container c = frame.getContentPane();
-        c.add(jl,0);
     }
 }

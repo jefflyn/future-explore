@@ -39,7 +39,6 @@ public class FutureTaskDispatcher {
         REFRESH = true;
     }
 
-    @Async
     public void executePulling(Boolean refresh) throws InterruptedException {
         keepRunning = true;
         REFRESH = refresh == null ? false : refresh;
@@ -60,9 +59,7 @@ public class FutureTaskDispatcher {
 
             // async live data
             futureLiveService.refreshLiveData(contractRealtimeDTOList, REFRESH);
-
-            // async log
+            TimeUnit.SECONDS.sleep(2L);
         }
-        TimeUnit.SECONDS.sleep(2L);
     }
 }

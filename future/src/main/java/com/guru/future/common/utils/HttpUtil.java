@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author jeff
+ * @author j
  */
 public class HttpUtil {
     public static String doGet(String url, Map<String, String> param) {

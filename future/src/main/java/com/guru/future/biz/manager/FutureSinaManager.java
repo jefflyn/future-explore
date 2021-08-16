@@ -52,13 +52,12 @@ public class FutureSinaManager {
                 if (Strings.isNullOrEmpty(contract)) {
                     continue;
                 }
-//                    System.out.println(JSON.toJSONString();
                 ContractRealtimeDTO contractRealtimeDTO = ContractRealtimeDTO.convertFromHqList(SinaHqUtil.parse2List(contract));
                 if (contractRealtimeDTO.getCode() == null) {
                     log.warn("skip {}", contract);
                 }
                 contractRealtimeDTOList.add(contractRealtimeDTO);
-                int randomNumber = RandomUtils.nextInt(1, 100000);
+                int randomNumber = RandomUtils.nextInt(1, 50000);
                 if (contractRealtimeDTOList.size() == randomNumber) {
                     log.info("contractRealtimeDTOList.size()={}, randomNumber={}, contract={}",
                             contractRealtimeDTOList.size(), randomNumber, contract);
