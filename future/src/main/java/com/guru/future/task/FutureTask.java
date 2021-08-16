@@ -39,7 +39,7 @@ public class FutureTask {
         futureGapService.monitorOpenGap();
     }
 
-    @Scheduled(cron = "30,50 59 20 * * MON-FRI")
+    @Scheduled(cron = "50 59 20 * * MON-FRI")
     private void monitorPreNightOpenGap() {
         futureGapService.monitorOpenGap();
     }

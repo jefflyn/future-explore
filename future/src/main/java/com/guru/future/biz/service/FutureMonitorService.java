@@ -16,7 +16,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Date;
 
 @Service
 @Slf4j
@@ -79,7 +78,7 @@ public class FutureMonitorService {
                     .append("【").append(lastPrice).append("-").append(price).append("】")
                     .append(suggestParam);
             // show msg frame
-            this.createMsgFrame(DateUtil.currentTime() + " "
+            this.createMsgFrame(key, DateUtil.currentTime() + " "
                     + futureLiveDO.getName() + " " + content.toString() + " " + suggestPrice);
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setName(futureLiveDO.getName());
@@ -99,8 +98,9 @@ public class FutureMonitorService {
 
     private JFrame frame = null;
 
-    private void createMsgFrame(String msg) {
+    private void createMsgFrame(String code, String msg) {
         try {
+            Runtime.getRuntime().exec("say price flash " + code);
             if (frame == null) {
                 frame = new JFrame("price flash");
                 frame.setLayout(new FlowLayout());
