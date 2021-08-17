@@ -34,7 +34,6 @@ public class FutureLiveService {
 
     @Async
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList, Boolean refresh) {
-        // not in trade time
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap(refresh);
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
