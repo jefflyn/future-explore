@@ -77,7 +77,7 @@ public class FutureMonitorService {
                     .append("【").append(lastPrice).append("-").append(price).append("】")
                     .append(suggestParam);
             // show msg frame
-            WindowUtil.createMsgFrame(key, DateUtil.currentTime() + " "
+            WindowUtil.createMsgFrame(key, isUp, DateUtil.currentTime() + " "
                     + futureLiveDO.getName() + " " + content + " " + suggestPrice);
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setName(futureLiveDO.getName());

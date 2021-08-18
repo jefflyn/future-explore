@@ -17,13 +17,14 @@ import java.util.Date;
 public class WindowUtil {
     private static JFrame frame = null;
 
-    public static void createMsgFrame(String code, String msg) {
+    public static void createMsgFrame(String code, Boolean isUp, String content) {
         try {
-            Runtime.getRuntime().exec("say price flash " + code);
+            String msg = isUp ? "price up " : "price down " + code;
+            Runtime.getRuntime().exec("say " + msg);
             if (frame == null) {
                 frame = new JFrame("price flash");
                 frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 420, 120);
+                frame.setBounds(0, 1000, 450, 120);
 //                frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                 frame.addWindowListener(new WindowAdapter() {
                     @Override
@@ -33,7 +34,7 @@ public class WindowUtil {
                     }
                 });
             }
-            JLabel jl = new JLabel(msg);
+            JLabel jl = new JLabel(content);
             Container c = frame.getContentPane();
             c.add(jl, 0);
             frame.setVisible(true);
@@ -49,6 +50,6 @@ public class WindowUtil {
     }
 
     public static void main(String[] args) throws IOException {
-        WindowUtil.createMsgFrame("A2201", "50秒 上涨0.36%【823.0-826.0】看多");
+        WindowUtil.createMsgFrame("A2201", true, "50秒 上涨0.36%【823.0-826.0】看多");
     }
 }

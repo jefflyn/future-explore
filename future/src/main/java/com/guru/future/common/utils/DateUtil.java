@@ -35,7 +35,7 @@ public class DateUtil {
     private static final int MORNING_CLOSE_HOUR = 11;
     private static final int MORNING_CLOSE_MINUTE = 30;
     private static final int AFTERNOON_OPEN_HOUR = 13;
-    private static final int AFTERNOON_OPEN_MINUTE = 30;
+    private static final int AFTERNOON_OPEN_MINUTE = 29;
     private static final int AFTERNOON_CLOSE_HOUR = 15;
     private static final int NIGHT_OPEN_HOUR = 20;
     private static final int NIGHT_OPEN_MINUTE = 59;
@@ -169,12 +169,12 @@ public class DateUtil {
         Calendar morningOpen = Calendar.getInstance();
         morningOpen.set(year, month, day, MORNING_OPEN_HOUR, MORNING_OPEN_MINUTE, 0);
         Calendar morningClose = Calendar.getInstance();
-        morningClose.set(year, month, day, MORNING_CLOSE_HOUR, MORNING_CLOSE_MINUTE, 0);
+        morningClose.set(year, month, day, MORNING_CLOSE_HOUR, MORNING_CLOSE_MINUTE, 10);
 
         Calendar afternoonOpen = Calendar.getInstance();
         afternoonOpen.set(year, month, day, AFTERNOON_OPEN_HOUR, AFTERNOON_OPEN_MINUTE, 0);
         Calendar afternoonClose = Calendar.getInstance();
-        afternoonClose.set(year, month, day, AFTERNOON_CLOSE_HOUR, 0, 0);
+        afternoonClose.set(year, month, day, AFTERNOON_CLOSE_HOUR, 0, 10);
 
         Calendar nightOpen = Calendar.getInstance();
         nightOpen.set(year, month, day, NIGHT_OPEN_HOUR, NIGHT_OPEN_MINUTE, 0);
