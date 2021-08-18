@@ -74,7 +74,7 @@ public class DateUtil {
 
     public static String currentTime() {
         Date date = new Date();
-        return DateFormatUtils.format(date, TRADE_DATE_PATTERN);
+        return DateFormatUtils.format(date, TIME_PATTERN);
     }
 
     public static String getLastTradeDate(String currentDate) {
@@ -195,24 +195,24 @@ public class DateUtil {
         System.out.println(DateUtil.getLastTradeDate(new Date()));
         System.out.println(DateUtil.getNextTradeDate(new Date()));
 
-//        JFrame frame = null;
-//
-//        for (int i = 0; i <= 4; i++) {
-//            if (frame == null) {
-//                frame = new JFrame("price flash");
-//                frame.setLayout(new FlowLayout());
-//                frame.setBounds(0, 1000, 420, 120);
-//                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//                frame.setVisible(true);
-//
-//            }
-//            JLabel jl = new JLabel("");
-//            Container c = frame.getContentPane();
-//            c.add(jl, 0);
-//        }
-//        frame.setVisible(true);
-//        JLabel jl = new JLabel("");
-//        Container c = frame.getContentPane();
-//        c.add(jl, 0);
+        JFrame frame = null;
+
+        for (int i = 0; i <= 4; i++) {
+            if (frame == null) {
+                frame = new JFrame("price flash");
+                frame.setLayout(new FlowLayout());
+                frame.setBounds(0, 1000, 420, 120);
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            }
+            JLabel jl = new JLabel("");
+            Container c = frame.getContentPane();
+            c.add(jl, 0);
+        }
+        frame.setVisible(true);
+        JLabel jl = new JLabel("");
+        Container c = frame.getContentPane();
+        c.add(jl, 0);
+
     }
 }

@@ -106,11 +106,12 @@ public class FutureMonitorService {
                 frame.setLayout(new FlowLayout());
                 frame.setBounds(0, 1000, 420, 120);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setVisible(true);
+                frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             }
             JLabel jl = new JLabel(msg);
             Container c = frame.getContentPane();
             c.add(jl, 0);
+            frame.setVisible(true);
         } catch (Exception e) {
             log.error("create price flash msg frame failed, error={}", e);
         }
