@@ -106,9 +106,9 @@ public class FutureGapService {
                 BigDecimal suggestTo = null;
                 StringBuilder remark = new StringBuilder("");
                 if (priceDiff.compareTo(BigDecimal.ZERO) >= 0) {
-                    suggestFrom = preClose;
                     // 日级别跳空高开
                     if (currentOpen.compareTo(preHigh) > 0) {
+                        suggestFrom = preClose.multiply(BigDecimal.valueOf(0.996));
                         dayGap = (currentOpen.subtract(preHigh)).multiply(BigDecimal.valueOf(100)).divide(preHigh, 2, RoundingMode.HALF_UP);
                         if (Math.abs(dayGap.floatValue()) >= 1.5) {
                             suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.005));
@@ -117,17 +117,20 @@ public class FutureGapService {
                         }
                         remark.append("日跳高 ").append("+").append(dayGap).append("%");
                     } else {
+                        suggestFrom = preClose.multiply(BigDecimal.valueOf(0.999));
                         if (Math.abs(gapRate.floatValue()) >= 1.5) {
                             suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.003));
                         } else {
                             suggestTo = currentOpen.multiply(BigDecimal.valueOf(1 + (1.5 - gapRate.floatValue()) / 100));
                         }
                     }
+                    if (Math.abs(gapRate.floatValue()) >= 0.6){
+                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.9964));
+                    }
                 } else {
-//                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(gapRate.floatValue() / 100)));
-                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.996));
                     // 日级别跳空低开
                     if (currentOpen.compareTo(preLow) < 0) {
+                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.996));
                         dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
 //                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
                         if (Math.abs(dayGap.floatValue()) >= 1.5) {
@@ -137,6 +140,7 @@ public class FutureGapService {
                         }
                         remark.append("日跳空 ").append(dayGap).append("%");
                     } else {
+                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.999));
                         if (Math.abs(gapRate.floatValue()) >= 1.5) {
                             suggestTo = preClose.multiply(BigDecimal.valueOf(1.003));
                         } else {
