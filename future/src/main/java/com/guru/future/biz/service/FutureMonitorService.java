@@ -3,6 +3,7 @@ package com.guru.future.biz.service;
 import com.guru.future.biz.manager.FutureLogManager;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.PriceFlashCache;
+import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +13,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.swing.*;
-import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -78,8 +77,8 @@ public class FutureMonitorService {
                     .append("【").append(lastPrice).append("-").append(price).append("】")
                     .append(suggestParam);
             // show msg frame
-            this.createMsgFrame(key, DateUtil.currentTime() + " "
-                    + futureLiveDO.getName() + " " + content.toString() + " " + suggestPrice);
+            WindowUtil.createMsgFrame(key, DateUtil.currentTime() + " "
+                    + futureLiveDO.getName() + " " + content + " " + suggestPrice);
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setName(futureLiveDO.getName());
             futureLogDO.setType(logType);
@@ -93,27 +92,6 @@ public class FutureMonitorService {
             futureLogManager.addFutureLog(futureLogDO);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(key);
-        }
-    }
-
-    private JFrame frame = null;
-
-    private void createMsgFrame(String code, String msg) {
-        try {
-            Runtime.getRuntime().exec("say price flash " + code);
-            if (frame == null) {
-                frame = new JFrame("price flash");
-                frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 420, 120);
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            }
-            JLabel jl = new JLabel(msg);
-            Container c = frame.getContentPane();
-            c.add(jl, 0);
-            frame.setVisible(true);
-        } catch (Exception e) {
-            log.error("create price flash msg frame failed, error={}", e);
         }
     }
 }
