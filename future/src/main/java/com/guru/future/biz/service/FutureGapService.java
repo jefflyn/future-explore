@@ -85,7 +85,7 @@ public class FutureGapService {
             BigDecimal currentOpen = realtimeDTO.getOpen();
             if (currentOpen.compareTo(preOpen) == 0) {
                 log.warn("{}-{}昨开等于今开{}!!!", realtimeDTO.getName(), code, currentOpen);
-//                continue;
+                continue;
             }
             BigDecimal priceDiff = currentOpen.subtract(preClose);
             total += 1;
@@ -195,8 +195,8 @@ public class FutureGapService {
         for (ContractOpenGapDTO openGapDTO : openGapDTOList) {
             stringBuilder.append("</tr>");
             stringBuilder.append("<td style=\"text-align:left\">" + (++seq) + "</td>");
-            stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getCategory() + "</td>");
-            stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getCode() + "</td>");
+            stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getCategory() + "</td>");
+            stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getCode() + "</td>");
             stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getName() + "</td>");
             stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getPreClose() + "</td>");
             stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getOpen() + "</td>");
