@@ -19,7 +19,7 @@ public class WindowUtil {
 
     public static void createMsgFrame(String code, Boolean isUp, String content) {
         try {
-            String msg = isUp ? "price up " : "price down " + code;
+            String msg = (isUp ? "price up " : "price down ") + code;
             Runtime.getRuntime().exec("say " + msg);
             if (frame == null) {
                 frame = new JFrame("price flash");
