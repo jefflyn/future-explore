@@ -19,7 +19,8 @@ import java.math.RoundingMode;
 @Service
 @Slf4j
 public class FutureMonitorService {
-    private static final float TRIGGER_DIFF = 0.33F;
+    private static final int secs = 60;
+    private static final float TRIGGER_DIFF = 0.4F;
 
     @Resource
     private FutureLogManager futureLogManager;
@@ -28,7 +29,6 @@ public class FutureMonitorService {
     public void triggerPriceFlash(FutureLiveDO futureLiveDO, String histHighLowFlag) {
         String key = futureLiveDO.getCode();
         BigDecimal price = futureLiveDO.getPrice();
-        int secs = 50;
         PriceFlashCache.rPush(key, price);
         int priceLen = PriceFlashCache.length(key);
         if (priceLen == 1) {
@@ -75,10 +75,11 @@ public class FutureMonitorService {
             StringBuilder content = new StringBuilder(secs + "秒");
             content.append(blastTip + logType).append(diffStr)
                     .append("【").append(lastPrice).append("-").append(price).append("】")
-                    .append(suggestParam);
+                    .append(suggestParam).append(" ").append(suggestPrice)
+                    .append(" ").append(futureLiveDO.getChange()).append("%");
             // show msg frame
             WindowUtil.createMsgFrame(key, isUp, DateUtil.currentTime() + " "
-                    + futureLiveDO.getName() + " " + content + " " + suggestPrice);
+                    + futureLiveDO.getName() + " " + content);
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setName(futureLiveDO.getName());
             futureLogDO.setType(logType);

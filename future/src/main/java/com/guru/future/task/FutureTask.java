@@ -29,7 +29,7 @@ public class FutureTask {
         futureTaskDispatcher.executePulling(false);
     }
 
-    @Scheduled(cron = "58 29 13 * * ?")
+    @Scheduled(cron = "55 29 13 * * ?")
     private void realtime2() throws InterruptedException {
         futureTaskDispatcher.executePulling(false);
     }
