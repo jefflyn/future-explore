@@ -3,11 +3,15 @@
 <mapper namespace="com.guru.future.mapper.FutureLogDAO">
     <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureLogDO">
         <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
+        <result column="factor" jdbcType="INTEGER" property="factor"/>
+        <result column="diff" jdbcType="DECIMAL" property="diff"/>
         <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="option" jdbcType="VARCHAR" property="option"/>
         <result column="suggest" jdbcType="DECIMAL" property="suggest"/>
-        <result column="price" jdbcType="DECIMAL" property="price"/>
         <result column="pct_change" jdbcType="DECIMAL" property="pctChange"/>
         <result column="position" jdbcType="INTEGER" property="position"/>
         <result column="log_time" jdbcType="TIMESTAMP" property="logTime"/>
@@ -15,22 +19,21 @@
     </resultMap>
     <sql id="Base_Column_List">
         id
-        , `name`, `type`, content, suggest, price, pct_change, `position`, log_time, remark
+        , trade_date, code, `name`, `type`, factor, diff, content, `option`, suggest, pct_change,
+    `position`, log_time, remark
     </sql>
 
-    <insert id="insert" parameterType="com.guru.future.domain.FutureLogDO">
-        insert into future_log (id, `name`, `type`,
-                                content, suggest, price, pct_change,
-                                `position`, log_time, remark)
-        values (#{id,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR},
-                #{content,jdbcType=VARCHAR}, #{suggest}, #{price,jdbcType=DECIMAL}, #{pctChange,jdbcType=DECIMAL},
-                #{position,jdbcType=INTEGER}, now(), #{remark,jdbcType=VARCHAR})
-    </insert>
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLogDO">
         insert into future_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
+            </if>
+            <if test="tradeDate != null">
+                trade_date,
+            </if>
+            <if test="code != null">
+                code,
             </if>
             <if test="name != null">
                 `name`,
@@ -38,14 +41,20 @@
             <if test="type != null">
                 `type`,
             </if>
+            <if test="factor != null">
+                factor,
+            </if>
+            <if test="diff != null">
+                diff,
+            </if>
             <if test="content != null">
                 content,
             </if>
+            <if test="option != null">
+                `option`,
+            </if>
             <if test="suggest != null">
                 suggest,
-            </if>
-            <if test="price != null">
-                price,
             </if>
             <if test="pctChange != null">
                 pct_change,
@@ -61,20 +70,32 @@
             <if test="id != null">
                 #{id,jdbcType=BIGINT},
             </if>
+            <if test="tradeDate != null">
+                #{tradeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
             <if test="name != null">
                 #{name,jdbcType=VARCHAR},
             </if>
             <if test="type != null">
                 #{type,jdbcType=VARCHAR},
             </if>
+            <if test="factor != null">
+                #{factor,jdbcType=INTEGER},
+            </if>
+            <if test="diff != null">
+                #{diff,jdbcType=DECIMAL},
+            </if>
             <if test="content != null">
                 #{content,jdbcType=VARCHAR},
             </if>
+            <if test="option != null">
+                #{option,jdbcType=VARCHAR},
+            </if>
             <if test="suggest != null">
                 #{suggest,jdbcType=DECIMAL},
-            </if>
-            <if test="price != null">
-                #{price,jdbcType=DECIMAL},
             </if>
             <if test="pctChange != null">
                 #{pctChange,jdbcType=DECIMAL},

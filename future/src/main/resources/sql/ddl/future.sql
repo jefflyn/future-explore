@@ -97,11 +97,15 @@ create table future_log
 (
     id bigint auto_increment comment 'id'
         primary key,
-    name varchar(20) not null comment '合约名称',
+    trade_date varchar(10) not null comment 'trade date',
+    code varchar(8) not null comment 'contract code',
+    name varchar(10) not null comment '合约名称',
     type varchar(10) null comment '类型',
+    factor int null comment '监控因子',
+    diff decimal(10,2) null comment '监控值',
     content varchar(64) null comment '内容',
+    `option` varchar(6) not null comment '操作选择',
     suggest decimal(10,2) not null comment '建议价格',
-    price decimal(10,2) null comment '当前价格',
     pct_change decimal(10,2) null comment '当前涨跌幅',
     position int null comment '相对位置',
     log_time timestamp default CURRENT_TIMESTAMP not null comment '时间',
@@ -109,29 +113,8 @@ create table future_log
 )
     comment '日志';
 
-create table future_monitor_log
-(
-    id bigint auto_increment comment 'id'
-        primary key,
-    sno varchar(16) not null comment 'serial no.',
-    code varchar(8) not null comment 'code',
-    name varchar(20) not null comment 'contract name',
-    type varchar(10) not null comment 'log type',
-    content varchar(64) not null comment 'log contents',
-    price decimal(10,2) not null comment 'logged current price',
-    pct_change decimal(10,2) not null comment 'logged percentage change',
-    position int not null comment 'relative position',
-    position_lvl tinyint not null comment '[0,33]=1,[33,66]=2,[66,100]=3',
-    `option` tinyint not null comment '1=call 2=put',
-    suggest_price decimal(10,2) not null comment 'suggest price',
-    log_time datetime not null comment 'log time',
-    remark varchar(32) null comment 'remark contents',
-    constraint uidx_future_monitor_log_code
-        unique (code),
-    constraint uidx_future_monitor_log_sno
-        unique (sno)
-)
-    comment '监控日志';
+create index idx_future_log_code_date
+	on future_log (code, trade_date);
 
 create table open_gap
 (

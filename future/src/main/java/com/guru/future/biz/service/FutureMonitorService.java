@@ -15,18 +15,36 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
 public class FutureMonitorService {
-    private static final int secs = 50;
-    private static final float TRIGGER_DIFF = 0.46F;
+    private static List<Pair<Integer, Float>> MONITOR_PARAMS = new ArrayList<>();
+
+    static {
+        MONITOR_PARAMS.add(Pair.with(30, 0.33F));
+        MONITOR_PARAMS.add(Pair.with(50, 0.46F));
+    }
 
     @Resource
     private FutureLogManager futureLogManager;
 
+    public void monitorPriceFlash(FutureLiveDO futureLiveDO, String histHighLowFlag) {
+        try {
+            for (Pair<Integer, Float> param : MONITOR_PARAMS) {
+                triggerPriceFlash(param, futureLiveDO, histHighLowFlag);
+            }
+        } catch (Exception e) {
+            log.error("monitorPriceFlash fail, error={}", e);
+        }
+    }
+
     @Async
-    public void triggerPriceFlash(FutureLiveDO futureLiveDO, String histHighLowFlag) {
+    public void triggerPriceFlash(Pair<Integer, Float> param, FutureLiveDO futureLiveDO, String histHighLowFlag) {
+        int factor = param.getValue0();
+        float triggerDiff = param.getValue1();
         String key = futureLiveDO.getCode();
         BigDecimal price = futureLiveDO.getPrice();
         PriceFlashCache.rPush(key, price);
@@ -34,8 +52,8 @@ public class FutureMonitorService {
         if (priceLen == 1) {
             return;
         }
-        int steps = secs / 5;
-        BigDecimal lastPrice = null;
+        int steps = factor / 5;
+        BigDecimal lastPrice;
         if (priceLen >= steps) {
             lastPrice = PriceFlashCache.lPop(key);
         } else {
@@ -52,19 +70,19 @@ public class FutureMonitorService {
                 BigDecimal minPrice = latePrices.getValue0();
                 BigDecimal maxPrice = latePrices.getValue1();
 
-                float diffMin = 0F;
+                float diffMin;
                 float diffMax = (price.subtract(maxPrice)).multiply(BigDecimal.valueOf(100))
                         .divide(maxPrice, 2, RoundingMode.HALF_UP).floatValue();
-                if (Math.abs(diffMax) >= TRIGGER_DIFF) {
-                    blastTip = "￥";
+                if (Math.abs(diffMax) >= triggerDiff) {
+                    blastTip = "+";
                     diff = diffMax;
                     lastPrice = maxPrice;
                 }
                 if (minPrice.compareTo(maxPrice) != 0) {
                     diffMin = (price.subtract(minPrice)).multiply(BigDecimal.valueOf(100))
                             .divide(minPrice, 2, RoundingMode.HALF_UP).floatValue();
-                    if (Math.abs(diffMin) >= TRIGGER_DIFF) {
-                        blastTip = "￥";
+                    if (Math.abs(diffMin) >= triggerDiff) {
+                        blastTip = "+";
                         diff = diffMin;
                         lastPrice = minPrice;
                     }
@@ -72,38 +90,44 @@ public class FutureMonitorService {
             }
         }
 
-//        if (key.contains("OI")) {
-//            log.info("price queue={}", PriceFlashCache.get(key));
-//            log.info("current price={}, queue price={}, blastTip={}", price, lastPrice, blastTip);
-//        }
-        if (diff >= TRIGGER_DIFF || Strings.isNotBlank(blastTip)) {
-            String diffStr = diff + "%";
+        if (diff >= triggerDiff || Strings.isNotBlank(blastTip)) {
             boolean isUp = price.compareTo(lastPrice) > 0;
             BigDecimal suggestPrice = (lastPrice.add(price)).divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP);
-            String logType = isUp ? "上涨" : "下跌";
-            String suggestParam = (isUp ? "看多" : "看空");
+            String logType = (isUp ? "上涨" : "下跌") + blastTip;
+            String suggestParam = (isUp ? "做多" : "做空");
             StringBuilder content = new StringBuilder();
-            content.append(blastTip + logType).append(diffStr)
-                    .append("【").append(lastPrice).append("-").append(price).append("】")
-                    .append(suggestParam).append(" ").append(suggestPrice)
-                    .append(" ").append(futureLiveDO.getChange()).append("%")
-                    .append(" ").append(futureLiveDO.getPosition());
-            // show msg frame
-            WindowUtil.createMsgFrame(key, isUp, DateUtil.currentTime() + " "
-                    + futureLiveDO.getName() + " " + content);
+            content.append(lastPrice).append("-").append(price);
             FutureLogDO futureLogDO = new FutureLogDO();
+            futureLogDO.setTradeDate(DateUtil.currentTradeDate());
+            futureLogDO.setCode(futureLiveDO.getCode());
+            futureLogDO.setFactor(factor);
+            futureLogDO.setDiff(BigDecimal.valueOf(triggerDiff));
+            futureLogDO.setOption(suggestParam);
             futureLogDO.setName(futureLiveDO.getName());
             futureLogDO.setType(logType);
             futureLogDO.setContent(content.toString());
             futureLogDO.setSuggest(suggestPrice);
-            futureLogDO.setPrice(price);
             futureLogDO.setPctChange(futureLiveDO.getChange());
             futureLogDO.setPosition(futureLiveDO.getPosition().intValue());
             futureLogDO.setRemark(logType + histHighLowFlag);
-            log.info("add log:{}", futureLiveDO.toString());
+            this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
+            log.info("add log:{}", futureLogDO);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(key);
         }
+    }
+
+    private void msgNotice(boolean isUp, FutureLogDO futureLogDO) {
+        String diffStr = String.format("%.2f", futureLogDO.getDiff()) + "%";
+        StringBuilder content = new StringBuilder();
+        content.append(futureLogDO.getType()).append(diffStr)
+                .append("【").append(futureLogDO.getContent()).append("】")
+                .append(futureLogDO.getOption()).append(" ").append(futureLogDO.getSuggest())
+                .append(" ").append(futureLogDO.getPctChange()).append("%")
+                .append(" ").append(futureLogDO.getPosition());
+        // show msg frame
+        WindowUtil.createMsgFrame(futureLogDO.getCode(), isUp, DateUtil.currentTime() + " "
+                + futureLogDO.getName() + " " + content);
     }
 }

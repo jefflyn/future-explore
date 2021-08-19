@@ -110,17 +110,26 @@
         <!--               enableSelectByExample="false"-->
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
-<!--        <table tableName="open_gap"-->
-<!--               domainObjectName="OpenGapDO" mapperName="OpenGapDAO"-->
-<!--               enableCountByExample="false"-->
-<!--               enableUpdateByExample="false"-->
-<!--               enableDeleteByExample="false"-->
-<!--               enableSelectByExample="false"-->
-<!--               selectByExampleQueryId="false">-->
-<!--        </table>-->
+        <!--        <table tableName="open_gap"-->
+        <!--               domainObjectName="OpenGapDO" mapperName="OpenGapDAO"-->
+        <!--               enableCountByExample="false"-->
+        <!--               enableUpdateByExample="false"-->
+        <!--               enableDeleteByExample="false"-->
+        <!--               enableSelectByExample="false"-->
+        <!--               selectByExampleQueryId="false">-->
+        <!--        </table>-->
 
-        <table tableName="future_log"
-               domainObjectName="FutureLogDO" mapperName="FutureLogDAO"
+        <!--        <table tableName="future_log"-->
+        <!--               domainObjectName="FutureLogDO" mapperName="FutureLogDAO"-->
+        <!--               enableCountByExample="false"-->
+        <!--               enableUpdateByExample="false"-->
+        <!--               enableDeleteByExample="false"-->
+        <!--               enableSelectByExample="false"-->
+        <!--               selectByExampleQueryId="false">-->
+        <!--        </table>-->
+
+        <table tableName="future_daily_collect"
+               domainObjectName="FutureDailyCollectDO" mapperName="FutureDailyCollectDAO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

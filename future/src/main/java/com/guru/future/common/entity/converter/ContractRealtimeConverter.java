@@ -1,6 +1,8 @@
 package com.guru.future.common.entity.converter;
 
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
+import com.guru.future.common.enums.DailyCollectType;
+import com.guru.future.domain.FutureDailyCollectDO;
 import com.guru.future.domain.FutureDailyDO;
 import com.guru.future.domain.FutureLiveDO;
 
@@ -70,13 +72,27 @@ public class ContractRealtimeConverter {
         dailyDO.setAmplitude((contractRealtimeDTO.getHigh().subtract(contractRealtimeDTO.getLow()))
                 .multiply(BigDecimal.valueOf(100))
                 .divide(contractRealtimeDTO.getHigh(), 2, RoundingMode.HALF_UP));
-//        dailyDO.setPreClose(contractRealtimeDTO.getPreClose());
         dailyDO.setPreSettle(contractRealtimeDTO.getPreSettle());
         dailyDO.setDealVol(contractRealtimeDTO.getDealVol());
         dailyDO.setHoldVol(contractRealtimeDTO.getHoldVol());
         dailyDO.setExchange(contractRealtimeDTO.getExchange());
         dailyDO.setRemark("");
 
+        return dailyDO;
+    }
+
+    public static FutureDailyCollectDO convert2DailyCollectDO(DailyCollectType collectType, ContractRealtimeDTO contractRealtimeDTO) {
+        FutureDailyCollectDO dailyDO = new FutureDailyCollectDO();
+        dailyDO.setType(collectType.getId());
+        dailyDO.setTradeDate(contractRealtimeDTO.getTradeDate());
+        dailyDO.setCode(contractRealtimeDTO.getCode());
+        dailyDO.setName(contractRealtimeDTO.getName());
+        dailyDO.setPrice(contractRealtimeDTO.getPrice());
+        dailyDO.setLow(contractRealtimeDTO.getLow());
+        dailyDO.setHigh(contractRealtimeDTO.getHigh());
+        dailyDO.setDealVol(contractRealtimeDTO.getDealVol());
+        dailyDO.setHoldVol(contractRealtimeDTO.getHoldVol());
+        dailyDO.setRemark(collectType.getDesc());
         return dailyDO;
     }
 }

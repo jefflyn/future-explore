@@ -46,7 +46,7 @@ public class FutureMonitorServiceTest extends PowerMockTestCase {
         futureLiveDO.setPosition(new BigDecimal("10"));
         when(futureLogManager.addFutureLog(any())).thenReturn(true);
         String histHighLowFlag = " ";
-        futureMonitorService.triggerPriceFlash(futureLiveDO, histHighLowFlag);
+//        futureMonitorService.triggerPriceFlash(futureLiveDO, histHighLowFlag);
     }
 
     @Test
@@ -66,6 +66,6 @@ public class FutureMonitorServiceTest extends PowerMockTestCase {
                 .thenReturn(Pair.with(BigDecimal.valueOf(1000), BigDecimal.valueOf(1001)));
         when(futureLogManager.addFutureLog(any())).thenReturn(true);
         String histHighLowFlag = " ";
-        futureMonitorService.triggerPriceFlash(futureLiveDO, histHighLowFlag);
+//        futureMonitorService.triggerPriceFlash(futureLiveDO, histHighLowFlag);
     }
 }

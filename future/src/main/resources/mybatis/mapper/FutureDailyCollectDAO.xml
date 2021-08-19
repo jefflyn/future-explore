@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guru.future.mapper.FutureDailyCollectDAO">
+    <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureDailyCollectDO">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="high" jdbcType="DECIMAL" property="high"/>
+        <result column="low" jdbcType="DECIMAL" property="low"/>
+        <result column="deal_vol" jdbcType="INTEGER" property="dealVol"/>
+        <result column="hold_vol" jdbcType="INTEGER" property="holdVol"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id
+        , trade_date, code, `name`, `type`, price, high, low, deal_vol, hold_vol, create_time,
+    remark
+    </sql>
+
+    <insert id="insertSelective" parameterType="com.guru.future.domain.FutureDailyCollectDO">
+        insert into future_daily_collect
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="tradeDate != null">
+                trade_date,
+            </if>
+            <if test="code != null">
+                code,
+            </if>
+            <if test="name != null">
+                `name`,
+            </if>
+            <if test="type != null">
+                `type`,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="high != null">
+                high,
+            </if>
+            <if test="low != null">
+                low,
+            </if>
+            <if test="dealVol != null">
+                deal_vol,
+            </if>
+            <if test="holdVol != null">
+                hold_vol,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="tradeDate != null">
+                #{tradeDate,jdbcType=VARCHAR},
+            </if>
+            <if test="code != null">
+                #{code,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=BIT},
+            </if>
+            <if test="price != null">
+                #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="high != null">
+                #{high,jdbcType=DECIMAL},
+            </if>
+            <if test="low != null">
+                #{low,jdbcType=DECIMAL},
+            </if>
+            <if test="dealVol != null">
+                #{dealVol,jdbcType=INTEGER},
+            </if>
+            <if test="holdVol != null">
+                #{holdVol,jdbcType=INTEGER},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+
+</mapper>

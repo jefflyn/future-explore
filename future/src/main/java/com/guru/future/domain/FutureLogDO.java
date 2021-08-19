@@ -9,15 +9,23 @@ import java.util.Date;
 public class FutureLogDO {
     private Long id;
 
+    private String tradeDate;
+
+    private String code;
+
     private String name;
 
     private String type;
 
+    private Integer factor;
+
+    private BigDecimal diff;
+
     private String content;
 
-    private BigDecimal suggest;
+    private String option;
 
-    private BigDecimal price;
+    private BigDecimal suggest;
 
     private BigDecimal pctChange;
 
