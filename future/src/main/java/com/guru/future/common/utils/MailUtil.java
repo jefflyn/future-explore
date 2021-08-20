@@ -36,7 +36,4 @@ public class MailUtil {
         return message;
     }
 
-    public static void main(String[] args) {
-
-    }
 }

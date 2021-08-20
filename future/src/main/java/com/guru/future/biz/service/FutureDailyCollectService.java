@@ -61,7 +61,7 @@ public class FutureDailyCollectService {
     }
 
     public void addTradeDailyCollect(DailyCollectType collectType) {
-        List<String> codes = futureLogManager.getLogCodes();
+        List<String> codes = null; //futureLogManager.getLogCodes();
         List<ContractRealtimeDTO> realtimeDTOList;
         if (CollectionUtils.isEmpty(codes)) {
             realtimeDTOList = dailyCollectManager.getFutureSinaManager().getAllRealtimeFromSina();

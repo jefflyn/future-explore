@@ -20,12 +20,12 @@ public class RealtimeJob {
     @Resource
     private FutureTaskDispatcher futureTaskDispatcher;
 
-    @Scheduled(cron = "3 0 9,21 * * ?")
+    @Scheduled(cron = "0 0 9,21 * * ?")
     private void realtime1() throws InterruptedException {
         futureTaskDispatcher.executePulling(false);
     }
 
-    @Scheduled(cron = "56 29 13 * * ?")
+    @Scheduled(cron = "58 29 13 * * ?")
     private void realtime2() throws InterruptedException {
         futureTaskDispatcher.executePulling(false);
     }
