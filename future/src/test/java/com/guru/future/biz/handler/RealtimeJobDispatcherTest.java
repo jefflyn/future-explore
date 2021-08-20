@@ -5,7 +5,7 @@ import org.testng.annotations.Test;
 
 import javax.annotation.Resource;
 
-public class FutureTaskDispatcherTest extends TestBase {
+public class RealtimeJobDispatcherTest extends TestBase {
 
     @Resource
     private FutureTaskDispatcher futureTaskDispatcher;

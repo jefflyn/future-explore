@@ -2,8 +2,10 @@ package com.guru.future.common.enums;
 
 public enum DailyCollectType {
     COLLECT_TIMED(1, "定时采集"),
-    COLLECT_LOW(2, "日内最低"),
-    COLLECT_HIGH(3, "日内最高"),
+    COLLECT_SCHEDULE(2, "延时采集"),
+
+    COLLECT_LOW(3, "日内最低"),
+    COLLECT_HIGH(4, "日内最高"),
     ;
 
     private Integer id;

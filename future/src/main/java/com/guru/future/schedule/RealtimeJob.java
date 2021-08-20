@@ -1,4 +1,4 @@
-package com.guru.future.task;
+package com.guru.future.schedule;
 
 import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.service.FutureDailyService;
@@ -16,11 +16,7 @@ import javax.annotation.Resource;
 
 @Configuration
 @EnableScheduling
-public class FutureTask {
-    @Resource
-    private FutureDailyService futureDailyService;
-    @Resource
-    private FutureGapService futureGapService;
+public class RealtimeJob {
     @Resource
     private FutureTaskDispatcher futureTaskDispatcher;
 
@@ -33,20 +29,4 @@ public class FutureTask {
     private void realtime2() throws InterruptedException {
         futureTaskDispatcher.executePulling(false);
     }
-
-    @Scheduled(cron = "8 8 15,03 * * ?")
-    private void updateTradeDaily() {
-        futureDailyService.addTradeDaily();
-    }
-
-    @Scheduled(cron = "8 59 08 * * MON-FRI")
-    private void monitorOpenGap() {
-        futureGapService.monitorOpenGap();
-    }
-
-    @Scheduled(cron = "3 0 21 * * MON-FRI")
-    private void monitorNightOpenGap() {
-        futureGapService.monitorOpenGap();
-    }
-
 }

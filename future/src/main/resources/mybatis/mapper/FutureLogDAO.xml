@@ -109,4 +109,9 @@
         </trim>
     </insert>
 
+    <select id="selectCodesByTradeDate" parameterType="string" resultType="string">
+        select distinct code
+        from future_log
+        where trade_date = #{tradeDate,jdbcType=VARCHAR}
+    </select>
 </mapper>

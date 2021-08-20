@@ -1,6 +1,8 @@
 package com.guru.future.biz.service;
 
+import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureLogManager;
+import com.guru.future.common.enums.DailyCollectType;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.PriceFlashCache;
 import com.guru.future.common.utils.WindowUtil;
@@ -24,9 +26,13 @@ public class FutureMonitorService {
     private static List<Pair<Integer, Float>> MONITOR_PARAMS = new ArrayList<>();
 
     static {
+        MONITOR_PARAMS.add(Pair.with(10, 0.2F));
         MONITOR_PARAMS.add(Pair.with(30, 0.33F));
         MONITOR_PARAMS.add(Pair.with(50, 0.46F));
     }
+
+    @Resource
+    private FutureDailyCollectService collectService;
 
     @Resource
     private FutureLogManager futureLogManager;
@@ -50,6 +56,7 @@ public class FutureMonitorService {
         PriceFlashCache.rPush(key, price);
         int priceLen = PriceFlashCache.length(key);
         if (priceLen == 1) {
+            log.info("[monitorPriceFlash] start! param={}, code={}", param, key);
             return;
         }
         int steps = factor / 5;
@@ -61,7 +68,7 @@ public class FutureMonitorService {
         }
         float diff = Math.abs((price.subtract(lastPrice)).multiply(BigDecimal.valueOf(100))
                 .divide(lastPrice, 2, RoundingMode.HALF_UP).floatValue());
-        String blastTip = " ";
+        String blastTip = "";
         {
             if (priceLen > steps / 2) {
                 // 取FIFO队列后半价格
@@ -101,7 +108,7 @@ public class FutureMonitorService {
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
             futureLogDO.setFactor(factor);
-            futureLogDO.setDiff(BigDecimal.valueOf(triggerDiff));
+            futureLogDO.setDiff(BigDecimal.valueOf(diff));
             futureLogDO.setOption(suggestParam);
             futureLogDO.setName(futureLiveDO.getName());
             futureLogDO.setType(logType);
@@ -109,10 +116,11 @@ public class FutureMonitorService {
             futureLogDO.setSuggest(suggestPrice);
             futureLogDO.setPctChange(futureLiveDO.getChange());
             futureLogDO.setPosition(futureLiveDO.getPosition().intValue());
-            futureLogDO.setRemark(logType + histHighLowFlag);
+            futureLogDO.setRemark(logType + " " + histHighLowFlag);
             this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
             log.info("add log:{}", futureLogDO);
+            collectService.scheduleTradeDailyCollect(Lists.newArrayList(key), DailyCollectType.COLLECT_SCHEDULE);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(key);
         }
