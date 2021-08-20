@@ -82,9 +82,27 @@ public class PriceFlashCache {
         return Pair.with(Collections.min(list), Collections.max(list));
     }
 
+    /**
+     * 列表获取最小和最大值
+     *
+     * @param key
+     * @return min, max
+     */
+    public static Pair<BigDecimal, BigDecimal> getMinAndMaxFromList(String key) {
+        LinkedList<BigDecimal> list = ObjectUtils.defaultIfNull(PRICE_QUEUE.get(key), new LinkedList());
+        if (CollectionUtils.isEmpty(list)) {
+            return Pair.with(null, null);
+        }
+        return Pair.with(Collections.min(list), Collections.max(list));
+    }
+
     public static int length(String key) {
         LinkedList list = ObjectUtils.defaultIfNull(PRICE_QUEUE.get(key), new LinkedList());
         return list.size();
     }
 
+    public static int index(String key, BigDecimal price) {
+        LinkedList list = ObjectUtils.defaultIfNull(PRICE_QUEUE.get(key), new LinkedList());
+        return list.indexOf(price);
+    }
 }

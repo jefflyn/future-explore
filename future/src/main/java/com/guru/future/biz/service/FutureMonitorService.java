@@ -9,7 +9,6 @@ import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.logging.log4j.util.Strings;
 import org.javatuples.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -56,7 +55,7 @@ public class FutureMonitorService {
         PriceFlashCache.rPush(key, price);
         int priceLen = PriceFlashCache.length(key);
         if (priceLen == 1) {
-            log.info("[monitorPriceFlash] start! param={}, code={}", param, key);
+//            log.info("[monitorPriceFlash] start! param={}, code={}", param, key);
             return;
         }
         int steps = factor / 5;
@@ -66,38 +65,33 @@ public class FutureMonitorService {
         } else {
             lastPrice = PriceFlashCache.peekFirst(key);
         }
-        float diff = Math.abs((price.subtract(lastPrice)).multiply(BigDecimal.valueOf(100))
-                .divide(lastPrice, 2, RoundingMode.HALF_UP).floatValue());
+//        float diff = 0.0F; //Math.abs((price.subtract(lastPrice)).multiply(BigDecimal.valueOf(100)).divide(lastPrice, 2, RoundingMode.HALF_UP).floatValue());
+        Pair<BigDecimal, BigDecimal> minMaxPrices = PriceFlashCache.getMinAndMaxFromList(key);
+        BigDecimal minPrice = minMaxPrices.getValue0();
+        BigDecimal maxPrice = minMaxPrices.getValue1();
+        boolean isTrigger = false;
         String blastTip = "";
-        {
-            if (priceLen > steps / 2) {
-                // 取FIFO队列后半价格
-                Pair<BigDecimal, BigDecimal> latePrices = PriceFlashCache.getMinAndMaxFromList(key,
-                        Integer.valueOf(steps / 2), PriceFlashCache.length(key));
-                BigDecimal minPrice = latePrices.getValue0();
-                BigDecimal maxPrice = latePrices.getValue1();
-
-                float diffMin;
-                float diffMax = (price.subtract(maxPrice)).multiply(BigDecimal.valueOf(100))
-                        .divide(maxPrice, 2, RoundingMode.HALF_UP).floatValue();
-                if (Math.abs(diffMax) >= triggerDiff) {
+        float diff = (price.subtract(maxPrice)).multiply(BigDecimal.valueOf(100))
+                .divide(maxPrice, 2, RoundingMode.HALF_UP).floatValue();
+        if (Math.abs(diff) >= triggerDiff) {
+            isTrigger = true;
+            lastPrice = maxPrice;
+            if (PriceFlashCache.index(key, maxPrice) > (priceLen / 2)) {
+                blastTip = "+";
+            }
+        } else {
+            diff = (price.subtract(minPrice)).multiply(BigDecimal.valueOf(100))
+                    .divide(minPrice, 2, RoundingMode.HALF_UP).floatValue();
+            if (Math.abs(diff) >= triggerDiff) {
+                isTrigger = true;
+                lastPrice = minPrice;
+                if (PriceFlashCache.index(key, minPrice) > (priceLen / 2)) {
                     blastTip = "+";
-                    diff = diffMax;
-                    lastPrice = maxPrice;
-                }
-                if (minPrice.compareTo(maxPrice) != 0) {
-                    diffMin = (price.subtract(minPrice)).multiply(BigDecimal.valueOf(100))
-                            .divide(minPrice, 2, RoundingMode.HALF_UP).floatValue();
-                    if (Math.abs(diffMin) >= triggerDiff) {
-                        blastTip = "+";
-                        diff = diffMin;
-                        lastPrice = minPrice;
-                    }
                 }
             }
         }
 
-        if (diff >= triggerDiff || Strings.isNotBlank(blastTip)) {
+        if (isTrigger) {
             boolean isUp = price.compareTo(lastPrice) > 0;
             BigDecimal suggestPrice = (lastPrice.add(price)).divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP);
             String logType = (isUp ? "上涨" : "下跌") + blastTip;
