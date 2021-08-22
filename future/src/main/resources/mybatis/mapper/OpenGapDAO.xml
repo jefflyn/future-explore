@@ -9,6 +9,7 @@
         <result column="pre_close" jdbcType="DECIMAL" property="preClose"/>
         <result column="open" jdbcType="DECIMAL" property="open"/>
         <result column="gap_rate" jdbcType="DECIMAL" property="gapRate"/>
+        <result column="day_gap" jdbcType="BOOLEAN" property="dayGap"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
         <result column="buy_low" jdbcType="DECIMAL" property="buyLow"/>
         <result column="sell_high" jdbcType="DECIMAL" property="sellHigh"/>
@@ -16,12 +17,12 @@
 
     <insert id="insertBatch" parameterType="list">
         insert into open_gap
-        (trade_date, code, name, category, pre_close, open, gap_rate, remark, buy_low, sell_high)
+        (trade_date, code, name, category, pre_close, open, gap_rate, day_gap, remark, buy_low, sell_high)
         values
         <foreach collection="list" item="obj" index="index" separator=",">
             (
             #{obj.tradeDate}, #{obj.code}, #{obj.name}, #{obj.category}, #{obj.preClose},
-            #{obj.open}, #{obj.gapRate}, #{obj.remark}, #{obj.buyLow}, #{obj.sellHigh}
+            #{obj.open}, #{obj.gapRate}, #{obj.dayGap}, #{obj.remark}, #{obj.buyLow}, #{obj.sellHigh}
             )
         </foreach>
     </insert>
@@ -49,6 +50,9 @@
             </if>
             <if test="gapRate != null">
                 gap_rate,
+            </if>
+            <if test="dayGap != null">
+                day_gap,
             </if>
             <if test="remark != null">
                 remark,
@@ -81,6 +85,9 @@
             </if>
             <if test="gapRate != null">
                 #{gapRate,jdbcType=DECIMAL},
+            </if>
+            <if test="dayGap != null">
+                #{dayGap,jdbcType=BOOLEAN},
             </if>
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},

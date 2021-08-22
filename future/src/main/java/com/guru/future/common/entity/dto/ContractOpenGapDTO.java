@@ -20,6 +20,8 @@ public class ContractOpenGapDTO implements Comparable<ContractOpenGapDTO> {
 
     private BigDecimal gapRate;
 
+    private Boolean dayGap;
+
     private String remark;
 
     private String suggest;

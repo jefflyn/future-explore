@@ -100,63 +100,66 @@ public class FutureGapService {
                 openStats.put("低开", cnt + 1);
             }
             BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
-            if (Math.abs(gapRate.floatValue()) >= 0.5) {
-                BigDecimal dayGap = null;
-                BigDecimal suggestFrom = null;
-                BigDecimal suggestTo = null;
-                StringBuilder remark = new StringBuilder("");
-                if (priceDiff.compareTo(BigDecimal.ZERO) >= 0) {
-                    // 日级别跳空高开
-                    if (currentOpen.compareTo(preHigh) > 0) {
-                        suggestFrom = preClose.multiply(BigDecimal.valueOf(0.996));
-                        dayGap = (currentOpen.subtract(preHigh)).multiply(BigDecimal.valueOf(100)).divide(preHigh, 2, RoundingMode.HALF_UP);
-                        if (Math.abs(dayGap.floatValue()) >= 1.5) {
-                            suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.005));
-                        } else {
-                            suggestTo = currentOpen.multiply(BigDecimal.valueOf(1 + (1.5 - dayGap.floatValue()) / 100));
-                        }
-                        remark.append("日跳高 ").append("+").append(dayGap).append("%");
+            //if (Math.abs(gapRate.floatValue()) >= 0.5) {
+            BigDecimal dayGap = null;
+            BigDecimal suggestFrom = null;
+            BigDecimal suggestTo = null;
+            StringBuilder remark = new StringBuilder("");
+            boolean isDayGap = false;
+            if (priceDiff.compareTo(BigDecimal.ZERO) >= 0) {
+                // 日级别跳空高开
+                if (currentOpen.compareTo(preHigh) > 0) {
+                    isDayGap = true;
+                    suggestFrom = preClose.multiply(BigDecimal.valueOf(0.996));
+                    dayGap = (currentOpen.subtract(preHigh)).multiply(BigDecimal.valueOf(100)).divide(preHigh, 2, RoundingMode.HALF_UP);
+                    if (Math.abs(dayGap.floatValue()) >= 1.5) {
+                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.005));
                     } else {
-                        suggestFrom = preClose.multiply(BigDecimal.valueOf(0.999));
-                        if (Math.abs(gapRate.floatValue()) >= 1.5) {
-                            suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.003));
-                        } else {
-                            suggestTo = currentOpen.multiply(BigDecimal.valueOf(1 + (1.5 - gapRate.floatValue()) / 100));
-                        }
+                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1 + (1.5 - dayGap.floatValue()) / 100));
                     }
-                    if (Math.abs(gapRate.floatValue()) >= 0.6){
-                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.9964));
-                    }
+                    remark.append("日跳高 ").append("+").append(dayGap).append("%");
                 } else {
-                    // 日级别跳空低开
-                    if (currentOpen.compareTo(preLow) < 0) {
-                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.996));
-                        dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
-//                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
-                        if (Math.abs(dayGap.floatValue()) >= 1.5) {
-                            suggestTo = preLow.multiply(BigDecimal.valueOf(1.005));
-                        } else {
-                            suggestTo = preLow.multiply(BigDecimal.valueOf(1 + (1.5 + dayGap.floatValue()) / 100));
-                        }
-                        remark.append("日跳空 ").append(dayGap).append("%");
+                    suggestFrom = preClose.multiply(BigDecimal.valueOf(0.999));
+                    if (Math.abs(gapRate.floatValue()) >= 1.5) {
+                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.003));
                     } else {
-                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.999));
-                        if (Math.abs(gapRate.floatValue()) >= 1.5) {
-                            suggestTo = preClose.multiply(BigDecimal.valueOf(1.003));
-                        } else {
-                            suggestTo = preClose.multiply(BigDecimal.valueOf(1 + (1.5 + gapRate.floatValue()) / 100));
-                        }
+                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1 + (1.5 - gapRate.floatValue()) / 100));
                     }
                 }
-                suggestFrom = suggestFrom.setScale(1, RoundingMode.HALF_UP);
-                suggestTo = suggestTo.setScale(1, RoundingMode.HALF_UP);
-                String suggestPrice = suggestFrom + "-" + suggestTo;
-                ContractOpenGapDTO openGapDTO = ContractOpenGapDTO.builder()
-                        .tradeDate(tradeDate).code(code).name(basicDO.getName()).category(basicDO.getType())
-                        .preClose(preClose.setScale(1, RoundingMode.HALF_UP)).open(currentOpen).gapRate(gapRate)
-                        .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo).suggest(suggestPrice).build();
-                openGapDTOList.add(openGapDTO);
+                if (Math.abs(gapRate.floatValue()) >= 0.6) {
+                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.9964));
+                }
+            } else {
+                // 日级别跳空低开
+                if (currentOpen.compareTo(preLow) < 0) {
+                    isDayGap = true;
+                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.996));
+                    dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
+//                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
+                    if (Math.abs(dayGap.floatValue()) >= 1.5) {
+                        suggestTo = preLow.multiply(BigDecimal.valueOf(1.005));
+                    } else {
+                        suggestTo = preLow.multiply(BigDecimal.valueOf(1 + (1.5 + dayGap.floatValue()) / 100));
+                    }
+                    remark.append("日跳空 ").append(dayGap).append("%");
+                } else {
+                    suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.999));
+                    if (Math.abs(gapRate.floatValue()) >= 1.5) {
+                        suggestTo = preClose.multiply(BigDecimal.valueOf(1.003));
+                    } else {
+                        suggestTo = preClose.multiply(BigDecimal.valueOf(1 + (1.5 + gapRate.floatValue()) / 100));
+                    }
+                }
             }
+            suggestFrom = suggestFrom.setScale(1, RoundingMode.HALF_UP);
+            suggestTo = suggestTo.setScale(1, RoundingMode.HALF_UP);
+            String suggestPrice = suggestFrom + "-" + suggestTo;
+            ContractOpenGapDTO openGapDTO = ContractOpenGapDTO.builder()
+                    .tradeDate(tradeDate).code(code).name(basicDO.getName()).category(basicDO.getType()).dayGap(isDayGap)
+                    .preClose(preClose.setScale(1, RoundingMode.HALF_UP)).open(currentOpen).gapRate(gapRate)
+                    .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo).suggest(suggestPrice).build();
+            openGapDTOList.add(openGapDTO);
+//            }
         }
         // 2021-08-18 高开:20 低开:10 平开:1
         StringBuilder title = new StringBuilder(tradeDate + "<br/>");
@@ -197,17 +200,19 @@ public class FutureGapService {
                 "</tr>");
         int seq = 0;
         for (ContractOpenGapDTO openGapDTO : openGapDTOList) {
-            stringBuilder.append("</tr>");
-            stringBuilder.append("<td style=\"text-align:left\">" + (++seq) + "</td>");
-            stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getCategory() + "</td>");
-            stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getCode() + "</td>");
-            stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getName() + "</td>");
-            stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getPreClose() + "</td>");
-            stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getOpen() + "</td>");
-            stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getGapRate() + "%</td>");
-            stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getRemark() + "</td>");
-            stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getSuggest() + "</td>");
-            stringBuilder.append("</tr>");
+            if (Math.abs(openGapDTO.getGapRate().floatValue()) >= 0.33 || openGapDTO.getDayGap()) {
+                stringBuilder.append("</tr>");
+                stringBuilder.append("<td style=\"text-align:left\">" + (++seq) + "</td>");
+                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getCategory() + "</td>");
+                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getCode() + "</td>");
+                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getName() + "</td>");
+                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getPreClose() + "</td>");
+                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getOpen() + "</td>");
+                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getGapRate() + "%</td>");
+                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getRemark() + "</td>");
+                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getSuggest() + "</td>");
+                stringBuilder.append("</tr>");
+            }
         }
         stringBuilder.append("</table>");
         stringBuilder.append("</body></html>");
