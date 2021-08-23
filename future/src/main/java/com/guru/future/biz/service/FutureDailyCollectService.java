@@ -48,7 +48,7 @@ public class FutureDailyCollectService {
      * @param collectType
      */
     public void scheduleTradeDailyCollect(List<String> codes, DailyCollectType collectType) {
-        if (!DateUtil.isTradeTime()) {
+        if (DateUtil.isTradeTime()) {
             return;
         }
         if (CollectionUtils.isEmpty(codes)) {
