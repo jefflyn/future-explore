@@ -25,7 +25,7 @@ public class FutureMonitorService {
     private static List<Pair<Integer, Float>> MONITOR_PARAMS = new ArrayList<>();
 
     static {
-        MONITOR_PARAMS.add(Pair.with(20, 0.2F));
+        MONITOR_PARAMS.add(Pair.with(15, 0.2F));
         MONITOR_PARAMS.add(Pair.with(30, 0.33F));
         MONITOR_PARAMS.add(Pair.with(50, 0.46F));
     }
@@ -50,23 +50,24 @@ public class FutureMonitorService {
     public void triggerPriceFlash(Pair<Integer, Float> param, FutureLiveDO futureLiveDO, String histHighLowFlag) {
         int factor = param.getValue0();
         float triggerDiff = param.getValue1();
-        String key = futureLiveDO.getCode();
+        String code = futureLiveDO.getCode();
+        String cachedKey = code + param.toString();
         BigDecimal price = futureLiveDO.getPrice();
-        PriceFlashCache.rPush(key, price);
-        int priceLen = PriceFlashCache.length(key);
+        PriceFlashCache.rPush(cachedKey, price);
+        int priceLen = PriceFlashCache.length(cachedKey);
         if (priceLen == 1) {
-//            log.info("[monitorPriceFlash] start! param={}, code={}", param, key);
+//            log.info("[monitorPriceFlash] start! param={}, code={}", param, cachedKey);
             return;
         }
         int steps = factor / 5;
         BigDecimal lastPrice;
         if (priceLen >= steps) {
-            lastPrice = PriceFlashCache.lPop(key);
+            lastPrice = PriceFlashCache.lPop(cachedKey);
         } else {
-            lastPrice = PriceFlashCache.peekFirst(key);
+            lastPrice = PriceFlashCache.peekFirst(cachedKey);
         }
 //        float diff = 0.0F; //Math.abs((price.subtract(lastPrice)).multiply(BigDecimal.valueOf(100)).divide(lastPrice, 2, RoundingMode.HALF_UP).floatValue());
-        Pair<BigDecimal, BigDecimal> minMaxPrices = PriceFlashCache.getMinAndMaxFromList(key);
+        Pair<BigDecimal, BigDecimal> minMaxPrices = PriceFlashCache.getMinAndMaxFromList(cachedKey);
         BigDecimal minPrice = minMaxPrices.getValue0();
         BigDecimal maxPrice = minMaxPrices.getValue1();
         boolean isTrigger = false;
@@ -76,7 +77,7 @@ public class FutureMonitorService {
         if (Math.abs(diff) >= triggerDiff) {
             isTrigger = true;
             lastPrice = maxPrice;
-            if (PriceFlashCache.index(key, maxPrice) > (priceLen / 2)) {
+            if (PriceFlashCache.index(cachedKey, maxPrice) > (priceLen / 2)) {
                 blastTip = "+";
             }
         } else {
@@ -85,7 +86,7 @@ public class FutureMonitorService {
             if (Math.abs(diff) >= triggerDiff) {
                 isTrigger = true;
                 lastPrice = minPrice;
-                if (PriceFlashCache.index(key, minPrice) > (priceLen / 2)) {
+                if (PriceFlashCache.index(cachedKey, minPrice) > (priceLen / 2)) {
                     blastTip = "+";
                 }
             }
@@ -114,16 +115,17 @@ public class FutureMonitorService {
             this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
             log.info("add log:{}", futureLogDO);
-            collectService.scheduleTradeDailyCollect(Lists.newArrayList(key), DailyCollectType.COLLECT_SCHEDULE);
+            collectService.scheduleTradeDailyCollect(Lists.newArrayList(code), DailyCollectType.COLLECT_SCHEDULE);
             // 删除价格列表，重新获取
-            PriceFlashCache.delete(key);
+            PriceFlashCache.delete(cachedKey);
         }
     }
 
     private void msgNotice(boolean isUp, FutureLogDO futureLogDO) {
         String diffStr = String.format("%.2f", futureLogDO.getDiff()) + "%";
         StringBuilder content = new StringBuilder();
-        content.append(futureLogDO.getType()).append(futureLogDO.getFactor()).append(" ").append(diffStr)
+        content.append(futureLogDO.getType()).append(" ").append(futureLogDO.getFactor())
+                .append(" ").append(diffStr)
                 .append("【").append(futureLogDO.getContent()).append("】")
                 .append(futureLogDO.getOption()).append(" ").append(futureLogDO.getSuggest())
                 .append(" ").append(futureLogDO.getPctChange()).append("%")
