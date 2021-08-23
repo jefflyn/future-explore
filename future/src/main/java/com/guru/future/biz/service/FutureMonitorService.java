@@ -123,7 +123,7 @@ public class FutureMonitorService {
     private void msgNotice(boolean isUp, FutureLogDO futureLogDO) {
         String diffStr = String.format("%.2f", futureLogDO.getDiff()) + "%";
         StringBuilder content = new StringBuilder();
-        content.append(futureLogDO.getType()).append(diffStr)
+        content.append(futureLogDO.getType()).append(futureLogDO.getFactor()).append(" ").append(diffStr)
                 .append("【").append(futureLogDO.getContent()).append("】")
                 .append(futureLogDO.getOption()).append(" ").append(futureLogDO.getSuggest())
                 .append(" ").append(futureLogDO.getPctChange()).append("%")

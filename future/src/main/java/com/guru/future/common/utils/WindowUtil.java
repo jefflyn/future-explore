@@ -24,7 +24,7 @@ public class WindowUtil {
             if (frame == null) {
                 frame = new JFrame("price flash");
                 frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 480, 120);
+                frame.setBounds(0, 1000, 500, 120);
 //                frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
                 frame.addWindowListener(new WindowAdapter() {
                     @Override
