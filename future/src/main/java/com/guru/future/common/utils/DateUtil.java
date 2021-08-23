@@ -7,21 +7,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
-import java.sql.Time;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author j
  */
 @Slf4j
 public class DateUtil {
+    private static final long SECOND_SCALE = 1000L;
+    private static final long MINUTE_SCALE = 60L * SECOND_SCALE;
+    private static final long HOUR_SCALE = 60L * MINUTE_SCALE;
+    private static final long DAY_SCALE = 24L * HOUR_SCALE;
+
     public static final Map<Integer, List<Integer>> HOLIDAY_MAP = new HashMap<>();
 
     static {
@@ -45,7 +49,6 @@ public class DateUtil {
     public static final String HOUR_MINUTE_PATTERN = "HH:mm";
     public static final String COMMON_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final String TIME_PATTERN = "HH:mm:ss";
-
 
 
     public static Boolean isHoliday(Date date) {
@@ -189,11 +192,31 @@ public class DateUtil {
         return isTradeTime;
     }
 
-    public static void main(String[] args) throws IOException {
-//        Runtime.getRuntime().exec("say hello");
-        System.out.println(DateUtil.isTradeTime());
-        System.out.println(DateUtil.getLastTradeDate(new Date()));
-        System.out.println(DateUtil.getNextTradeDate(new Date()));
+    public static long diff(Date before, Date after, TimeUnit unit) {
+        long diff = after.getTime() - before.getTime();
+        if (TimeUnit.DAYS.equals(unit)) {
+            return diff / DAY_SCALE;
+        } else if (TimeUnit.HOURS.equals(unit)) {
+            return diff / HOUR_SCALE;
+        } else if (TimeUnit.MINUTES.equals(unit)) {
+            return diff / MINUTE_SCALE;
+        } else {
+            return diff / SECOND_SCALE;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
+                DateUtils.parseDate("2021-08-23 12:41:10", COMMON_DATE_PATTERN), null));
+        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
+                DateUtils.parseDate("2021-08-23 12:43:11", COMMON_DATE_PATTERN), TimeUnit.MINUTES));
+        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
+                DateUtils.parseDate("2021-08-23 13:41:59", COMMON_DATE_PATTERN), TimeUnit.HOURS));
+        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:40", COMMON_DATE_PATTERN),
+                DateUtils.parseDate("2021-08-25 12:39:10", COMMON_DATE_PATTERN), TimeUnit.DAYS));
+//        System.out.println(DateUtil.isTradeTime());
+//        System.out.println(DateUtil.getLastTradeDate(new Date()));
+//        System.out.println(DateUtil.getNextTradeDate(new Date()));
 
     }
 }

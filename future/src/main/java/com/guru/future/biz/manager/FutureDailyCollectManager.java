@@ -24,6 +24,10 @@ public class FutureDailyCollectManager {
     @Resource
     private FutureDailyCollectDAO futureDailyCollectDAO;
 
+    public FutureDailyCollectDO getLastDailyByCode(String code) {
+        return futureDailyCollectDAO.selectLastByCode(code);
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public Boolean addDailyCollect(FutureDailyCollectDO futureDailyCollectDO) {
         return futureDailyCollectDAO.insertSelective(futureDailyCollectDO) > 0;

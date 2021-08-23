@@ -21,6 +21,14 @@
     remark
     </sql>
 
+    <select id="selectLastByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from future_daily_collect
+        where code = #{code,jdbcType=VARCHAR}
+        order by id desc limit 1
+    </select>
+
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureDailyCollectDO">
         insert into future_daily_collect
         <trim prefix="(" suffix=")" suffixOverrides=",">

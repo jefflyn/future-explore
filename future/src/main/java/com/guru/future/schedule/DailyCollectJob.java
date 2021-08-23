@@ -18,7 +18,7 @@ public class DailyCollectJob {
     @Resource
     private FutureDailyCollectService dailyCollectService;
 
-    @Scheduled(cron = "0 30 10,11,12 * * ?")
+    @Scheduled(cron = "0 30 9,10,11 * * ?")
     private void dailyCollect1() {
         dailyCollectService.addTradeDailyCollect(DailyCollectType.COLLECT_TIMED);
 
