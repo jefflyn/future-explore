@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -48,7 +49,7 @@ public class FutureDailyCollectService {
      * @param collectType
      */
     public void scheduleTradeDailyCollect(List<String> codes, DailyCollectType collectType) {
-        if (DateUtil.isTradeTime()) {
+        if (!DateUtil.isTradeTime()) {
             return;
         }
         if (CollectionUtils.isEmpty(codes)) {
@@ -61,7 +62,7 @@ public class FutureDailyCollectService {
     }
 
     public void addTradeDailyCollect(DailyCollectType collectType) {
-        List<String> codes = null; //futureLogManager.getLogCodes();
+        List<String> codes = new ArrayList<>(); //futureLogManager.getLogCodes();
         List<ContractRealtimeDTO> realtimeDTOList;
         if (CollectionUtils.isEmpty(codes)) {
             realtimeDTOList = dailyCollectManager.getFutureSinaManager().getAllRealtimeFromSina();
