@@ -40,7 +40,7 @@ public class DailyCollectTask implements Runnable {
             for (ContractRealtimeDTO contractRealtimeDTO : realtimeDTOList) {
                 FutureDailyCollectDO dailyCollectDO = ContractRealtimeConverter.convert2DailyCollectDO(dailyCollectManager.getCollectType(), contractRealtimeDTO);
                 FutureDailyCollectDO lastDailyDO = dailyCollectManager.getLastDailyByCode(dailyCollectDO.getCode());
-                if (lastDailyDO == null || DateUtil.diff(new Date(), lastDailyDO.getCreateTime(), TimeUnit.MINUTES) > 5) {
+                if (lastDailyDO == null || DateUtil.diff(lastDailyDO.getCreateTime(), new Date(), TimeUnit.MINUTES) > 5) {
                     dailyCollectManager.addDailyCollect(dailyCollectDO);
                     log.info("[DailyCollectTask] success! {}", dailyCollectDO);
                 }
