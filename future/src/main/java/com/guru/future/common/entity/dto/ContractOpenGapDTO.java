@@ -16,6 +16,10 @@ public class ContractOpenGapDTO implements Comparable<ContractOpenGapDTO> {
 
     private BigDecimal preClose;
 
+    private BigDecimal preHigh;
+
+    private BigDecimal preLow;
+
     private BigDecimal open;
 
     private BigDecimal gapRate;

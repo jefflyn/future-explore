@@ -156,7 +156,8 @@ public class FutureGapService {
             String suggestPrice = suggestFrom + "-" + suggestTo;
             ContractOpenGapDTO openGapDTO = ContractOpenGapDTO.builder()
                     .tradeDate(tradeDate).code(code).name(basicDO.getName()).category(basicDO.getType()).dayGap(isDayGap)
-                    .preClose(preClose.setScale(1, RoundingMode.HALF_UP)).open(currentOpen).gapRate(gapRate)
+                    .preClose(preClose.setScale(1, RoundingMode.HALF_UP))
+                    .preHigh(preHigh).preLow(preLow).open(currentOpen).gapRate(gapRate)
                     .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo).suggest(suggestPrice).build();
             openGapDTOList.add(openGapDTO);
 //            }
