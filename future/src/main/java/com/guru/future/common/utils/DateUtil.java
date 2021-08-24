@@ -43,7 +43,8 @@ public class DateUtil {
     private static final int AFTERNOON_CLOSE_HOUR = 15;
     private static final int NIGHT_OPEN_HOUR = 20;
     private static final int NIGHT_OPEN_MINUTE = 59;
-    private static final int NIGHT_CLOSE_HOUR = 3;
+    private static final int NIGHT_CLOSE_HOUR = 23;
+    private static final int MID_NIGHT_CLOSE_HOUR = 3;
 
     public static final String TRADE_DATE_PATTERN = "yyyy-MM-dd";
     public static final String HOUR_MINUTE_PATTERN = "HH:mm";
@@ -182,12 +183,12 @@ public class DateUtil {
         Calendar nightOpen = Calendar.getInstance();
         nightOpen.set(year, month, day, NIGHT_OPEN_HOUR, NIGHT_OPEN_MINUTE, 0);
         Calendar nightClose = Calendar.getInstance();
-        nightClose.set(year, month, day, NIGHT_CLOSE_HOUR, 59, 59);
+        nightClose.set(year, month, day, NIGHT_CLOSE_HOUR, 0, 0);
 
         boolean isTradeTime = (now.after(morningOpen) && now.before(morningClose))
                 || (now.after(afternoonOpen) && now.before(afternoonClose))
                 || (now.after(nightOpen) && now.before(nightClose))
-                || hour <= NIGHT_CLOSE_HOUR;
+                || hour <= MID_NIGHT_CLOSE_HOUR;
 
         return isTradeTime;
     }
