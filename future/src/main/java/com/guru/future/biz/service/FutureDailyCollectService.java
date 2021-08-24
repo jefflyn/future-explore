@@ -58,7 +58,7 @@ public class FutureDailyCollectService {
         dailyCollectManager.setCollectType(collectType);
         dailyCollectManager.setCollectCodes(codes);
         this.executorService.scheduleWithFixedDelay(new DailyCollectTask(dailyCollectManager),
-                0L, 5L, TimeUnit.MINUTES);
+                5L, 5L, TimeUnit.MINUTES);
     }
 
     public void addTradeDailyCollect(DailyCollectType collectType) {
