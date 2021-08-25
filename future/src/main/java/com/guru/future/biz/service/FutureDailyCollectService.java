@@ -50,6 +50,7 @@ public class FutureDailyCollectService {
      */
     public void scheduleTradeDailyCollect(List<String> codes, DailyCollectType collectType) {
         if (!DateUtil.isTradeTime()) {
+            log.info("scheduleTradeDailyCollect not trade time, end!");
             return;
         }
         if (CollectionUtils.isEmpty(codes)) {

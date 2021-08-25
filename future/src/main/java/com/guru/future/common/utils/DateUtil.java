@@ -160,35 +160,25 @@ public class DateUtil {
     }
 
     public static Boolean isTradeTime() {
-        Calendar now = Calendar.getInstance();
+        Date now = new Date();
         // holiday
         if (isHoliday(now)) {
             return false;
         }
-        int year = now.get(Calendar.YEAR);
-        int month = now.get(Calendar.MONTH);
-        int day = now.get(Calendar.DAY_OF_MONTH);
-        int hour = now.get(Calendar.HOUR_OF_DAY);
+        String nowTime = DateFormatUtils.format(now, TIME_PATTERN);
 
-        Calendar morningOpen = Calendar.getInstance();
-        morningOpen.set(year, month, day, MORNING_OPEN_HOUR, MORNING_OPEN_MINUTE, 0);
-        Calendar morningClose = Calendar.getInstance();
-        morningClose.set(year, month, day, MORNING_CLOSE_HOUR, MORNING_CLOSE_MINUTE, 10);
+        String morningOpen = "09:00:00";
+        String morningClose = "11:30:00";
 
-        Calendar afternoonOpen = Calendar.getInstance();
-        afternoonOpen.set(year, month, day, AFTERNOON_OPEN_HOUR, AFTERNOON_OPEN_MINUTE, 0);
-        Calendar afternoonClose = Calendar.getInstance();
-        afternoonClose.set(year, month, day, AFTERNOON_CLOSE_HOUR, 0, 10);
+        String afternoonOpen = "13:30:00";
+        String afternoonClose = "15:00:00";
 
-        Calendar nightOpen = Calendar.getInstance();
-        nightOpen.set(year, month, day, NIGHT_OPEN_HOUR, NIGHT_OPEN_MINUTE, 0);
-        Calendar nightClose = Calendar.getInstance();
-        nightClose.set(year, month, day, NIGHT_CLOSE_HOUR, 0, 0);
+        String nightOpen = "21:00:00";
+        String nightClose = "23:00:00";
 
-        boolean isTradeTime = (now.after(morningOpen) && now.before(morningClose))
-                || (now.after(afternoonOpen) && now.before(afternoonClose))
-                || (now.after(nightOpen) && now.before(nightClose))
-                || hour <= MID_NIGHT_CLOSE_HOUR;
+        boolean isTradeTime = (nowTime.compareTo(morningOpen) >= 0 && nowTime.compareTo(morningClose) <= 0)
+                || (nowTime.compareTo(afternoonOpen) >= 0 && nowTime.compareTo(afternoonClose) <= 0)
+                || (nowTime.compareTo(nightOpen) >= 0 && nowTime.compareTo(nightClose) <= 0);
 
         return isTradeTime;
     }
@@ -207,15 +197,15 @@ public class DateUtil {
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
-                DateUtils.parseDate("2021-08-23 12:41:10", COMMON_DATE_PATTERN), null));
-        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
-                DateUtils.parseDate("2021-08-23 12:43:11", COMMON_DATE_PATTERN), TimeUnit.MINUTES));
-        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
-                DateUtils.parseDate("2021-08-23 13:41:59", COMMON_DATE_PATTERN), TimeUnit.HOURS));
-        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:40", COMMON_DATE_PATTERN),
-                DateUtils.parseDate("2021-08-25 12:39:10", COMMON_DATE_PATTERN), TimeUnit.DAYS));
-//        System.out.println(DateUtil.isTradeTime());
+//        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
+//                DateUtils.parseDate("2021-08-23 12:41:10", COMMON_DATE_PATTERN), null));
+//        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
+//                DateUtils.parseDate("2021-08-23 12:43:11", COMMON_DATE_PATTERN), TimeUnit.MINUTES));
+//        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
+//                DateUtils.parseDate("2021-08-23 13:41:59", COMMON_DATE_PATTERN), TimeUnit.HOURS));
+//        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:40", COMMON_DATE_PATTERN),
+//                DateUtils.parseDate("2021-08-25 12:39:10", COMMON_DATE_PATTERN), TimeUnit.DAYS));
+        System.out.println(DateUtil.isTradeTime());
 //        System.out.println(DateUtil.getLastTradeDate(new Date()));
 //        System.out.println(DateUtil.getNextTradeDate(new Date()));
 
