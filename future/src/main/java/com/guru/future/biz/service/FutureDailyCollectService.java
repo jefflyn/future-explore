@@ -49,17 +49,13 @@ public class FutureDailyCollectService {
      * @param collectType
      */
     public void scheduleTradeDailyCollect(List<String> codes, DailyCollectType collectType) {
-        if (!DateUtil.isTradeTime()) {
-            log.info("scheduleTradeDailyCollect not trade time, end!");
-            return;
-        }
         if (CollectionUtils.isEmpty(codes)) {
             return;
         }
         dailyCollectManager.setCollectType(collectType);
         dailyCollectManager.setCollectCodes(codes);
         this.executorService.scheduleWithFixedDelay(new DailyCollectTask(dailyCollectManager),
-                5L, 5L, TimeUnit.MINUTES);
+                5L, 10L, TimeUnit.MINUTES);
     }
 
     public void addTradeDailyCollect(DailyCollectType collectType) {

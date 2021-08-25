@@ -32,6 +32,10 @@ public class DailyCollectTask implements Runnable {
 
     @Override
     public void run() {
+        if (!DateUtil.isTradeTime()) {
+            log.info("DailyCollectTask not in trade time, end!");
+            return;
+        }
         try {
             List<ContractRealtimeDTO> realtimeDTOList = dailyCollectManager.getFutureSinaManager().getRealtimeFromSina(dailyCollectManager.getCollectCodes());
             if (CollectionUtils.isEmpty(realtimeDTOList)) {

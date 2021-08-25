@@ -24,7 +24,7 @@ public class DailyCollectJob {
 
     }
 
-    @Scheduled(cron = "0 0 3,14,15,22,23 * * ?")
+    @Scheduled(cron = "0 0 14,15,22,23 * * ?")
     private void dailyCollect2() {
         dailyCollectService.addTradeDailyCollect(DailyCollectType.COLLECT_TIMED);
     }
