@@ -71,8 +71,7 @@ public class FutureLiveService {
     private Pair<BigDecimal, BigDecimal> updateHistHighLow(ContractRealtimeDTO contractRealtimeDTO, FutureBasicDO futureBasicDO) {
         BigDecimal histHigh = ObjectUtils.defaultIfNull(futureBasicDO.getHigh(), BigDecimal.ZERO);
         BigDecimal histLow = ObjectUtils.defaultIfNull(futureBasicDO.getLow(), BigDecimal.ZERO);
-        if (contractRealtimeDTO.getLow().compareTo(histLow) < 0 || histLow.intValue() == 0) {
-            histHigh = contractRealtimeDTO.getLow();
+        if (contractRealtimeDTO.getLow().compareTo(histLow) < 0) {
             FutureBasicDO updateBasicDO = new FutureBasicDO();
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setLow(contractRealtimeDTO.getLow());
@@ -81,8 +80,7 @@ public class FutureLiveService {
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist low, refresh basic data", contractRealtimeDTO.getCode());
         }
-        if (contractRealtimeDTO.getHigh().compareTo(histHigh) > 0 || histHigh.intValue() == 0) {
-            histLow = contractRealtimeDTO.getHigh();
+        if (contractRealtimeDTO.getHigh().compareTo(histHigh) > 0) {
             FutureBasicDO updateBasicDO = new FutureBasicDO();
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setHigh(contractRealtimeDTO.getHigh());

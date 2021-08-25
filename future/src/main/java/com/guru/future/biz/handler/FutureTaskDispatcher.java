@@ -59,6 +59,7 @@ public class FutureTaskDispatcher {
 
             // async live data
             futureLiveService.refreshLiveData(contractRealtimeDTOList, REFRESH);
+            REFRESH = false;
             TimeUnit.SECONDS.sleep(2L);
         }
     }
