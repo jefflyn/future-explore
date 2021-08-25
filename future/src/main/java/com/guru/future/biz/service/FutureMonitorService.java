@@ -51,7 +51,7 @@ public class FutureMonitorService {
         int factor = param.getValue0();
         float triggerDiff = param.getValue1();
         String code = futureLiveDO.getCode();
-        String cachedKey = code + param.toString();
+        String cachedKey = code + param;
         BigDecimal price = futureLiveDO.getPrice();
         PriceFlashCache.rPush(cachedKey, price);
         int priceLen = PriceFlashCache.length(cachedKey);
@@ -94,7 +94,7 @@ public class FutureMonitorService {
 
         if (isTrigger) {
             boolean isUp = price.compareTo(lastPrice) > 0;
-            BigDecimal suggestPrice = (lastPrice.add(price)).divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP);
+            BigDecimal suggestPrice = lastPrice;
             String logType = (isUp ? "上涨" : "下跌") + blastTip;
             String suggestParam = (isUp ? "做多" : "做空");
             StringBuilder content = new StringBuilder();
