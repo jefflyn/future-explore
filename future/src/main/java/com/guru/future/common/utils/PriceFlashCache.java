@@ -29,7 +29,7 @@ public class PriceFlashCache {
     }
 
     public static void deleteAll() {
-        PRICE_QUEUE = null;
+        PRICE_QUEUE = new HashMap<>(50);
     }
 
     public static List get(String key) {
