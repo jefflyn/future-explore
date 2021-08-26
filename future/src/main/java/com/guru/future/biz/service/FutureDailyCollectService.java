@@ -5,7 +5,6 @@ import com.guru.future.biz.manager.FutureLogManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.enums.DailyCollectType;
-import com.guru.future.common.utils.DateUtil;
 import com.guru.future.domain.FutureDailyCollectDO;
 import com.guru.future.task.DailyCollectTask;
 import lombok.extern.slf4j.Slf4j;
@@ -76,4 +75,5 @@ public class FutureDailyCollectService {
             log.info("data collect success! {}", dailyCollectDO);
         }
     }
+
 }

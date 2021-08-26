@@ -5,6 +5,7 @@ import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.PriceFlashCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -40,6 +41,7 @@ public class FutureTaskDispatcher {
     }
 
     public void executePulling(Boolean refresh) throws InterruptedException {
+        PriceFlashCache.deleteAll();
         keepRunning = true;
         REFRESH = refresh == null ? false : refresh;
         List<String> codeList = futureBasicManager.getAllCodes();

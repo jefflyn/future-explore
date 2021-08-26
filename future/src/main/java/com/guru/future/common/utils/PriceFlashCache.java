@@ -28,6 +28,10 @@ public class PriceFlashCache {
         PRICE_QUEUE.put(key, new LinkedList());
     }
 
+    public static void deleteAll() {
+        PRICE_QUEUE = null;
+    }
+
     public static List get(String key) {
         return PRICE_QUEUE.get(key);
     }
