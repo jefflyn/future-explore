@@ -51,11 +51,13 @@ public class FutureGapService {
         try {
             noticeOpenGap(contractRealtimeDTOList);
         } catch (Exception e) {
+            log.error("monitor open gap failed, error={}", e);
             e.printStackTrace();
         }
     }
 
     public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) throws Exception {
+        log.info("open gap check start!");
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
         String tradeDate = DateUtil.currentTradeDate();
         if (DateUtil.isNight()) {
