@@ -26,7 +26,8 @@ public class FutureMonitorService {
 
     static {
         MONITOR_PARAMS.add(Pair.with(30, 0.33F));
-        MONITOR_PARAMS.add(Pair.with(60, 0.46F));
+        MONITOR_PARAMS.add(Pair.with(60, 0.66F));
+        MONITOR_PARAMS.add(Pair.with(120, 1F));
     }
 
     @Resource
@@ -36,12 +37,14 @@ public class FutureMonitorService {
     private FutureLogManager futureLogManager;
 
     public void monitorPriceFlash(FutureLiveDO futureLiveDO, String histHighLowFlag) {
-        try {
-            for (Pair<Integer, Float> param : MONITOR_PARAMS) {
-                triggerPriceFlash(param, futureLiveDO, histHighLowFlag);
+        if (DateUtil.isPriceMonitorTime()) {
+            try {
+                for (Pair<Integer, Float> param : MONITOR_PARAMS) {
+                    triggerPriceFlash(param, futureLiveDO, histHighLowFlag);
+                }
+            } catch (Exception e) {
+                log.error("monitorPriceFlash fail, error={}", e);
             }
-        } catch (Exception e) {
-            log.error("monitorPriceFlash fail, error={}", e);
         }
     }
 
@@ -58,7 +61,7 @@ public class FutureMonitorService {
 //            log.info("[monitorPriceFlash] start! param={}, code={}", param, cachedKey);
             return;
         }
-        int steps = factor / 5;
+        int steps = factor / 2;
         BigDecimal lastPrice;
         if (priceLen >= steps) {
             lastPrice = PriceFlashCache.lPop(cachedKey);

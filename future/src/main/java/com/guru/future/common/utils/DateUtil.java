@@ -183,6 +183,17 @@ public class DateUtil {
         return isTradeTime;
     }
 
+    public static Boolean isPriceMonitorTime() {
+        Date now = new Date();
+        String nowTime = DateFormatUtils.format(now, TIME_PATTERN);
+        String dayMonitorFrom = "09:05:00";
+        String dayMonitorTo = "15:00:00";
+
+        String nightFrom = "21:05:00";
+        return (nowTime.compareTo(dayMonitorFrom) > 0 && nowTime.compareTo(dayMonitorTo) < 0)
+                || nowTime.compareTo(nightFrom) > 0;
+    }
+
     public static long diff(Date before, Date after, TimeUnit unit) {
         long diff = after.getTime() - before.getTime();
         if (TimeUnit.DAYS.equals(unit)) {

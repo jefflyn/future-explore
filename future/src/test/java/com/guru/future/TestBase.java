@@ -7,7 +7,6 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 @SpringBootTest(classes = FutureApplication.class)
 @WebAppConfiguration
-@Slf4j
 public class TestBase extends AbstractTestNGSpringContextTests {
     public TestBase() {
     }
