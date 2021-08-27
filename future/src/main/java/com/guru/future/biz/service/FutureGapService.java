@@ -103,9 +103,9 @@ public class FutureGapService {
             }
             BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
             //if (Math.abs(gapRate.floatValue()) >= 0.5) {
-            BigDecimal dayGap = null;
-            BigDecimal suggestFrom = null;
-            BigDecimal suggestTo = null;
+            BigDecimal dayGap;
+            BigDecimal suggestFrom;
+            BigDecimal suggestTo;
             StringBuilder remark = new StringBuilder("");
             boolean isDayGap = false;
             if (priceDiff.compareTo(BigDecimal.ZERO) >= 0) {

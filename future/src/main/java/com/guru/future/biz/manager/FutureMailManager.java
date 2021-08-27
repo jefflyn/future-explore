@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author j
@@ -25,15 +26,15 @@ public class FutureMailManager {
     @Value("${spring.mail.username}")
     private String from;
 
-    public void notifyOpenGap(String content) {
-        // 构建一个邮件对象
-        SimpleMailMessage message = MailUtil.buildSimpleMail("缺口报告", from, from, content);
-        // 发送邮件
-        javaMailSender.send(message);
-    }
-
-    public void notifyOpenGapHtml(String content) throws MessagingException {
-        this.sendHtmlMail("缺口报告", from, from, content);
+    public void notifyOpenGapHtml(String content) throws Exception {
+        try {
+            log.info("send mail of open gap report >>>");
+            this.sendHtmlMail("缺口报告", from, from, content);
+        } catch (Exception e) {
+            log.error("send mail failed, retry after 5 secs!, error={}", e);
+            TimeUnit.SECONDS.sleep(5L);
+            this.sendHtmlMail("缺口报告(重试)", from, from, content);
+        }
     }
 
     public void sendHtmlMail(String subject, String from, String to, String content) throws MessagingException {

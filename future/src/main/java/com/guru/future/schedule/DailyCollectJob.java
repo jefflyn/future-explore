@@ -21,7 +21,6 @@ public class DailyCollectJob {
     @Scheduled(cron = "0 30 9,10,11 * * ?")
     private void dailyCollect1() {
         dailyCollectService.addTradeDailyCollect(DailyCollectType.COLLECT_TIMED);
-
     }
 
     @Scheduled(cron = "0 0 14,15,22,23 * * ?")
@@ -29,4 +28,8 @@ public class DailyCollectJob {
         dailyCollectService.addTradeDailyCollect(DailyCollectType.COLLECT_TIMED);
     }
 
+    @Scheduled(cron = "5,15,30,45,55 59 8,20 * * ?")
+    private void realtimeDataCheck() throws InterruptedException {
+        dailyCollectService.addTradeDailyCollect(DailyCollectType.COLLECT_TIMED);
+    }
 }
