@@ -109,49 +109,34 @@ public class FutureGapService {
             StringBuilder remark = new StringBuilder("");
             boolean isDayGap = false;
             if (priceDiff.compareTo(BigDecimal.ZERO) >= 0) {
-                // 日级别跳空高开
+                // 日级别高开
                 if (currentOpen.compareTo(preHigh) > 0) {
                     isDayGap = true;
                     suggestFrom = preClose.multiply(BigDecimal.valueOf(0.996));
                     dayGap = (currentOpen.subtract(preHigh)).multiply(BigDecimal.valueOf(100)).divide(preHigh, 2, RoundingMode.HALF_UP);
-                    if (Math.abs(dayGap.floatValue()) >= 1.5) {
-                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.005));
-                    } else {
-                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1 + (1.5 - dayGap.floatValue()) / 100));
-                    }
                     remark.append("日跳高 ").append("+").append(dayGap).append("%");
                 } else {
                     suggestFrom = preClose.multiply(BigDecimal.valueOf(0.999));
-                    if (Math.abs(gapRate.floatValue()) >= 1.5) {
-                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.003));
-                    } else {
-                        suggestTo = currentOpen.multiply(BigDecimal.valueOf(1 + (1.5 - gapRate.floatValue()) / 100));
-                    }
                 }
                 if (Math.abs(gapRate.floatValue()) >= 0.6) {
                     suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.9964));
                 }
+                if (Math.abs(gapRate.floatValue()) >= 1) {
+                    suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.0075));
+                } else {
+                    suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.007));
+                }
             } else {
-                // 日级别跳空低开
+                // 日级别低开
                 if (currentOpen.compareTo(preLow) < 0) {
                     isDayGap = true;
                     suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.996));
                     dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
-//                        suggestFrom = currentOpen.multiply(BigDecimal.valueOf(1 - Math.abs(dayGap.floatValue() / 100)));
-                    if (Math.abs(dayGap.floatValue()) >= 1.5) {
-                        suggestTo = preLow.multiply(BigDecimal.valueOf(1.005));
-                    } else {
-                        suggestTo = preLow.multiply(BigDecimal.valueOf(1 + (1.5 + dayGap.floatValue()) / 100));
-                    }
                     remark.append("日跳空 ").append(dayGap).append("%");
                 } else {
                     suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.999));
-                    if (Math.abs(gapRate.floatValue()) >= 1.5) {
-                        suggestTo = preClose.multiply(BigDecimal.valueOf(1.003));
-                    } else {
-                        suggestTo = preClose.multiply(BigDecimal.valueOf(1 + (1.5 + gapRate.floatValue()) / 100));
-                    }
                 }
+                suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.007));
             }
             suggestFrom = suggestFrom.setScale(1, RoundingMode.HALF_UP);
             suggestTo = suggestTo.setScale(1, RoundingMode.HALF_UP);
