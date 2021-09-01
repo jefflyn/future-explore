@@ -34,7 +34,7 @@ public class DailyCollectTask implements Runnable {
     public void run() {
         if (!DateUtil.isTradeTime()) {
             log.info("DailyCollectTask not in trade time, end!");
-            throw new RuntimeException("DailyCollectTask not in trade time, end!");
+            throw new RuntimeException("DailyCollectTask not in trade time exception, end!");
         }
         try {
             List<ContractRealtimeDTO> realtimeDTOList = dailyCollectManager.getFutureSinaManager().getRealtimeFromSina(dailyCollectManager.getCollectCodes());
