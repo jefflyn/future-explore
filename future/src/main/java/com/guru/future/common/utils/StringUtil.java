@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.stream.Collectors;
 
 /**
@@ -22,7 +23,17 @@ public class StringUtil {
 
     public static void main(String[] args) throws Exception {
         String words = "fruit/Apple/orange/grape/watermelon/pear/banana/strawberry/kiwi fruit/peach/melon/mango";
-        System.out.println(strToList(words, "/"));
+        List<String> wordList = strToList(words, "/");
+        System.out.println(wordList);
+        ListIterator<String> wordsIter = wordList.listIterator();
+        while (wordsIter.hasNext()) {
+            String word = wordsIter.next();
+            if (word.contains("a")) {
+                System.out.println(word);
+                wordsIter.remove();
+            }
+        }
+        System.out.println(wordList);
 
     }
 }

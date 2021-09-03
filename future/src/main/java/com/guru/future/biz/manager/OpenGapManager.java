@@ -9,6 +9,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 /**
@@ -28,15 +29,15 @@ public class OpenGapManager {
 
     @Transactional
     public Boolean batchAddOpenGapLog(List<OpenGapDO> openGapDOList) {
-        for (OpenGapDO openGapDO : openGapDOList) {
+        ListIterator<OpenGapDO> openGapIterator = openGapDOList.listIterator();
+        while (openGapIterator.hasNext()) {
+            OpenGapDO openGapDO = openGapIterator.next();
             String key = openGapDO.getCode() + openGapDO.getTradeDate();
             if (OPEN_GAP_MAP.get(key) != null) {
-                openGapDOList.remove(openGapDO);
+                openGapIterator.remove();
             }
         }
-        if (CollectionUtils.isEmpty(openGapDOList)) {
-            return false;
-        } else {
+        if (!CollectionUtils.isEmpty(openGapDOList)) {
             if (openGapDAO.insertBatch(openGapDOList) > 0) {
                 for (OpenGapDO openGapDO : openGapDOList) {
                     String key = openGapDO.getCode() + openGapDO.getTradeDate();
@@ -44,7 +45,7 @@ public class OpenGapManager {
                 }
                 return true;
             }
-            return false;
         }
+        return false;
     }
 }
