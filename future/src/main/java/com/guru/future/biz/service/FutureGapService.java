@@ -57,7 +57,7 @@ public class FutureGapService {
     }
 
     public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) throws Exception {
-        log.info("open gap check start!");
+        log.info("open gap start!");
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
         String tradeDate = DateUtil.currentTradeDate();
         if (DateUtil.isNight()) {
