@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Component
 public class OpenGapManager {
-    private static Map<String, Boolean> OPEN_GAP_MAP = new HashMap<>();
+    private static Map<String, Boolean> openGapMap = new HashMap<>();
 
     @Resource
     private OpenGapDAO openGapDAO;
@@ -33,18 +33,16 @@ public class OpenGapManager {
         while (openGapIterator.hasNext()) {
             OpenGapDO openGapDO = openGapIterator.next();
             String key = openGapDO.getCode() + openGapDO.getTradeDate();
-            if (OPEN_GAP_MAP.get(key) != null) {
+            if (openGapMap.get(key) != null) {
                 openGapIterator.remove();
             }
         }
-        if (!CollectionUtils.isEmpty(openGapDOList)) {
-            if (openGapDAO.insertBatch(openGapDOList) > 0) {
-                for (OpenGapDO openGapDO : openGapDOList) {
-                    String key = openGapDO.getCode() + openGapDO.getTradeDate();
-                    OPEN_GAP_MAP.put(key, true);
-                }
-                return true;
+        if (!CollectionUtils.isEmpty(openGapDOList) && openGapDAO.insertBatch(openGapDOList) > 0) {
+            for (OpenGapDO openGapDO : openGapDOList) {
+                String key = openGapDO.getCode() + openGapDO.getTradeDate();
+                openGapMap.put(key, true);
             }
+            return true;
         }
         return false;
     }

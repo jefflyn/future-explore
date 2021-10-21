@@ -25,7 +25,7 @@ public class FutureMonitorService {
     private static List<Pair<Integer, Float>> MONITOR_PARAMS = new ArrayList<>();
 
     static {
-        MONITOR_PARAMS.add(Pair.with(30, 0.33F));
+//        MONITOR_PARAMS.add(Pair.with(30, 0.33F));
         MONITOR_PARAMS.add(Pair.with(60, 0.66F));
         MONITOR_PARAMS.add(Pair.with(120, 1F));
     }
