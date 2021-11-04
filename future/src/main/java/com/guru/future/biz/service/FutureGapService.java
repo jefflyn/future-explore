@@ -67,6 +67,8 @@ public class FutureGapService {
         List<ContractOpenGapDTO> openGapDTOList = new ArrayList<>();
         int total = 0;
         Map<String, Integer> openStats = new HashMap<>();
+        String openHighTag = "高开";
+        String openLowTag = "低开";
         for (ContractRealtimeDTO realtimeDTO : contractRealtimeDTOList) {
 //            log.info("{}: realtimeDTO={}", realtimeDTO.getName(), realtimeDTO);
             String code = realtimeDTO.getCode();
@@ -92,14 +94,14 @@ public class FutureGapService {
             BigDecimal priceDiff = currentOpen.subtract(preClose);
             total += 1;
             if (priceDiff.compareTo(BigDecimal.ZERO) == 0) {
-                Integer cnt = ObjectUtils.defaultIfNull(openStats.get("平开"), 0);
-                openStats.put("平开", cnt + 1);
+//                Integer cnt = ObjectUtils.defaultIfNull(openStats.get("平开"), 0);
+//                openStats.put("平开", cnt + 1);
             } else if (priceDiff.compareTo(BigDecimal.ZERO) > 0) {
                 Integer cnt = ObjectUtils.defaultIfNull(openStats.get("高开"), 0);
-                openStats.put("高开", cnt + 1);
+                openStats.put(openHighTag, cnt + 1);
             } else {
                 Integer cnt = ObjectUtils.defaultIfNull(openStats.get("低开"), 0);
-                openStats.put("低开", cnt + 1);
+                openStats.put(openLowTag, cnt + 1);
             }
             BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
             //if (Math.abs(gapRate.floatValue()) >= 0.5) {
@@ -149,14 +151,26 @@ public class FutureGapService {
             openGapDTOList.add(openGapDTO);
 //            }
         }
-        // 2021-08-18 高开:20 低开:10 平开:1
-        StringBuilder title = new StringBuilder(tradeDate + "<br/>");
-        for (String openKey : openStats.keySet()) {
-            int count = openStats.get(openKey);
-            float rate = count * 100 / (float) total;
-            String openStr = openKey + ":" + count + "," + String.format("%.1f", rate) + "%";
-            title.append(" ").append(openStr);
+
+        String overview = "中性";
+        float highRate = ObjectUtils.defaultIfNull(openStats.get(openHighTag), 0) * 100 / (float) total;
+        float lowRate = ObjectUtils.defaultIfNull(openStats.get(openLowTag), 0) * 100 / (float) total;
+        if (highRate >= 70) {
+            overview = "多";
+        } else if (highRate >= 55) {
+            overview = "偏多";
+        } else if (lowRate >= 70) {
+            overview = "空";
+        } else if (lowRate >= 55) {
+            overview = "偏空";
         }
+        String openHighStr = openHighTag + ":" + String.format("%.1f", highRate) + "%";
+        String openLowStr = openLowTag + ":" + String.format("%.1f", lowRate) + "%";
+
+        // 2021-08-18 高开:20 低开:10 平开:1
+        StringBuilder title = new StringBuilder(tradeDate + "【" + overview + "】" + "<br/>");
+        title.append(openHighStr).append(" VS ").append(openLowStr);
+
         if (!CollectionUtils.isEmpty(openGapDTOList)) {
             sendOpenGapMail(title.toString(), openGapDTOList);
             openGapManager.batchAddOpenGapLog(ContractOpenGapConverter.convert2OpenGapDOList(openGapDTOList));
