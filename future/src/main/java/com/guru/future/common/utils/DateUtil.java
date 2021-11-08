@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -159,6 +157,24 @@ public class DateUtil {
         return dayClose;
     }
 
+    public static boolean beforeBidTime() {
+        Date now = new Date();
+        // holiday
+        if (isHoliday(now)) {
+            return false;
+        }
+        String nowTime = DateFormatUtils.format(now, TIME_PATTERN);
+
+        String morningOpen = "08:59:00";
+        String afternoonClose = "15:00:00";
+        String nightOpen = "20:59:00";
+
+        boolean beforeBidTime = nowTime.compareTo(morningOpen) <= 0
+                || (nowTime.compareTo(afternoonClose) > 0 && nowTime.compareTo(nightOpen) < 0);
+
+        return beforeBidTime;
+    }
+
     public static Boolean isTradeTime() {
         Date now = new Date();
         // holiday
@@ -179,7 +195,6 @@ public class DateUtil {
         boolean isTradeTime = (nowTime.compareTo(morningOpen) >= 0 && nowTime.compareTo(morningClose) <= 0)
                 || (nowTime.compareTo(afternoonOpen) >= 0 && nowTime.compareTo(afternoonClose) <= 0)
                 || (nowTime.compareTo(nightOpen) >= 0 && nowTime.compareTo(nightClose) <= 0);
-
         return isTradeTime;
     }
 

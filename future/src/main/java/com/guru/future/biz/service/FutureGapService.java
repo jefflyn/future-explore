@@ -27,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author j
@@ -45,8 +46,12 @@ public class FutureGapService {
     @Resource
     private OpenGapManager openGapManager;
 
-    @Async
-    public void monitorOpenGap() {
+//    @Async
+    public void monitorOpenGap() throws InterruptedException {
+        if (DateUtil.beforeBidTime()) {
+            TimeUnit.SECONDS.sleep(5L);
+        }
+
         List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getAllRealtimeFromSina();
         try {
             noticeOpenGap(contractRealtimeDTOList);
@@ -150,6 +155,10 @@ public class FutureGapService {
                     .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo).suggest(suggestPrice).build();
             openGapDTOList.add(openGapDTO);
 //            }
+        }
+
+        if (total == 0) {
+            return;
         }
 
         String overview = "中性";

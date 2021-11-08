@@ -36,7 +36,7 @@ public class WindowUtil {
             JLabel jl = new JLabel(content);
             Container c = frame.getContentPane();
             c.add(jl, 0);
-//            frame.setVisible(true);
+            frame.setVisible(true);
             if (c.getComponentCount() > 4) {
                 for (int i = 5; i < c.getComponentCount(); i++) {
                     c.remove(i);

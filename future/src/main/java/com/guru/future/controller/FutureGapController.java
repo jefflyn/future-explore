@@ -16,7 +16,7 @@ public class FutureGapController {
     private FutureGapService futureGapService;
 
     @GetMapping(value = "/future/open/gap")
-    public String openGap() {
+    public String openGap() throws InterruptedException {
         futureGapService.monitorOpenGap();
         return "success";
     }
