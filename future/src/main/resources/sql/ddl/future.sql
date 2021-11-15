@@ -54,23 +54,31 @@ create table future_daily
     comment '每日数据';
 
 create index idx_future_daily_code
-	on future_daily (symbol);
+    on future_daily (symbol);
 
 create index idx_future_daily_code_date
-	on future_daily (code, trade_date);
+    on future_daily (code, trade_date);
 
-create table future_daily_high_low_log
+create table future_daily_collect
 (
-    code varchar(6) null,
-    trade_date date not null,
-    high decimal(10,2) null,
-    high_time time null,
-    low decimal(10,2) null,
-    low_time time null
-);
+    id bigint auto_increment comment '主键id'
+        primary key,
+    trade_date varchar(10) not null comment '交易日期',
+    code varchar(10) not null comment '合约代码',
+    name varchar(20) not null comment '合约名称',
+    type tinyint(1) not null comment '采集类型',
+    price decimal(10,2) not null comment '现价',
+    high decimal(10,2) not null comment '最高价',
+    low decimal(10,2) not null comment '最低价',
+    deal_vol int null comment '交易量',
+    hold_vol int null comment '持仓量',
+    create_time timestamp default CURRENT_TIMESTAMP not null comment '创建时间',
+    remark varchar(64) null
+)
+    comment '定时数据采集分析';
 
-create index idx_future_daily_high_low_log_code
-	on future_daily_high_low_log (code);
+create index idx_future_daily_collect_code_date
+    on future_daily_collect (code, trade_date);
 
 create table future_live
 (
@@ -114,7 +122,10 @@ create table future_log
     comment '日志';
 
 create index idx_future_log_code_date
-	on future_log (code, trade_date);
+    on future_log (code, trade_date);
+
+create index idx_future_log_trade_date
+    on future_log (trade_date);
 
 create table open_gap
 (
@@ -123,8 +134,11 @@ create table open_gap
     name varchar(10) not null comment 'name',
     category varchar(8) default '' not null comment 'category',
     pre_close decimal(10,2) not null comment 'pre close',
+    pre_high decimal(10,2) null comment 'pre high',
+    pre_low decimal(10,2) null comment 'pre low',
     open decimal(10,2) not null comment 'current open',
     gap_rate decimal(10,2) not null comment 'gap rate',
+    day_gap tinyint null comment 'is day gap',
     remark varchar(64) null comment 'remark',
     buy_low decimal(10,2) not null comment 'low price for buy',
     sell_high decimal(10,2) not null comment 'high price for sell',
