@@ -36,4 +36,11 @@ public class FutureLogManager {
         return futureLogDAO.insertSelective(futureLogDO) > 0;
     }
 
+    public Boolean deleteLogByType(String code, String tradeDate, String type) {
+        FutureLogDO futureLogDO = new FutureLogDO();
+        futureLogDO.setTradeDate(tradeDate);
+        futureLogDO.setCode(code);
+        futureLogDO.setType(type);
+        return futureLogDAO.delete(futureLogDO) > 0;
+    }
 }

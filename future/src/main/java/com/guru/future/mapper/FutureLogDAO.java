@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface FutureLogDAO {
 
-    int insertSelective(FutureLogDO record);
+    int insertSelective(FutureLogDO futureLogDO);
+
+    int delete(FutureLogDO futureLogDO);
 
     List<String> selectCodesByTradeDate(@Param("tradeDate") String tradeDate);
 

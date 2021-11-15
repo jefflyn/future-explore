@@ -43,6 +43,7 @@ public class WindowUtil {
                 }
             }
 //            frame.setExtendedState(JFrame.ICONIFIED);
+            frame.pack();
         } catch (Exception e) {
             log.error("create price flash msg frame failed, error={}", e);
         }

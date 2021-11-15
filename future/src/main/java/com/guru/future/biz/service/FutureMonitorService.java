@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.javatuples.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
@@ -45,6 +46,37 @@ public class FutureMonitorService {
             } catch (Exception e) {
                 log.error("monitorPriceFlash fail, error={}", e);
             }
+        }
+    }
+
+    @Async
+    @Transactional
+    public void addPositionLog(FutureLiveDO futureLiveDO) {
+        int position = -1;
+        if (futureLiveDO.getPosition().compareTo(BigDecimal.ZERO) <= 0) {
+            position = 0;
+        } else if (futureLiveDO.getPosition().compareTo(BigDecimal.valueOf(100)) >= 0) {
+            position = 100;
+        }
+        if (position > -1) {
+            FutureLogDO futureLogDO = new FutureLogDO();
+            futureLogDO.setTradeDate(DateUtil.currentTradeDate());
+            futureLogDO.setCode(futureLiveDO.getCode());
+            futureLogDO.setOption("");
+            futureLogDO.setName(futureLiveDO.getName());
+            if (position == 0) {
+                futureLogDO.setType("日内低点");
+                futureLogDO.setContent("日内低点");
+            } else {
+                futureLogDO.setType("日内高点");
+                futureLogDO.setContent("日内高点");
+            }
+            futureLogDO.setSuggest(BigDecimal.ZERO);
+            futureLogDO.setPctChange(futureLiveDO.getChange());
+            futureLogDO.setPosition(futureLiveDO.getPosition().intValue());
+            futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
+            futureLogManager.addFutureLog(futureLogDO);
+            log.info("add log:{}", futureLogDO);
         }
     }
 

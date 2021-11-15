@@ -109,6 +109,12 @@
         </trim>
     </insert>
 
+    <delete id="delete" parameterType="com.guru.future.domain.FutureLogDO">
+        delete from future_log
+        where code=#{code,jdbcType=VARCHAR} and tradeDate=#{tradeDate,jdbcType=VARCHAR}
+        and type=#{type,jdbcType=VARCHAR}
+    </delete>
+
     <select id="selectCodesByTradeDate" parameterType="string" resultType="string">
         select distinct code
         from future_log
