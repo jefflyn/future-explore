@@ -111,7 +111,7 @@
 
     <delete id="delete" parameterType="com.guru.future.domain.FutureLogDO">
         delete from future_log
-        where code=#{code,jdbcType=VARCHAR} and tradeDate=#{tradeDate,jdbcType=VARCHAR}
+        where code=#{code,jdbcType=VARCHAR} and trade_date=#{tradeDate,jdbcType=VARCHAR}
         and type=#{type,jdbcType=VARCHAR}
     </delete>
 

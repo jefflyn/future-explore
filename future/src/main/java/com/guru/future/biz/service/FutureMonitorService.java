@@ -71,9 +71,10 @@ public class FutureMonitorService {
                 futureLogDO.setType("日内高点");
                 futureLogDO.setContent("日内高点");
             }
-            futureLogDO.setSuggest(BigDecimal.ZERO);
+            futureLogDO.setSuggest(futureLiveDO.getPrice());
             futureLogDO.setPctChange(futureLiveDO.getChange());
             futureLogDO.setPosition(futureLiveDO.getPosition().intValue());
+            this.msgNotice(position == 100, futureLogDO);
             futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
             futureLogManager.addFutureLog(futureLogDO);
             log.info("add log:{}", futureLogDO);
