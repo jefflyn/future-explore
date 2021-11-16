@@ -62,16 +62,17 @@ public class FutureMonitorService {
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
-            futureLogDO.setOption("");
             futureLogDO.setFactor(0);
             futureLogDO.setDiff(BigDecimal.ZERO);
             futureLogDO.setName(futureLiveDO.getName());
             if (position == 0) {
                 futureLogDO.setType("日内低点");
                 futureLogDO.setContent("日内低点");
+                futureLogDO.setOption("做多");
             } else {
                 futureLogDO.setType("日内高点");
                 futureLogDO.setContent("日内高点");
+                futureLogDO.setOption("做空");
             }
             futureLogDO.setSuggest(futureLiveDO.getPrice());
             futureLogDO.setPctChange(futureLiveDO.getChange());
