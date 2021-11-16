@@ -63,6 +63,8 @@ public class FutureMonitorService {
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
             futureLogDO.setOption("");
+            futureLogDO.setFactor(0);
+            futureLogDO.setDiff(BigDecimal.ZERO);
             futureLogDO.setName(futureLiveDO.getName());
             if (position == 0) {
                 futureLogDO.setType("日内低点");
