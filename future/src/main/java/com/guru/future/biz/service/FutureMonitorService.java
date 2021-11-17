@@ -68,11 +68,11 @@ public class FutureMonitorService {
             if (position == 0) {
                 futureLogDO.setType("日内低点");
                 futureLogDO.setContent("日内低点");
-                futureLogDO.setOption("做多");
+                futureLogDO.setOption("做空");
             } else {
                 futureLogDO.setType("日内高点");
                 futureLogDO.setContent("日内高点");
-                futureLogDO.setOption("做空");
+                futureLogDO.setOption("做多");
             }
             futureLogDO.setSuggest(futureLiveDO.getPrice());
             futureLogDO.setPctChange(futureLiveDO.getChange());

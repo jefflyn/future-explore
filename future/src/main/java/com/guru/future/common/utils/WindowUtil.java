@@ -1,6 +1,7 @@
 package com.guru.future.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.security.MD5Encoder;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -18,7 +19,13 @@ import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * @author j
@@ -29,14 +36,21 @@ public class WindowUtil {
 
     private static DefaultListModel model = new DefaultListModel<>();
 
+    private static LinkedList<String> contents = new LinkedList<>();
+
     public static void createMsgFrame(String code, Boolean isUp, String content) {
+        String contentStr = MD5Encoder.encode(content.getBytes(StandardCharsets.UTF_8));
+        if (contents.contains(contentStr)){
+            return;
+        }
+        contents.add(contentStr);
         try {
             String msg = (isUp ? "up " : "down ") + code;
 //            Runtime.getRuntime().exec("say " + msg);
-
             JLabel label = new JLabel();
             label.setText(content);
             if (model.size() > 10) {
+                contents.removeLast();
                 Object lastOne = model.lastElement();
                 model.removeElement(lastOne);
             }
@@ -45,7 +59,7 @@ public class WindowUtil {
             if (frame == null) {
                 frame = new JFrame("price flash");
                 frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 500, 160);
+                frame.setBounds(0, 1000, 520, 140);
                 JList list = new JList(model);
                 list.setCellRenderer(new MyListCellRenderer());
                 JScrollPane pane = new JScrollPane(list);
