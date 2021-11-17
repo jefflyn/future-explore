@@ -1,7 +1,7 @@
 package com.guru.future.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.digest.Md5Crypt;
+import org.springframework.util.DigestUtils;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -33,54 +33,54 @@ public class WindowUtil {
     private static LinkedList<String> contents = new LinkedList<>();
 
     public static void createMsgFrame(String code, Boolean isUp, String content) {
-        String contentStr = Md5Crypt.md5Crypt(content.substring(content.indexOf(" ")).getBytes(StandardCharsets.UTF_8));
-        if (contents.contains(contentStr)){
-            return;
-        }
-        contents.add(contentStr);
-        try {
-            String msg = (isUp ? "up " : "down ") + code;
+        String contentStr = DigestUtils.md5DigestAsHex(content.substring(content.indexOf(" ")).getBytes(StandardCharsets.UTF_8));
+        if (Boolean.FALSE.equals(contents.contains(contentStr))) {
+
+            contents.add(contentStr);
+            try {
+//                String msg = (isUp ? "up " : "down ") + code;
 //            Runtime.getRuntime().exec("say " + msg);
-            JLabel label = new JLabel();
-            label.setText(content);
-            if (contents.size() > 10) {
-                contents.removeLast();
-                Object lastOne = model.lastElement();
-                model.removeElement(lastOne);
-            }
-            model.add(0, label);
+                JLabel label = new JLabel();
+                label.setText(content);
+                if (contents.size() > 10) {
+                    contents.removeLast();
+                    Object lastOne = model.lastElement();
+                    model.removeElement(lastOne);
+                }
+                model.add(0, label);
 
-            if (frame == null) {
-                frame = new JFrame("trade log");
-                frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 510, 160);
-                JList list = new JList(model);
-                list.setCellRenderer(new MyListCellRenderer());
-                JScrollPane pane = new JScrollPane(list);
-                pane.setPreferredSize(new Dimension(500, 120));
-                Container c = frame.getContentPane();
-                c.add(pane, 0);
+                if (frame == null) {
+                    frame = new JFrame("trade log");
+                    frame.setLayout(new FlowLayout());
+                    frame.setBounds(0, 1000, 510, 160);
+                    JList list = new JList(model);
+                    list.setCellRenderer(new MyListCellRenderer());
+                    JScrollPane pane = new JScrollPane(list);
+                    pane.setPreferredSize(new Dimension(500, 120));
+                    Container c = frame.getContentPane();
+                    c.add(pane, 0);
 
-                frame.addWindowListener(new WindowAdapter() {
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        frame.dispose();
-                        frame.getContentPane().removeAll();
-                    }
-                });
-                frame.setVisible(true);
-            } else {
-                JList list = new JList(model);
-                list.setCellRenderer(new MyListCellRenderer());
-                Container c = frame.getContentPane();
-                JScrollPane scrollPane = (JScrollPane) c.getComponent(0);
-                JViewport viewport = scrollPane.getViewport();
-                viewport.removeAll();
-                viewport.add(list);
+                    frame.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosing(WindowEvent e) {
+                            frame.dispose();
+                            frame.getContentPane().removeAll();
+                        }
+                    });
+                    frame.setVisible(true);
+                } else {
+                    JList list = new JList(model);
+                    list.setCellRenderer(new MyListCellRenderer());
+                    Container c = frame.getContentPane();
+                    JScrollPane scrollPane = (JScrollPane) c.getComponent(0);
+                    JViewport viewport = scrollPane.getViewport();
+                    viewport.removeAll();
+                    viewport.add(list);
+                }
+                frame.validate();
+            } catch (Exception e) {
+                log.error("create price flash msg frame failed, error={}", e);
             }
-            frame.validate();
-        } catch (Exception e) {
-            log.error("create price flash msg frame failed, error={}", e);
         }
     }
 
@@ -101,10 +101,9 @@ public class WindowUtil {
     }
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         for (int i = 0; i < 20; i++) {
             WindowUtil.createMsgFrame("A2201", true, i + ": 50秒 上涨0.36%【823.0-826.0】看多");
-//            WindowUtil.createMsgFrame("B2201", true, i + ": 50秒 下跌0.36%【823.0-826.0】看空");
 
         }
     }
