@@ -33,7 +33,7 @@ public class WindowUtil {
     private static LinkedList<String> contents = new LinkedList<>();
 
     public static void createMsgFrame(String code, Boolean isUp, String content) {
-        String contentStr = Md5Crypt.md5Crypt(content.getBytes(StandardCharsets.UTF_8));
+        String contentStr = Md5Crypt.md5Crypt(content.substring(content.indexOf(" ")).getBytes(StandardCharsets.UTF_8));
         if (contents.contains(contentStr)){
             return;
         }
@@ -43,7 +43,7 @@ public class WindowUtil {
 //            Runtime.getRuntime().exec("say " + msg);
             JLabel label = new JLabel();
             label.setText(content);
-            if (model.size() > 10) {
+            if (contents.size() > 10) {
                 contents.removeLast();
                 Object lastOne = model.lastElement();
                 model.removeElement(lastOne);
@@ -51,7 +51,7 @@ public class WindowUtil {
             model.add(0, label);
 
             if (frame == null) {
-                frame = new JFrame("price flash");
+                frame = new JFrame("trade log");
                 frame.setLayout(new FlowLayout());
                 frame.setBounds(0, 1000, 510, 160);
                 JList list = new JList(model);
