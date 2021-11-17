@@ -1,14 +1,13 @@
 package com.guru.future.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.security.MD5Encoder;
+import org.apache.commons.codec.digest.Md5Crypt;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.JViewport;
 import javax.swing.ListCellRenderer;
 import java.awt.Color;
@@ -20,12 +19,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * @author j
@@ -39,7 +33,7 @@ public class WindowUtil {
     private static LinkedList<String> contents = new LinkedList<>();
 
     public static void createMsgFrame(String code, Boolean isUp, String content) {
-        String contentStr = MD5Encoder.encode(content.getBytes(StandardCharsets.UTF_8));
+        String contentStr = Md5Crypt.md5Crypt(content.getBytes(StandardCharsets.UTF_8));
         if (contents.contains(contentStr)){
             return;
         }
@@ -59,7 +53,7 @@ public class WindowUtil {
             if (frame == null) {
                 frame = new JFrame("price flash");
                 frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 520, 140);
+                frame.setBounds(0, 1000, 510, 160);
                 JList list = new JList(model);
                 list.setCellRenderer(new MyListCellRenderer());
                 JScrollPane pane = new JScrollPane(list);
