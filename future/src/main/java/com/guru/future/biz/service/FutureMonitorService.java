@@ -9,6 +9,7 @@ import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.javatuples.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,19 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.atomic.LongAdder;
 
 @Service
 @Slf4j
 public class FutureMonitorService {
     private static List<Pair<Integer, Float>> MONITOR_PARAMS = new ArrayList<>();
     private static LinkedList<String> contents = new LinkedList<>();
+    private static Map<String, LongAdder> positionCount = new HashMap<>();
 
     static {
 //        MONITOR_PARAMS.add(Pair.with(30, 0.33F));
@@ -69,10 +75,12 @@ public class FutureMonitorService {
             if (contents.size() > 10) {
                 contents.removeLast();
             }
+            LongAdder adder = ObjectUtils.defaultIfNull(positionCount.get(futureLiveDO.getCode() + position), new LongAdder());
+            adder.increment();
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
-            futureLogDO.setFactor(0);
+            futureLogDO.setFactor(adder.intValue());
             futureLogDO.setDiff(BigDecimal.ZERO);
             futureLogDO.setName(futureLiveDO.getName());
             if (position == 0) {
@@ -170,7 +178,7 @@ public class FutureMonitorService {
     }
 
     private void msgNotice(boolean isUp, FutureLogDO futureLogDO) {
-        String diffStr = String.format("%.2f", futureLogDO.getDiff()) + "%";
+        String diffStr = Objects.isNull(futureLogDO.getDiff()) ? "" : String.format("%.2f", futureLogDO.getDiff()) + "%";
         StringBuilder content = new StringBuilder();
         content.append(futureLogDO.getType()).append(" ").append(futureLogDO.getFactor())
                 .append(" ").append(diffStr)
