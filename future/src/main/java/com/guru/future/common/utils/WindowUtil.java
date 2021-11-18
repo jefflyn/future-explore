@@ -1,5 +1,6 @@
 package com.guru.future.common.utils;
 
+import com.guru.future.domain.OpenGapDO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.DigestUtils;
 
@@ -20,6 +21,7 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
+import java.util.ListIterator;
 
 /**
  * @author j
@@ -30,58 +32,48 @@ public class WindowUtil {
 
     private static DefaultListModel model = new DefaultListModel<>();
 
-    private static LinkedList<String> contents = new LinkedList<>();
-
     public static void createMsgFrame(String code, Boolean isUp, String content) {
-        String contentStr = DigestUtils.md5DigestAsHex(content.substring(content.indexOf(" ")).getBytes(StandardCharsets.UTF_8));
-        if (Boolean.FALSE.equals(contents.contains(contentStr))) {
-
-            contents.add(contentStr);
-            try {
-//                String msg = (isUp ? "up " : "down ") + code;
-//            Runtime.getRuntime().exec("say " + msg);
-                JLabel label = new JLabel();
-                label.setText(content);
-                if (contents.size() > 10) {
-                    contents.removeLast();
-                    Object lastOne = model.lastElement();
-                    model.removeElement(lastOne);
-                }
-                model.add(0, label);
-
-                if (frame == null) {
-                    frame = new JFrame("trade log");
-                    frame.setLayout(new FlowLayout());
-                    frame.setBounds(0, 1000, 510, 160);
-                    JList list = new JList(model);
-                    list.setCellRenderer(new MyListCellRenderer());
-                    JScrollPane pane = new JScrollPane(list);
-                    pane.setPreferredSize(new Dimension(500, 120));
-                    Container c = frame.getContentPane();
-                    c.add(pane, 0);
-
-                    frame.addWindowListener(new WindowAdapter() {
-                        @Override
-                        public void windowClosing(WindowEvent e) {
-                            frame.dispose();
-                            frame.getContentPane().removeAll();
-                        }
-                    });
-                    frame.setVisible(true);
-                } else {
-                    JList list = new JList(model);
-                    list.setCellRenderer(new MyListCellRenderer());
-                    Container c = frame.getContentPane();
-                    JScrollPane scrollPane = (JScrollPane) c.getComponent(0);
-                    JViewport viewport = scrollPane.getViewport();
-                    viewport.removeAll();
-                    viewport.add(list);
-                }
-                frame.validate();
-            } catch (Exception e) {
-                log.error("create price flash msg frame failed, error={}", e);
+        try {
+//          String msg = (isUp ? "up " : "down ") + code;
+//          Runtime.getRuntime().exec("say " + msg);
+            JLabel label = new JLabel();
+            label.setText(content);
+            if (model.size() > 10) {
+                Object lastOne = model.lastElement();
+                model.removeElement(lastOne);
             }
+            model.add(0, label);
+
+            if (frame == null) {
+                frame = new JFrame("trade log");
+                frame.setLayout(new FlowLayout());
+                frame.setBounds(0, 1000, 510, 160);
+                frame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        frame.dispose();
+                        frame.getContentPane().removeAll();
+                    }
+                });
+                refreshContentPane();
+                frame.setVisible(true);
+            } else {
+                refreshContentPane();
+            }
+            frame.validate();
+        } catch (Exception e) {
+            log.error("create trade log frame failed, error={}", e);
         }
+    }
+
+    private static void refreshContentPane(){
+        JList list = new JList(model);
+        list.setCellRenderer(new MyListCellRenderer());
+        JScrollPane pane = new JScrollPane(list);
+        pane.setPreferredSize(new Dimension(500, 120));
+        Container c = frame.getContentPane();
+        c.removeAll();
+        c.add(pane, 0);
     }
 
     public static class MyListCellRenderer extends JLabel implements ListCellRenderer {
@@ -100,11 +92,9 @@ public class WindowUtil {
         }
     }
 
-
     public static void main(String[] args) {
         for (int i = 0; i < 20; i++) {
             WindowUtil.createMsgFrame("A2201", true, i + ": 50秒 上涨0.36%【823.0-826.0】看多");
-
         }
     }
 }

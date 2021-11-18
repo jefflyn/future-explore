@@ -18,12 +18,14 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
 @Slf4j
 public class FutureMonitorService {
     private static List<Pair<Integer, Float>> MONITOR_PARAMS = new ArrayList<>();
+    private static LinkedList<String> contents = new LinkedList<>();
 
     static {
 //        MONITOR_PARAMS.add(Pair.with(30, 0.33F));
@@ -52,6 +54,15 @@ public class FutureMonitorService {
     @Async
     @Transactional
     public void addPositionLog(FutureLiveDO futureLiveDO) {
+        String contentStr = futureLiveDO.getCode() + futureLiveDO.getPrice() + futureLiveDO.getPosition();
+        if (Boolean.TRUE.equals(contents.contains(contentStr))) {
+            return;
+        }
+        contents.addFirst(contentStr);
+        if (contents.size() > 10) {
+            contents.removeLast();
+        }
+
         int position = -1;
         if (futureLiveDO.getPosition().compareTo(BigDecimal.ZERO) <= 0) {
             position = 0;
