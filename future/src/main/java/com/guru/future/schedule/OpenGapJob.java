@@ -23,7 +23,7 @@ public class OpenGapJob {
         futureGapService.monitorOpenGap();
     }
 
-    @Scheduled(cron = "4 0 21 * * MON-FRI")
+//    @Scheduled(cron = "4 0 21 * * MON-FRI")
     private void monitorNightOpenGap() throws InterruptedException {
         futureGapService.monitorOpenGap();
     }

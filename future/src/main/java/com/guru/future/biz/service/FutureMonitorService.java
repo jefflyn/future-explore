@@ -40,7 +40,7 @@ public class FutureMonitorService {
     private FutureLogManager futureLogManager;
 
     public void monitorPriceFlash(FutureLiveDO futureLiveDO, String histHighLowFlag) {
-        if (DateUtil.isPriceMonitorTime()) {
+        if (Boolean.TRUE.equals(DateUtil.isPriceMonitorTime())) {
             try {
                 for (Pair<Integer, Float> param : MONITOR_PARAMS) {
                     triggerPriceFlash(param, futureLiveDO, histHighLowFlag);
