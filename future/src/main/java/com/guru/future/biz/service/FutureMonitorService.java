@@ -54,15 +54,6 @@ public class FutureMonitorService {
     @Async
     @Transactional
     public void addPositionLog(FutureLiveDO futureLiveDO) {
-        String contentStr = futureLiveDO.getCode() + futureLiveDO.getPrice() + futureLiveDO.getPosition();
-        if (Boolean.TRUE.equals(contents.contains(contentStr))) {
-            return;
-        }
-        contents.addFirst(contentStr);
-        if (contents.size() > 10) {
-            contents.removeLast();
-        }
-
         int position = -1;
         if (futureLiveDO.getPosition().compareTo(BigDecimal.ZERO) <= 0) {
             position = 0;
@@ -70,6 +61,14 @@ public class FutureMonitorService {
             position = 100;
         }
         if (position > -1) {
+            String contentStr = futureLiveDO.getCode() + futureLiveDO.getPrice() + futureLiveDO.getPosition();
+            if (Boolean.TRUE.equals(contents.contains(contentStr))) {
+                return;
+            }
+            contents.addFirst(contentStr);
+            if (contents.size() > 10) {
+                contents.removeLast();
+            }
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
