@@ -38,7 +38,7 @@ public class WindowUtil {
 //          Runtime.getRuntime().exec("say " + msg);
             JLabel label = new JLabel();
             label.setText(content);
-            if (model.size() > 50) {
+            if (model.size() > 30) {
                 Object lastOne = model.lastElement();
                 model.removeElement(lastOne);
             }

@@ -82,7 +82,6 @@ public class FutureMonitorService {
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
             futureLogDO.setFactor(adder.intValue());
-            futureLogDO.setDiff(BigDecimal.ZERO);
             futureLogDO.setName(futureLiveDO.getName());
             if (position == 0) {
                 futureLogDO.setType("日内低点");
@@ -179,10 +178,12 @@ public class FutureMonitorService {
     }
 
     private void msgNotice(boolean isUp, FutureLogDO futureLogDO) {
-        String diffStr = Objects.isNull(futureLogDO.getDiff()) ? "" : String.format("%.2f", futureLogDO.getDiff()) + "%";
+        String diffStr = Objects.isNull(futureLogDO.getDiff()) ? ""
+                : " " +String.format("%.2f", futureLogDO.getDiff()) + "%";
+        String factorStr = futureLogDO.getType().contains("日内") ? futureLogDO.getFactor() + "+"
+                : String.valueOf(futureLogDO.getFactor());
         StringBuilder content = new StringBuilder();
-        content.append(futureLogDO.getType()).append(" ").append(futureLogDO.getFactor())
-                .append(" ").append(diffStr)
+        content.append(futureLogDO.getType()).append(" ").append(factorStr).append(diffStr)
                 .append("【").append(futureLogDO.getContent()).append("】")
                 .append(futureLogDO.getOption()).append(" ").append(futureLogDO.getSuggest())
                 .append(" ").append(futureLogDO.getPctChange()).append("%")
