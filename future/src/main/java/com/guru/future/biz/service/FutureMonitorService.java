@@ -77,6 +77,7 @@ public class FutureMonitorService {
             }
             LongAdder adder = ObjectUtils.defaultIfNull(positionCount.get(futureLiveDO.getCode() + position), new LongAdder());
             adder.increment();
+            positionCount.put(futureLiveDO.getCode() + position, adder);
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
