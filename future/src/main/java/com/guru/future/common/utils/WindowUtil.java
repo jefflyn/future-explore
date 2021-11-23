@@ -1,5 +1,6 @@
 package com.guru.future.common.utils;
 
+import com.google.common.base.Strings;
 import com.guru.future.common.cache.LiveDataCache;
 import com.guru.future.common.entity.vo.FutureLiveVO;
 import lombok.extern.slf4j.Slf4j;
@@ -48,16 +49,19 @@ public class WindowUtil {
     public static void createMsgFrame(String overview, String content) {
         try {
 //          Runtime.getRuntime().exec("say ");
-            JLabel label = new JLabel();
-            label.setText(content);
-            if (priceModel.size() > 30) {
-                Object lastOne = priceModel.lastElement();
-                priceModel.removeElement(lastOne);
+            if (!Strings.isNullOrEmpty(content)) {
+                JLabel label = new JLabel();
+                label.setText(content);
+                if (priceModel.size() > 30) {
+                    Object lastOne = priceModel.lastElement();
+                    priceModel.removeElement(lastOne);
+                }
+                priceModel.add(0, label);
             }
-            priceModel.add(0, label);
             buildTopModel();
+            String frameTitle = "Trade Log【" + overview + "】";
             if (frame == null) {
-                frame = new JFrame("trade log【" + overview + "】");
+                frame = new JFrame(frameTitle);
                 frame.setLayout(new FlowLayout());
                 frame.setBounds(0, 1000, 510, 438);
                 frame.addWindowListener(new WindowAdapter() {
@@ -70,6 +74,7 @@ public class WindowUtil {
                 refreshContentPane();
                 frame.setVisible(true);
             } else {
+                frame.setTitle(frameTitle);
                 refreshContentPane();
             }
             frame.validate();

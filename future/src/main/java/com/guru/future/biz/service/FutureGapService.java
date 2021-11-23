@@ -50,8 +50,8 @@ public class FutureGapService {
     @Resource
     private OpenGapManager openGapManager;
 
-//    @Cacheable(cacheManager = "hour1CacheManager", value = "marketOverview", key = "marketOverview", unless = "#result==null")
-    public String getMarketOverview() {
+    @Cacheable(cacheManager = "hour1CacheManager", value = "marketOverview", key = "#currentDate", unless = "#result==null")
+    public String getMarketOverview(String currentDate) {
         List<OpenGapDO> openGapDOList = openGapManager.getCurrentOpenGap();
         if (CollectionUtils.isEmpty(openGapDOList)) {
             return null;

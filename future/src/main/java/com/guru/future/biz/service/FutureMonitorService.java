@@ -209,7 +209,7 @@ public class FutureMonitorService {
                 .append(" ").append(futureLogDO.getPctChange()).append("%")
                 .append(" ").append(futureLogDO.getPosition());
         // show msg frame
-        WindowUtil.createMsgFrame(openGapService.getMarketOverview(), DateUtil.currentTime() + " "
+        WindowUtil.createMsgFrame(openGapService.getMarketOverview(futureLogDO.getTradeDate()), DateUtil.currentTime() + " "
                 + futureLogDO.getName() + " " + content);
     }
 }

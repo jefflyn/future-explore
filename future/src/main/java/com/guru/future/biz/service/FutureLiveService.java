@@ -7,7 +7,9 @@ import com.guru.future.common.cache.LiveDataCache;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.FutureLiveVO;
+import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.WaveUtil;
+import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureLiveDO;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +36,7 @@ import java.util.concurrent.ScheduledExecutorService;
 @Slf4j
 public class FutureLiveService {
     @Resource
-    private ScheduledExecutorService scheduledExecutor;
+    private FutureGapService openGapService;
     @Resource
     private FutureBasicManager futureBasicManager;
     @Resource
@@ -65,6 +67,7 @@ public class FutureLiveService {
         Collections.reverse(highTop10List);
         LiveDataCache.setHighTop10(highTop10List);
         LiveDataCache.setLowTop10(lowTop10List);
+        WindowUtil.createMsgFrame(openGapService.getMarketOverview(DateUtil.currentTradeDate()), null);
     }
 
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList, Boolean refresh) {
