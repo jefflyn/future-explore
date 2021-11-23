@@ -22,6 +22,10 @@ public class OpenGapManager {
     @Resource
     private OpenGapDAO openGapDAO;
 
+    public List<OpenGapDO> getCurrentOpenGap() {
+        return openGapDAO.selectByCurrentDate();
+    }
+
     @Transactional
     public Boolean addOpenGapLog(OpenGapDO openGapDO) {
         return openGapDAO.insertSelective(openGapDO) > 0;

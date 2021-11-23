@@ -112,4 +112,8 @@
             </if>
         </trim>
     </insert>
+
+    <select id="selectByCurrentDate" resultMap="BaseResultMap">
+        select * from open_gap where trade_date = CURDATE();
+    </select>
 </mapper>

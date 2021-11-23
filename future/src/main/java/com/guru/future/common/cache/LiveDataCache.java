@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 public class LiveDataCache {
+    public final static String SYMBOL_UP = "↑";
+    public final static String SYMBOL_DOWN = "↓";
+
     private static Boolean refreshSnapshot = true;
     private static Map<String, FutureLiveVO> top10Snapshot = new HashMap<>(20);
     private static List<FutureLiveVO> highTop10 = new ArrayList<>(10);
@@ -38,7 +41,7 @@ public class LiveDataCache {
             highTopVo.setSortNo(i + 1);
             FutureLiveVO lastVo = top10Snapshot.get(highTopVo.getName());
             if (lastVo != null && highTopVo.getSortNo() != lastVo.getSortNo()) {
-                highTopVo.setDirection(highTopVo.getSortNo().compareTo(lastVo.getSortNo()) < 0 ? "↑" : "↓");
+                highTopVo.setDirection(highTopVo.getSortNo().compareTo(lastVo.getSortNo()) < 0 ? SYMBOL_UP : SYMBOL_DOWN);
             }
         }
         highTop10.addAll(futureLiveVOList);
@@ -51,7 +54,7 @@ public class LiveDataCache {
             lowTopVo.setSortNo(i + 1);
             FutureLiveVO lastVo = top10Snapshot.get(lowTopVo.getName());
             if (lastVo != null && lowTopVo.getSortNo() != lastVo.getSortNo()) {
-                lowTopVo.setDirection(lowTopVo.getSortNo().compareTo(lastVo.getSortNo()) < 0 ? "↑" : "↓");
+                lowTopVo.setDirection(lowTopVo.getSortNo().compareTo(lastVo.getSortNo()) < 0 ? SYMBOL_UP : SYMBOL_DOWN);
             }
         }
         lowTop10.addAll(futureLiveVOList);

@@ -2,9 +2,9 @@ package com.guru.future.biz.service;
 
 import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureLogManager;
+import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.enums.DailyCollectType;
 import com.guru.future.common.utils.DateUtil;
-import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
@@ -40,7 +40,8 @@ public class FutureMonitorService {
 
     @Resource
     private FutureDailyCollectService collectService;
-
+    @Resource
+    private FutureGapService openGapService;
     @Resource
     private FutureLogManager futureLogManager;
 
@@ -206,7 +207,7 @@ public class FutureMonitorService {
                 .append(" ").append(futureLogDO.getPctChange()).append("%")
                 .append(" ").append(futureLogDO.getPosition());
         // show msg frame
-        WindowUtil.createMsgFrame(futureLogDO.getCode(), isUp, DateUtil.currentTime() + " "
+        WindowUtil.createMsgFrame(openGapService.getMarketOverview(), DateUtil.currentTime() + " "
                 + futureLogDO.getName() + " " + content);
     }
 }

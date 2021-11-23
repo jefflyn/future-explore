@@ -11,9 +11,13 @@ import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureDailyDO;
+import com.guru.future.domain.OpenGapDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.logging.log4j.util.Strings;
+import org.checkerframework.checker.units.qual.Current;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -45,6 +49,40 @@ public class FutureGapService {
     private FutureMailManager futureMailManager;
     @Resource
     private OpenGapManager openGapManager;
+
+    @Cacheable(cacheManager = "hour1CacheManager", value = "marketOverview", key = "#marketOverview", unless = "#result==null")
+    public String getMarketOverview() {
+        List<OpenGapDO> openGapDOList = openGapManager.getCurrentOpenGap();
+        if (CollectionUtils.isEmpty(openGapDOList)) {
+            return null;
+        }
+        int total = openGapDOList.size();
+        int openHighCount = 0;
+        int openLowCount = 0;
+        int openFlat = 0;
+        for (OpenGapDO openGapDO : openGapDOList) {
+            if (openGapDO.getGapRate().compareTo(BigDecimal.ZERO) > 0) {
+                openHighCount += 1;
+            } else if (openGapDO.getGapRate().compareTo(BigDecimal.ZERO) < 0) {
+                openLowCount += 1;
+            } else {
+                openFlat += 1;
+            }
+        }
+        String overview = "中性";
+        float highRate = openHighCount * 100 / total;
+        float lowRate = openLowCount * 100 / total;
+        if (highRate >= 70) {
+            overview = "多";
+        } else if (highRate >= 55) {
+            overview = "偏多";
+        } else if (lowRate >= 70) {
+            overview = "空";
+        } else if (lowRate >= 55) {
+            overview = "偏空";
+        }
+        return overview;
+    }
 
     public void monitorOpenGap() throws InterruptedException {
         if (DateUtil.beforeBidTime()) {
