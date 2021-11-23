@@ -12,11 +12,6 @@ create table future_basic
     c decimal(10,2) null comment '本合约C（合约变更需修改）',
     amount int not null comment '合同每单位数量',
     unit varchar(4) not null comment '单位',
-    `limit` tinyint not null comment '涨跌停限制%',
-    margin_rate tinyint not null comment '保证金率%',
-    fee_type tinyint not null comment '手续费类型（1=金额，2=数量）',
-    fee decimal(8,6) null comment '每手开平手续费',
-    fee_today decimal(8,6) not null comment '平今手续费',
     night tinyint not null comment '是否夜盘（0=否 1=是）',
     exchange varchar(16) not null comment '所属交易所',
     is_target tinyint default 1 not null comment '0=否 1=是',
@@ -25,7 +20,6 @@ create table future_basic
     update_time timestamp not null on update CURRENT_TIMESTAMP comment '更新时间'
 )
     comment '合约基本信息';
-
 
 create table future_daily
 (
@@ -151,4 +145,7 @@ create table open_gap
         unique (code, trade_date)
 )
     comment 'open gap log';
+
+create index idx_open_gap_trade_date
+    on open_gap (trade_date);
 
