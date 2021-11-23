@@ -3,7 +3,7 @@ package com.guru.future.biz.service;
 import java.math.BigDecimal;
 
 import com.guru.future.biz.manager.FutureLogManager;
-import com.guru.future.common.utils.PriceFlashCache;
+import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.domain.FutureLiveDO;
 import org.javatuples.Pair;
 import org.junit.runner.RunWith;

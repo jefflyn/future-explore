@@ -3,11 +3,9 @@ package com.guru.future.biz.handler;
 import com.guru.future.TestBase;
 import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
-import com.guru.future.common.utils.DateUtil;
-import com.guru.future.common.utils.PriceFlashCache;
+import com.guru.future.common.cache.PriceFlashCache;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomUtils;
-import org.springframework.util.CollectionUtils;
 import org.testng.annotations.Test;
 
 import javax.annotation.Resource;

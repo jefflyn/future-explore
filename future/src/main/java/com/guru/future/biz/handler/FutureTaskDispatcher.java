@@ -5,9 +5,8 @@ import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
-import com.guru.future.common.utils.PriceFlashCache;
+import com.guru.future.common.cache.PriceFlashCache;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

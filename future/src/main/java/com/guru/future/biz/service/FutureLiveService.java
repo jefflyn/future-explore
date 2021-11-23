@@ -32,7 +32,11 @@ public class FutureLiveService {
     @Resource
     private FutureMonitorService monitorService;
 
-    @Async
+    @Async("bizAsyncTaskExecutor")
+    public void reloadLiveCache(List<ContractRealtimeDTO> contractRealtimeDTOList){
+
+    }
+
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList, Boolean refresh) {
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap(refresh);
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {

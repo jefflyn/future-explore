@@ -30,13 +30,13 @@ public class FutureDailyService {
     @Resource
     private FutureSinaManager futureSinaManager;
 
-    @Async
+    @Async("bizAsyncTaskExecutor")
     public void addTradeDaily() {
         List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getAllRealtimeFromSina();
         this.upsertTradeDaily(contractRealtimeDTOList);
     }
 
-    @Async
+    @Async("bizAsyncTaskExecutor")
     public void upsertTradeDaily(List<ContractRealtimeDTO> contractRealtimeDTOList) {
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
         String tradeDate = DateUtil.currentTradeDate();

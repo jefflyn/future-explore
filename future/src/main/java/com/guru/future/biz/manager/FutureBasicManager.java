@@ -55,7 +55,7 @@ public class FutureBasicManager {
         return true;
     }
 
-    @Async
+    @Async("bizAsyncTaskExecutor")
     public void refreshBasicCacheMap(String code) {
         FutureBasicDO futureBasicDO = getBasicByCode(code);
         FUTURE_BASIC_MAP.put(code, futureBasicDO);

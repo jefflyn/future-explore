@@ -1,10 +1,9 @@
 package com.guru.future.common.utils;
 
+import com.guru.future.common.cache.PriceFlashCache;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PriceFlashCacheTest {
 

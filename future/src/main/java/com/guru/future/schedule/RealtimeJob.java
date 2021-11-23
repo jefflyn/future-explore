@@ -22,7 +22,7 @@ public class RealtimeJob {
     @Resource
     private FutureTaskDispatcher futureTaskDispatcher;
 
-    @Scheduled(cron = "4 0 9,21 * * ?")
+    @Scheduled(cron = "3 0 9,21 * * ?")
     private void realtime1() throws InterruptedException {
         log.info("realtime start...");
         futureTaskDispatcher.executePulling(false);

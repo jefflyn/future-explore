@@ -1,4 +1,4 @@
-package com.guru.future.common.utils;
+package com.guru.future.common.cache;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.javatuples.Pair;

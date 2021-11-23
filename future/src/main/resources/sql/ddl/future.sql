@@ -7,6 +7,9 @@ create table future_basic
     code varchar(8) not null comment '合约代码',
     low decimal(10,2) not null comment '主连历史最低',
     high decimal(10,2) not null comment '主连历史最高',
+    a decimal(10,2) null comment '本合约A（合约变更需修改）',
+    b decimal(10,2) null comment '本合约B（合约变更需修改）',
+    c decimal(10,2) null comment '本合约C（合约变更需修改）',
     amount int not null comment '合同每单位数量',
     unit varchar(4) not null comment '单位',
     `limit` tinyint not null comment '涨跌停限制%',
@@ -22,6 +25,7 @@ create table future_basic
     update_time timestamp not null on update CURRENT_TIMESTAMP comment '更新时间'
 )
     comment '合约基本信息';
+
 
 create table future_daily
 (

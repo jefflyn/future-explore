@@ -1,15 +1,12 @@
 package com.guru.future.common.utils;
 
-import com.guru.future.domain.OpenGapDO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.DigestUtils;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.JViewport;
 import javax.swing.ListCellRenderer;
 import java.awt.Color;
 import java.awt.Component;
@@ -18,10 +15,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
-import java.util.ListIterator;
 
 /**
  * @author j

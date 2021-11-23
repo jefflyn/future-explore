@@ -4,12 +4,11 @@ import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureLogManager;
 import com.guru.future.common.enums.DailyCollectType;
 import com.guru.future.common.utils.DateUtil;
-import com.guru.future.common.utils.PriceFlashCache;
+import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.ObjectUtils;
 import org.javatuples.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ import java.util.concurrent.atomic.LongAdder;
 public class FutureMonitorService {
     private static List<Pair<Integer, Float>> MONITOR_PARAMS = new ArrayList<>();
     private static LinkedList<String> contents = new LinkedList<>();
-    private static Map<String, LongAdder> positionCount = new HashMap<>();
+    private static Map<String, Map<BigDecimal, LongAdder>> positionCount = new HashMap<>();
 
     static {
 //        MONITOR_PARAMS.add(Pair.with(30, 0.33F));
@@ -57,7 +56,7 @@ public class FutureMonitorService {
         }
     }
 
-    @Async
+    @Async("bizAsyncTaskExecutor")
     @Transactional
     public void addPositionLog(FutureLiveDO futureLiveDO) {
         int position = -1;
@@ -75,13 +74,31 @@ public class FutureMonitorService {
             if (contents.size() > 10) {
                 contents.removeLast();
             }
-            LongAdder adder = ObjectUtils.defaultIfNull(positionCount.get(futureLiveDO.getCode() + position), new LongAdder());
-            adder.increment();
-            positionCount.put(futureLiveDO.getCode() + position, adder);
+            String positionKey = futureLiveDO.getCode() + position;
+            Map<BigDecimal, LongAdder> priceAdderMap = positionCount.get(positionKey);
+            if (priceAdderMap == null) {
+                priceAdderMap = new HashMap<>();
+                LongAdder adder = new LongAdder();
+                adder.increment();
+                priceAdderMap.put(futureLiveDO.getPrice(), adder);
+                positionCount.put(positionKey, priceAdderMap);
+            } else {
+                LongAdder lastAdder = priceAdderMap.values().stream().findFirst().get();
+                LongAdder adder = priceAdderMap.get(futureLiveDO.getPrice());
+                if (adder == null) {
+                    adder = new LongAdder();
+                    adder.add(lastAdder.intValue());
+                    adder.increment();
+                    priceAdderMap.clear();
+                    priceAdderMap.put(futureLiveDO.getPrice(), adder);
+                    positionCount.put(positionKey, priceAdderMap);
+                }
+            }
+
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
-            futureLogDO.setFactor(adder.intValue());
+            futureLogDO.setFactor(priceAdderMap.values().stream().findFirst().get().intValue());
             futureLogDO.setName(futureLiveDO.getName());
             if (position == 0) {
                 futureLogDO.setType("日内低点");
@@ -102,7 +119,7 @@ public class FutureMonitorService {
         }
     }
 
-    @Async
+    @Async("bizAsyncTaskExecutor")
     public void triggerPriceFlash(Pair<Integer, Float> param, FutureLiveDO futureLiveDO, String histHighLowFlag) {
         int factor = param.getValue0();
         float triggerDiff = param.getValue1();
@@ -179,7 +196,7 @@ public class FutureMonitorService {
 
     private void msgNotice(boolean isUp, FutureLogDO futureLogDO) {
         String diffStr = Objects.isNull(futureLogDO.getDiff()) ? ""
-                : " " +String.format("%.2f", futureLogDO.getDiff()) + "%";
+                : " " + String.format("%.2f", futureLogDO.getDiff()) + "%";
         String factorStr = futureLogDO.getType().contains("日内") ? futureLogDO.getFactor() + "+"
                 : String.valueOf(futureLogDO.getFactor());
         StringBuilder content = new StringBuilder();

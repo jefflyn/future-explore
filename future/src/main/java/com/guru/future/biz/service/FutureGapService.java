@@ -46,7 +46,6 @@ public class FutureGapService {
     @Resource
     private OpenGapManager openGapManager;
 
-//    @Async
     public void monitorOpenGap() throws InterruptedException {
         if (DateUtil.beforeBidTime()) {
             TimeUnit.SECONDS.sleep(5L);
@@ -188,7 +187,7 @@ public class FutureGapService {
         }
     }
 
-    @Async
+    @Async("bizAsyncTaskExecutor")
     public void sendOpenGapMail(String title, List<ContractOpenGapDTO> openGapDTOList) throws Exception {
         Collections.sort(openGapDTOList);
         Collections.reverse(openGapDTOList);
