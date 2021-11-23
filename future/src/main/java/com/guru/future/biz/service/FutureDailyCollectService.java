@@ -27,10 +27,6 @@ import java.util.concurrent.TimeUnit;
 public class FutureDailyCollectService {
     @Resource
     private ScheduledExecutorService scheduledExecutor;
-
-    @Resource
-    private FutureLogManager futureLogManager;
-
     @Resource
     private FutureDailyCollectManager dailyCollectManager;
 

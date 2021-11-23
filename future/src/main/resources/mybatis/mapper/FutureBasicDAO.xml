@@ -9,6 +9,9 @@
         <result column="code" jdbcType="VARCHAR" property="code"/>
         <result column="low" jdbcType="DECIMAL" property="low"/>
         <result column="high" jdbcType="DECIMAL" property="high"/>
+        <result column="a" jdbcType="DECIMAL" property="a"/>
+        <result column="b" jdbcType="DECIMAL" property="b"/>
+        <result column="c" jdbcType="DECIMAL" property="c"/>
         <result column="amount" jdbcType="INTEGER" property="amount"/>
         <result column="unit" jdbcType="VARCHAR" property="unit"/>
         <result column="limit" jdbcType="TINYINT" property="limit"/>
@@ -26,7 +29,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        symbol, `name`, `type`, code, low, high, amount, unit, `limit`, margin_rate, fee_type,
+        symbol, `name`, `type`, code, low, high, `a`,`b`,`c`,amount, unit, `limit`, margin_rate, fee_type,
     fee, fee_today, night, exchange, is_target, deleted, update_time, remark
     </sql>
 

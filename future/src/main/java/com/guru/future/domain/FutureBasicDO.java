@@ -19,6 +19,10 @@ public class FutureBasicDO {
 
     private BigDecimal high;
 
+    private BigDecimal a;
+    private BigDecimal b;
+    private BigDecimal c;
+
     private Integer amount;
 
     private String unit;
