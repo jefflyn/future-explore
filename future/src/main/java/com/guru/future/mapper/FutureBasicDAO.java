@@ -6,11 +6,11 @@ import com.guru.future.domain.FutureBasicDO;
 import java.util.List;
 
 public interface FutureBasicDAO {
-    int insertSelective(FutureBasicDO record);
+    int insertSelective(FutureBasicDO futureBasicDO);
 
     FutureBasicDO selectByCode(String code);
 
-    int updateByCodeSelective(FutureBasicDO record);
+    int updateByCodeSelective(FutureBasicDO futureBasicDO);
 
     List<FutureBasicDO> selectByQuery(FutureBasicQuery query);
 }

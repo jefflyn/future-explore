@@ -141,10 +141,7 @@ public class DateUtil {
             return true;
         }
         String currentTime = DateFormatUtils.format(date, HOUR_MINUTE_PATTERN);
-        boolean currentNight = currentTime.compareTo("20:59") >= 0 && currentTime.compareTo("24:00") < 0;
-//        boolean nextMorning = currentTime.compareTo("00:00") >= 0 && currentTime.compareTo("08:59") < 0;
-        return currentNight;
-//        return (currentNight || nextMorning);
+        return currentTime.compareTo("20:59") >= 0 && currentTime.compareTo("24:00") < 0;
     }
 
     public static Boolean dayClose() {
@@ -160,7 +157,7 @@ public class DateUtil {
     public static boolean beforeBidTime() {
         Date now = new Date();
         // holiday
-        if (isHoliday(now)) {
+        if (Boolean.TRUE.equals(isHoliday(now))) {
             return false;
         }
         String nowTime = DateFormatUtils.format(now, TIME_PATTERN);

@@ -39,4 +39,16 @@ public class LocalCacheConfig {
         return cacheManager;
     }
 
+    @Bean("minute3CacheManager")
+    public CacheManager minute3CacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+        cacheManager.setCaffeine(Caffeine.newBuilder()
+                .recordStats()
+                .initialCapacity(16)
+                .maximumSize(64)
+                .expireAfterWrite(3, TimeUnit.MINUTES)
+        );
+        return cacheManager;
+    }
+
 }

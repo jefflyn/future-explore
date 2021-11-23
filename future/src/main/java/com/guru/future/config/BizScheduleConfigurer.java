@@ -24,19 +24,13 @@ public class BizScheduleConfigurer {
 
     @Bean("scheduledExecutor")
     public Executor getAsyncExecutor() {
-        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(2, new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                Thread t = new Thread(r);
-                t.setName("collectSchedule-" + t.getId());
-                t.setDaemon(true);
-                return t;
-            }
-        }, new RejectedExecutionHandler(){
-            @Override
-            public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
-                throw new RejectedExecutionException("rejected task " + r.toString());
-            }
+        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(2, r -> {
+            Thread t = new Thread(r);
+            t.setName("collectSchedule-" + t.getId());
+            t.setDaemon(true);
+            return t;
+        }, (r, executor) -> {
+            throw new RejectedExecutionException("rejected task " + r.toString());
         });
         log.info("开启定时任务线程池");
         return executorService;

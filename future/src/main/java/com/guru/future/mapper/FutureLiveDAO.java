@@ -5,10 +5,10 @@ import com.guru.future.domain.FutureLiveDO;
 public interface FutureLiveDAO {
     int deleteByPrimaryKey(String code);
 
-    int insertSelective(FutureLiveDO record);
+    int insertSelective(FutureLiveDO futureLiveDO);
 
     FutureLiveDO selectByPrimaryKey(String code);
 
-    int updateByPrimaryKeySelective(FutureLiveDO record);
+    int updateByPrimaryKeySelective(FutureLiveDO futureLiveDO);
 
 }

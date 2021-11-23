@@ -25,6 +25,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.LongAdder;
 
+import static com.guru.future.common.utils.NumberUtil.decimal2String;
+
 @Service
 @Slf4j
 public class FutureMonitorService {
@@ -57,7 +59,7 @@ public class FutureMonitorService {
         }
     }
 
-    @Async("bizAsyncTaskExecutor")
+    @Async()
     @Transactional
     public void addPositionLog(FutureLiveDO futureLiveDO) {
         int position = -1;
@@ -99,7 +101,7 @@ public class FutureMonitorService {
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
-            futureLogDO.setFactor(priceAdderMap.values().stream().findFirst().get().intValue());
+            futureLogDO.setFactor(priceAdderMap.values().stream().findFirst().orElse(new LongAdder()).intValue());
             futureLogDO.setName(futureLiveDO.getName());
             if (position == 0) {
                 futureLogDO.setType("日内低点");
@@ -120,7 +122,7 @@ public class FutureMonitorService {
         }
     }
 
-    @Async("bizAsyncTaskExecutor")
+    @Async()
     public void triggerPriceFlash(Pair<Integer, Float> param, FutureLiveDO futureLiveDO, String histHighLowFlag) {
         int factor = param.getValue0();
         float triggerDiff = param.getValue1();
@@ -203,7 +205,7 @@ public class FutureMonitorService {
         StringBuilder content = new StringBuilder();
         content.append(futureLogDO.getType()).append(" ").append(factorStr).append(diffStr)
                 .append("【").append(futureLogDO.getContent()).append("】")
-                .append(futureLogDO.getOption()).append(" ").append(futureLogDO.getSuggest())
+                .append(futureLogDO.getOption()).append(" ").append(decimal2String(futureLogDO.getSuggest()))
                 .append(" ").append(futureLogDO.getPctChange()).append("%")
                 .append(" ").append(futureLogDO.getPosition());
         // show msg frame

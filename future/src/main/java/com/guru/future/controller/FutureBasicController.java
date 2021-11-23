@@ -19,8 +19,9 @@ public class FutureBasicController {
     public String start(@RequestParam(required = false) Boolean refresh) {
         try {
             futureTaskDispatcher.executePulling(refresh);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
         return "success";
     }

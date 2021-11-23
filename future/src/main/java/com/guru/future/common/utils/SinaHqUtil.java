@@ -13,9 +13,9 @@ import java.util.List;
  * @author j
  */
 public class SinaHqUtil {
-    public final static Integer HQ_LIST_SIZE = 29;
+    public static final Integer HQ_LIST_SIZE = 29;
 
-    public final static String HQ_CODE_PREFIX = "nf_";
+    public static final String HQ_CODE_PREFIX = "nf_";
 
     public static String convert2HqCode(String code) {
         if (!code.startsWith(SinaHqUtil.HQ_CODE_PREFIX)) {

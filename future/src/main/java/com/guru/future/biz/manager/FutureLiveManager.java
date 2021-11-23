@@ -16,8 +16,7 @@ public class FutureLiveManager {
     private FutureLiveDAO futureLiveDAO;
 
     public FutureLiveDO getLiveDOByCode(String code) {
-        FutureLiveDO futureLiveDO = futureLiveDAO.selectByPrimaryKey(code);
-        return futureLiveDO;
+        return futureLiveDAO.selectByPrimaryKey(code);
     }
 
     public Boolean upsertFutureLive(FutureLiveDO futureLiveDO) {

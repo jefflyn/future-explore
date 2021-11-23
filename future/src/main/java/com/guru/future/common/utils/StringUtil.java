@@ -21,7 +21,7 @@ public class StringUtil {
         return strList;
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String words = "fruit/Apple/orange/grape/watermelon/pear/banana/strawberry/kiwi fruit/peach/melon/mango";
         List<String> wordList = strToList(words, "/");
         System.out.println(wordList);

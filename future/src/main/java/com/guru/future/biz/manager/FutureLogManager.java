@@ -4,6 +4,7 @@ import com.guru.future.common.utils.DateUtil;
 import com.guru.future.domain.FutureLogDO;
 import com.guru.future.mapper.FutureLogDAO;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class FutureLogManager {
     private FutureLogDAO futureLogDAO;
 
     public List<String> getLogCodes() {
-        if (LOG_CODES_CACHE.size() > 0) {
+        if (!CollectionUtils.isEmpty(LOG_CODES_CACHE)) {
             return new ArrayList<>(LOG_CODES_CACHE);
         }
         // get from db

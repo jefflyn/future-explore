@@ -58,18 +58,4 @@ public class WaveUtil {
 
     }
 
-    public static void main(String[] args) {
-        BigDecimal a = new BigDecimal(100);
-        BigDecimal b = new BigDecimal(120);
-        BigDecimal c = new BigDecimal(90);
-        BigDecimal price = new BigDecimal(99);
-        System.out.println(generateWave(null, null, null, null));
-        System.out.println(generateWave(a, null, null, null));
-        System.out.println(generateWave(a, null, null, price));
-        System.out.println(generateWave(a, b, null, price));
-        System.out.println(generateWave(a, null, b, price));
-        System.out.println(generateWave(a, b, c, price));
-
-    }
-
 }

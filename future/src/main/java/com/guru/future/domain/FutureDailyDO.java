@@ -59,7 +59,6 @@ public class FutureDailyDO {
         this.tradeDate = tradeDate;
         this.code = code;
         this.name = name;
-        this.open = open;
         this.preClose = preClose;
     }
 

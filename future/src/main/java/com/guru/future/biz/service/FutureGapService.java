@@ -50,13 +50,13 @@ public class FutureGapService {
     @Resource
     private OpenGapManager openGapManager;
 
-    @Cacheable(cacheManager = "hour1CacheManager", value = "marketOverview", key = "#marketOverview", unless = "#result==null")
+//    @Cacheable(cacheManager = "hour1CacheManager", value = "marketOverview", key = "marketOverview", unless = "#result==null")
     public String getMarketOverview() {
         List<OpenGapDO> openGapDOList = openGapManager.getCurrentOpenGap();
         if (CollectionUtils.isEmpty(openGapDOList)) {
             return null;
         }
-        int total = openGapDOList.size();
+        float total = openGapDOList.size();
         int openHighCount = 0;
         int openLowCount = 0;
         int openFlat = 0;
@@ -225,7 +225,7 @@ public class FutureGapService {
         }
     }
 
-    @Async("bizAsyncTaskExecutor")
+    @Async()
     public void sendOpenGapMail(String title, List<ContractOpenGapDTO> openGapDTOList) throws Exception {
         Collections.sort(openGapDTOList);
         Collections.reverse(openGapDTOList);

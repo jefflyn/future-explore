@@ -23,15 +23,14 @@ public class FutureBasicManager {
     private Map<String, FutureBasicDO> FUTURE_BASIC_MAP = new HashMap<>();
 
     public FutureBasicDO getBasicByCode(String code) {
-        FutureBasicDO futureBasicDO = futureBasicsDAO.selectByCode(code);
-        return futureBasicDO;
+        return futureBasicsDAO.selectByCode(code);
     }
 
     public Map<String, FutureBasicDO> getBasicMap() {
         return getBasicMap(false);
     }
     public Map<String, FutureBasicDO> getBasicMap(Boolean refresh) {
-        if (FUTURE_BASIC_MAP.size() > 0 && !refresh) {
+        if (FUTURE_BASIC_MAP.size() > 0 && Boolean.FALSE.equals(refresh)) {
             return FUTURE_BASIC_MAP;
         }
         List<FutureBasicDO> futureBasicDOList = futureBasicsDAO.selectByQuery(null);
@@ -55,7 +54,7 @@ public class FutureBasicManager {
         return true;
     }
 
-    @Async("bizAsyncTaskExecutor")
+    @Async()
     public void refreshBasicCacheMap(String code) {
         FutureBasicDO futureBasicDO = getBasicByCode(code);
         FUTURE_BASIC_MAP.put(code, futureBasicDO);

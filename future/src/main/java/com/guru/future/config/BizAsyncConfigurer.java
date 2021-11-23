@@ -24,9 +24,9 @@ public class BizAsyncConfigurer implements AsyncConfigurer {
         // 当前线程数
         threadPool.setCorePoolSize(5);
         // 最大线程数
-        threadPool.setMaxPoolSize(10);
+        threadPool.setMaxPoolSize(100);
         // 线程池所使用的缓冲队列
-        threadPool.setQueueCapacity(10);
+        threadPool.setQueueCapacity(100);
         // 等待任务在关机时完成--表明等待所有线程执行完
         threadPool.setWaitForTasksToCompleteOnShutdown(true);
         // 等待时间 （默认为0，此时立即停止），并没等待xx秒后强制停止
@@ -44,13 +44,10 @@ public class BizAsyncConfigurer implements AsyncConfigurer {
 
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return new AsyncUncaughtExceptionHandler() {
-            @Override
-            public void handleUncaughtException(Throwable throwable, Method method, Object... objects) {
-                log.info("handleUncaughtException Method name - " + method.getName());
-                for (Object param : objects) {
-                    log.info("handleUncaughtException Parameter value - " + param);
-                }
+        return (throwable, method, objects) -> {
+            log.info("handleUncaughtException Method name - " + method.getName(), throwable);
+            for (Object param : objects) {
+                log.info("handleUncaughtException Parameter value - " + param);
             }
         };
     }

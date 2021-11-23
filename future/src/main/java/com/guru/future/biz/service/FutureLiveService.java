@@ -10,12 +10,9 @@ import com.guru.future.common.entity.vo.FutureLiveVO;
 import com.guru.future.common.utils.WaveUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureLiveDO;
-import com.guru.future.task.DailyCollectTask;
-import com.guru.future.task.LiveSnapshotRefreshTask;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.ini4j.spi.BeanTool;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -29,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author j
@@ -46,7 +42,7 @@ public class FutureLiveService {
     @Resource
     private FutureMonitorService monitorService;
 
-    @Async("bizAsyncTaskExecutor")
+    @Async()
     public void reloadLiveCache(List<ContractRealtimeDTO> contractRealtimeDTOList, Map<String, FutureBasicDO> basicMap) {
         List<FutureLiveVO> futureLiveVOList = new ArrayList<>();
         if (CollectionUtils.isEmpty(contractRealtimeDTOList)) {
@@ -69,9 +65,6 @@ public class FutureLiveService {
         Collections.reverse(highTop10List);
         LiveDataCache.setHighTop10(highTop10List);
         LiveDataCache.setLowTop10(lowTop10List);
-        LiveDataCache.setTop10Snapshot(LiveDataCache.getHighTop10(), LiveDataCache.getLowTop10());
-        scheduledExecutor.scheduleWithFixedDelay(new LiveSnapshotRefreshTask(),
-                5L, 5L, TimeUnit.MINUTES);
     }
 
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList, Boolean refresh) {

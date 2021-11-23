@@ -1,6 +1,7 @@
 package com.guru.future.common.utils;
 
 
+import com.tencentcloudapi.common.AbstractModel;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.common.profile.ClientProfile;
@@ -102,7 +103,7 @@ public class SMSUtil {
             SendSmsResponse res = client.SendSms(req);
 
             // 输出json格式的字符串回包
-            System.out.println(SendSmsResponse.toJsonString(res));
+            System.out.println(AbstractModel.toJsonString(res));
 
             // 也可以取出单个值，你可以通过官网接口文档或跳转到response对象的定义处查看返回字段的定义
             System.out.println(res.getRequestId());

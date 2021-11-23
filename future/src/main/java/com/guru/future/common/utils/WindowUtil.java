@@ -24,11 +24,13 @@ import java.awt.event.WindowEvent;
 @Slf4j
 public class WindowUtil {
     private static JFrame frame = null;
-    private static DefaultListModel priceModel = new DefaultListModel<>();
-    private static DefaultListModel highTopModel = new DefaultListModel<>();
-    private static DefaultListModel lowTopModel = new DefaultListModel<>();
+    private static DefaultListModel<JLabel> priceModel = new DefaultListModel<>();
+    private static DefaultListModel<JLabel> highTopModel = new DefaultListModel<>();
+    private static DefaultListModel<JLabel> lowTopModel = new DefaultListModel<>();
 
     private static void buildTopModel() {
+        highTopModel.clear();
+        lowTopModel.clear();
         for (int i = 0; i < LiveDataCache.getHighTop10().size(); i++) {
             FutureLiveVO highTop = LiveDataCache.getHighTop10().get(i);
             JLabel label = new JLabel();
