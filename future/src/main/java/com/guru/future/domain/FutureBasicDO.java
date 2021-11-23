@@ -27,16 +27,6 @@ public class FutureBasicDO {
 
     private String unit;
 
-    private Integer limit;
-
-    private Integer marginRate;
-
-    private Integer feeType;
-
-    private BigDecimal fee;
-
-    private BigDecimal feeToday;
-
     private Integer night;
 
     private String exchange;
