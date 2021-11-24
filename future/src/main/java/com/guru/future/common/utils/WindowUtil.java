@@ -30,8 +30,8 @@ public class WindowUtil {
     private static DefaultListModel<JLabel> lowTopModel = new DefaultListModel<>();
 
     private static void buildTopModel() {
-        highTopModel.clear();
-        lowTopModel.clear();
+        highTopModel = new DefaultListModel<>();
+        lowTopModel = new DefaultListModel<>();
         for (int i = 0; i < LiveDataCache.getHighTop10().size(); i++) {
             FutureLiveVO highTop = LiveDataCache.getHighTop10().get(i);
             JLabel label = new JLabel();
@@ -90,19 +90,19 @@ public class WindowUtil {
         pane.setPreferredSize(new Dimension(500, 130));
         Container c = frame.getContentPane();
         c.removeAll();
-        c.add(pane, 0);
+        c.add(pane);
 
         JList highTopList = new JList(highTopModel);
         highTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane highTopPane = new JScrollPane(highTopList);
         highTopPane.setPreferredSize(new Dimension(500, 130));
-        c.add(highTopPane, 1);
+        c.add(highTopPane);
 
         JList lowTopList = new JList(lowTopModel);
         lowTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane lowTopPane = new JScrollPane(lowTopList);
         lowTopPane.setPreferredSize(new Dimension(500, 130));
-        c.add(lowTopPane, 2);
+        c.add(lowTopPane);
     }
 
     public static class MyListCellRenderer extends JLabel implements ListCellRenderer {

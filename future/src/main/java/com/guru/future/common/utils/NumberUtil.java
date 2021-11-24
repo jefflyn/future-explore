@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 public class NumberUtil {
     public static String decimal2String(BigDecimal numberVal) {
         String numberStr = String.valueOf(numberVal);
-        System.out.println(numberStr.contains("."));
         String[] numberArr = numberStr.split("\\.");
         if (numberArr.length > 1) {
             String digit = numberArr[1];
