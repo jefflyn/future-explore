@@ -55,8 +55,8 @@ public class FutureLiveService {
             FutureBasicDO basicDO = basicMap.get(code);
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
             FutureLiveVO futureLiveVO = new FutureLiveVO();
-            futureLiveVO.setWave(WaveUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), futureLiveVO.getPrice()));
             BeanUtils.copyProperties(futureLiveDO, futureLiveVO);
+            futureLiveVO.setWave(WaveUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), futureLiveVO.getPrice()));
             futureLiveVOList.add(futureLiveVO);
         }
         Collections.sort(futureLiveVOList);

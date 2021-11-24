@@ -118,11 +118,11 @@ public class FutureMonitorService {
             this.msgNotice(position == 100, futureLogDO);
             futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
             futureLogManager.addFutureLog(futureLogDO);
-            log.info("add log:{}", futureLogDO);
+            log.info("add position log >>> {}, {}", futureLogDO.getName(), futureLogDO.getPosition());
         }
     }
 
-    @Async()
+    @Async
     public void triggerPriceFlash(Pair<Integer, Float> param, FutureLiveDO futureLiveDO, String histHighLowFlag) {
         int factor = param.getValue0();
         float triggerDiff = param.getValue1();
@@ -190,7 +190,7 @@ public class FutureMonitorService {
             futureLogDO.setRemark(logType + " " + histHighLowFlag);
             this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
-            log.info("add log:{}", futureLogDO);
+            log.info("add price flash log >>> {}, {}", futureLogDO.getName(), futureLogDO.getDiff());
             collectService.scheduleTradeDailyCollect(Lists.newArrayList(code), DailyCollectType.COLLECT_SCHEDULE);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(cachedKey);
