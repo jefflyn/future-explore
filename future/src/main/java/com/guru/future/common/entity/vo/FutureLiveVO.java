@@ -1,13 +1,9 @@
 package com.guru.future.common.entity.vo;
 
-import com.fasterxml.jackson.datatype.jsr310.DecimalUtils;
 import com.guru.future.common.utils.WaveUtil;
 import lombok.Data;
-import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.util.NumberUtils;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import static com.guru.future.common.utils.NumberUtil.decimal2String;
 
@@ -38,7 +34,8 @@ public class FutureLiveVO implements Comparable<FutureLiveVO> {
 
     @Override
     public String toString() {
-        return sortNo + direction + "  " + name + "  "  + change + WaveUtil.PERCENTAGE_SYMBOL
-                + "【" + low + "-" + high + "】" + decimal2String(price) + "  " + position + "  " + wave;
+        return sortNo + direction + " " + name + "[" + decimal2String(low) + "-" + decimal2String(high) + "]"
+                + decimal2String(price) + " " + change + WaveUtil.PERCENTAGE_SYMBOL
+                + "【" + position + "】" + wave;
     }
 }

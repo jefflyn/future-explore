@@ -63,7 +63,7 @@ public class WindowUtil {
             if (frame == null) {
                 frame = new JFrame(frameTitle);
                 frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 510, 338);
+                frame.setBounds(0, 1000, 530, 358);
                 frame.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e) {
@@ -87,7 +87,7 @@ public class WindowUtil {
         JList list = new JList(priceModel);
         list.setCellRenderer(new MyListCellRenderer());
         JScrollPane pane = new JScrollPane(list);
-        pane.setPreferredSize(new Dimension(500, 130));
+        pane.setPreferredSize(new Dimension(520, 130));
         Container c = frame.getContentPane();
         c.removeAll();
         c.add(pane);
@@ -95,13 +95,13 @@ public class WindowUtil {
         JList highTopList = new JList(highTopModel);
         highTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane highTopPane = new JScrollPane(highTopList);
-        highTopPane.setPreferredSize(new Dimension(500, 80));
+        highTopPane.setPreferredSize(new Dimension(520, 100));
         c.add(highTopPane);
 
         JList lowTopList = new JList(lowTopModel);
         lowTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane lowTopPane = new JScrollPane(lowTopList);
-        lowTopPane.setPreferredSize(new Dimension(500, 80));
+        lowTopPane.setPreferredSize(new Dimension(520, 100));
         c.add(lowTopPane);
     }
 

@@ -25,7 +25,7 @@ public class WaveUtil {
     }
 
     public static String generateWave(BigDecimal a, BigDecimal b, BigDecimal c, BigDecimal price) {
-        StringBuilder waveStr = new StringBuilder("【");
+        StringBuilder waveStr = new StringBuilder();
         if (a == null || price == null) {
             return Strings.EMPTY;
         }
@@ -36,7 +36,7 @@ public class WaveUtil {
         } else {
             waveA = price.subtract(a).multiply(BigDecimal.valueOf(100)).divide(price, 2, RoundingMode.HALF_UP);
             waveStr.append(getDirectionTag(waveA)).append(waveA).append(PERCENTAGE_SYMBOL);
-            return waveStr.append("】").toString();
+            return waveStr.toString();
         }
         BigDecimal waveB = null;
         if (c != null) {
@@ -64,7 +64,7 @@ public class WaveUtil {
             waveB = price.subtract(b).multiply(BigDecimal.valueOf(100)).divide(price, 2, RoundingMode.HALF_UP);
             waveStr.append(getDirectionTag(waveB)).append(waveB).append(PERCENTAGE_SYMBOL);
         }
-        return waveStr.append("】").toString();
+        return waveStr.toString();
     }
 
 }
