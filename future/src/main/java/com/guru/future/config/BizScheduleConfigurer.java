@@ -24,7 +24,7 @@ public class BizScheduleConfigurer {
 
     @Bean("scheduledExecutor")
     public Executor getAsyncExecutor() {
-        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(2, r -> {
+        ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(4, r -> {
             Thread t = new Thread(r);
             t.setName("collectSchedule-" + t.getId());
             t.setDaemon(true);

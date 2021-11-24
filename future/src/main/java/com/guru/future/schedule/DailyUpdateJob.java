@@ -2,6 +2,7 @@ package com.guru.future.schedule;
 
 import com.guru.future.biz.service.FutureDailyService;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -18,8 +19,9 @@ public class DailyUpdateJob {
     @Resource
     private FutureDailyService futureDailyService;
 
+    @Async
     @Scheduled(cron = "8 8 15,03 * * ?")
-    private void updateTradeDaily() {
+    public void updateTradeDaily() {
         futureDailyService.addTradeDaily();
     }
 

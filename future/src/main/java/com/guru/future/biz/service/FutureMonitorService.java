@@ -207,7 +207,7 @@ public class FutureMonitorService {
                 .append("【").append(futureLogDO.getContent()).append("】")
                 .append(futureLogDO.getOption()).append(" ").append(decimal2String(futureLogDO.getSuggest()))
                 .append(" ").append(futureLogDO.getPctChange()).append("%")
-                .append(" ").append(futureLogDO.getPosition());
+                .append("【").append(futureLogDO.getPosition()).append("】");
         // show msg frame
         WindowUtil.createMsgFrame(openGapService.getMarketOverview(futureLogDO.getTradeDate()), DateUtil.currentTime() + " "
                 + futureLogDO.getName() + " " + content);

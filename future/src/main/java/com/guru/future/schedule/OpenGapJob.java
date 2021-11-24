@@ -2,6 +2,7 @@ package com.guru.future.schedule;
 
 import com.guru.future.biz.service.FutureGapService;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -18,13 +19,9 @@ public class OpenGapJob {
     @Resource
     private FutureGapService futureGapService;
 
+    @Async
     @Scheduled(cron = "4 0 9,21 * * MON-FRI")
-    private void monitorOpenGap() throws InterruptedException {
-        futureGapService.monitorOpenGap();
-    }
-
-//    @Scheduled(cron = "4 0 21 * * MON-FRI")
-    private void monitorNightOpenGap() throws InterruptedException {
+    public void monitorOpenGap() throws InterruptedException {
         futureGapService.monitorOpenGap();
     }
 
