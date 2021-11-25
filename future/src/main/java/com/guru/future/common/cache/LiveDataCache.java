@@ -27,6 +27,7 @@ public class LiveDataCache {
         for (int i = 0; i < futureLiveVOList.size(); i++) {
             FutureLiveVO highTopVo = futureLiveVOList.get(i);
             highTopVo.setSortNo(i + 1);
+            highTopVo.setHighTop(true);
             FutureLiveVO lastVo = top10Snapshot.getIfPresent(highTopVo.getName());
             if (lastVo != null && !highTopVo.getSortNo().equals(lastVo.getSortNo())) {
                 highTopVo.setDirection(highTopVo.getSortNo().compareTo(lastVo.getSortNo()) < 0 ? SYMBOL_UP : SYMBOL_DOWN);
@@ -42,6 +43,7 @@ public class LiveDataCache {
         for (int i = 0; i < futureLiveVOList.size(); i++) {
             FutureLiveVO lowTopVo = futureLiveVOList.get(i);
             lowTopVo.setSortNo(i + 1);
+            lowTopVo.setHighTop(false);
             FutureLiveVO lastVo = top10Snapshot.getIfPresent(lowTopVo.getName());
             if (lastVo != null && !lowTopVo.getSortNo().equals(lastVo.getSortNo())) {
                 lowTopVo.setDirection(lowTopVo.getSortNo().compareTo(lastVo.getSortNo()) < 0 ? SYMBOL_UP : SYMBOL_DOWN);
