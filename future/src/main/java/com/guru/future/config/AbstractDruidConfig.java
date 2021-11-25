@@ -110,7 +110,7 @@ public abstract class AbstractDruidConfig {
         //配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁。
         dataSource.setUseUnfairLock(true);
         //对于长时间不使用的连接强制关闭
-        dataSource.setRemoveAbandoned(true);
+//        dataSource.setRemoveAbandoned(true);
         //超过30分钟开始关闭空闲连接
         dataSource.setRemoveAbandonedTimeout(7200);
         //将当前关闭动作记录到日志

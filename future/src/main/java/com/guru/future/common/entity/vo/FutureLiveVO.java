@@ -37,5 +37,6 @@ public class FutureLiveVO implements Comparable<FutureLiveVO> {
         return sortNo + direction + " " + name + "【" + decimal2String(low) + "-" + decimal2String(high) + "】"
                 + decimal2String(price) + " " + change + WaveUtil.PERCENTAGE_SYMBOL
                 + "【" + position + "】" + wave;
+
     }
 }

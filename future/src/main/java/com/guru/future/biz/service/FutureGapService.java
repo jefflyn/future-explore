@@ -86,6 +86,7 @@ public class FutureGapService {
 
     public void monitorOpenGap() throws InterruptedException {
         if (DateUtil.beforeBidTime()) {
+            log.warn("monitorOpenGap before bid time !!!");
             TimeUnit.SECONDS.sleep(5L);
         }
 

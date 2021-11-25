@@ -24,7 +24,7 @@ public class DateUtil {
     private static final long HOUR_SCALE = 60L * MINUTE_SCALE;
     private static final long DAY_SCALE = 24L * HOUR_SCALE;
 
-    public static final Map<Integer, List<Integer>> HOLIDAY_MAP = new HashMap<>();
+    protected static final Map<Integer, List<Integer>> HOLIDAY_MAP = new HashMap<>();
 
     static {
         HOLIDAY_MAP.put(Calendar.JANUARY, Lists.newArrayList(1));
@@ -32,23 +32,29 @@ public class DateUtil {
         HOLIDAY_MAP.put(Calendar.OCTOBER, Lists.newArrayList(1, 2, 3, 4, 5, 6, 7));
     }
 
-    private static final int MORNING_OPEN_HOUR = 8;
-    private static final int MORNING_OPEN_MINUTE = 59;
-    private static final int MORNING_CLOSE_HOUR = 11;
-    private static final int MORNING_CLOSE_MINUTE = 30;
-    private static final int AFTERNOON_OPEN_HOUR = 13;
-    private static final int AFTERNOON_OPEN_MINUTE = 29;
-    private static final int AFTERNOON_CLOSE_HOUR = 15;
-    private static final int NIGHT_OPEN_HOUR = 20;
-    private static final int NIGHT_OPEN_MINUTE = 59;
-    private static final int NIGHT_CLOSE_HOUR = 23;
-    private static final int MID_NIGHT_CLOSE_HOUR = 3;
+    /**
+     * private static final int MORNING_OPEN_HOUR = 8;
+     * private static final int MORNING_OPEN_MINUTE = 59;
+     * private static final int MORNING_CLOSE_HOUR = 11;
+     * private static final int MORNING_CLOSE_MINUTE = 30;
+     * private static final int AFTERNOON_OPEN_HOUR = 13;
+     * private static final int AFTERNOON_OPEN_MINUTE = 29;
+     * private static final int AFTERNOON_CLOSE_HOUR = 15;
+     * private static final int NIGHT_OPEN_HOUR = 20;
+     * private static final int NIGHT_OPEN_MINUTE = 59;
+     * private static final int NIGHT_CLOSE_HOUR = 23;
+     * private static final int MID_NIGHT_CLOSE_HOUR = 3;
+     **/
+
+    public static final String AFTERNOON_CLOSE_TIME = "15:00:00";
 
     public static final String TRADE_DATE_PATTERN = "yyyy-MM-dd";
     public static final String HOUR_MINUTE_PATTERN = "HH:mm";
     public static final String COMMON_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final String TIME_PATTERN = "HH:mm:ss";
 
+    private DateUtil() {
+    }
 
     public static Boolean isHoliday(Date date) {
         return isHoliday(DateUtils.toCalendar(date));
@@ -60,15 +66,12 @@ public class DateUtil {
         int weekDay = date.get(Calendar.DAY_OF_WEEK);
         boolean isWeekend = Lists.newArrayList(Calendar.SATURDAY, Calendar.SUNDAY).contains(weekDay);
         boolean isHoliday = HOLIDAY_MAP.get(month) != null && HOLIDAY_MAP.get(month).contains(day);
-        if (isWeekend || isHoliday) {
-            return true;
-        }
-        return false;
+        return isWeekend || isHoliday;
     }
 
     public static String currentTradeDate() {
         Date date = new Date();
-        if (isHoliday(date)) {
+        if (Boolean.TRUE.equals(isHoliday(date))) {
             return getNextTradeDate(date);
         }
         return DateFormatUtils.format(date, TRADE_DATE_PATTERN);
@@ -98,7 +101,7 @@ public class DateUtil {
         Calendar calendar = DateUtils.toCalendar(currentDate);
         for (int addDays = 0; addDays > -9; addDays--) {
             Date preDate = DateUtils.addDays(calendar.getTime(), addDays - 1);
-            if (!isHoliday(preDate)) {
+            if (Boolean.FALSE.equals(isHoliday(preDate))) {
                 return DateFormatUtils.format(preDate, TRADE_DATE_PATTERN);
             }
         }
@@ -124,7 +127,7 @@ public class DateUtil {
         Calendar calendar = DateUtils.toCalendar(currentDate);
         for (int addDays = 0; addDays < 9; addDays++) {
             Date nextDate = DateUtils.addDays(calendar.getTime(), addDays + 1);
-            if (!isHoliday(nextDate)) {
+            if (Boolean.FALSE.equals(isHoliday(nextDate))) {
                 return DateFormatUtils.format(nextDate, TRADE_DATE_PATTERN);
             }
         }
@@ -137,7 +140,7 @@ public class DateUtil {
      **/
     public static Boolean isNight() {
         Date date = new Date();
-        if (isHoliday(date)) {
+        if (Boolean.TRUE.equals(isHoliday(date))) {
             return true;
         }
         String currentTime = DateFormatUtils.format(date, HOUR_MINUTE_PATTERN);
@@ -146,12 +149,11 @@ public class DateUtil {
 
     public static Boolean dayClose() {
         Date date = new Date();
-        if (isHoliday(date)) {
+        if (Boolean.TRUE.equals(isHoliday(date))) {
             return false;
         }
         String currentTime = DateFormatUtils.format(date, HOUR_MINUTE_PATTERN);
-        boolean dayClose = currentTime.compareTo("15:00") > 0;
-        return dayClose;
+        return currentTime.compareTo("15:00") > 0;
     }
 
     public static boolean beforeBidTime() {
@@ -162,20 +164,17 @@ public class DateUtil {
         }
         String nowTime = DateFormatUtils.format(now, TIME_PATTERN);
 
-        String morningOpen = "08:59:00";
-        String afternoonClose = "15:00:00";
-        String nightOpen = "20:59:00";
+        String morningOpen = "09:00:00";
+        String nightOpen = "21:00:00";
 
-        boolean beforeBidTime = nowTime.compareTo(morningOpen) <= 0
-                || (nowTime.compareTo(afternoonClose) > 0 && nowTime.compareTo(nightOpen) < 0);
-
-        return beforeBidTime;
+        return nowTime.compareTo(morningOpen) < 0
+                || (nowTime.compareTo(AFTERNOON_CLOSE_TIME) > 0 && nowTime.compareTo(nightOpen) < 0);
     }
 
     public static Boolean isTradeTime() {
         Date now = new Date();
         // holiday
-        if (isHoliday(now)) {
+        if (Boolean.TRUE.equals(isHoliday(now))) {
             return false;
         }
         String nowTime = DateFormatUtils.format(now, TIME_PATTERN);
@@ -184,25 +183,21 @@ public class DateUtil {
         String morningClose = "11:30:00";
 
         String afternoonOpen = "13:30:00";
-        String afternoonClose = "15:00:00";
 
         String nightOpen = "21:00:00";
         String nightClose = "23:00:00";
 
-        boolean isTradeTime = (nowTime.compareTo(morningOpen) >= 0 && nowTime.compareTo(morningClose) <= 0)
-                || (nowTime.compareTo(afternoonOpen) >= 0 && nowTime.compareTo(afternoonClose) <= 0)
+        return (nowTime.compareTo(morningOpen) >= 0 && nowTime.compareTo(morningClose) <= 0)
+                || (nowTime.compareTo(afternoonOpen) >= 0 && nowTime.compareTo(AFTERNOON_CLOSE_TIME) <= 0)
                 || (nowTime.compareTo(nightOpen) >= 0 && nowTime.compareTo(nightClose) <= 0);
-        return isTradeTime;
     }
 
     public static Boolean isPriceMonitorTime() {
         Date now = new Date();
         String nowTime = DateFormatUtils.format(now, TIME_PATTERN);
         String dayMonitorFrom = "09:05:00";
-        String dayMonitorTo = "15:00:00";
-
         String nightFrom = "21:05:00";
-        return (nowTime.compareTo(dayMonitorFrom) > 0 && nowTime.compareTo(dayMonitorTo) < 0)
+        return (nowTime.compareTo(dayMonitorFrom) > 0 && nowTime.compareTo(AFTERNOON_CLOSE_TIME) < 0)
                 || nowTime.compareTo(nightFrom) > 0;
     }
 
@@ -217,20 +212,5 @@ public class DateUtil {
         } else {
             return diff / SECOND_SCALE;
         }
-    }
-
-    public static void main(String[] args) throws Exception {
-//        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
-//                DateUtils.parseDate("2021-08-23 12:41:10", COMMON_DATE_PATTERN), null));
-//        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
-//                DateUtils.parseDate("2021-08-23 12:43:11", COMMON_DATE_PATTERN), TimeUnit.MINUTES));
-//        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:00", COMMON_DATE_PATTERN),
-//                DateUtils.parseDate("2021-08-23 13:41:59", COMMON_DATE_PATTERN), TimeUnit.HOURS));
-//        System.out.println(diff(DateUtils.parseDate("2021-08-23 12:41:40", COMMON_DATE_PATTERN),
-//                DateUtils.parseDate("2021-08-25 12:39:10", COMMON_DATE_PATTERN), TimeUnit.DAYS));
-        System.out.println(DateUtil.isTradeTime());
-//        System.out.println(DateUtil.getLastTradeDate(new Date()));
-//        System.out.println(DateUtil.getNextTradeDate(new Date()));
-
     }
 }
