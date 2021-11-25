@@ -1,19 +1,13 @@
 package com.guru.future.task;
 
-import com.guru.future.biz.manager.FutureDailyCollectManager;
-import com.guru.future.biz.service.FutureDailyCollectService;
+import com.guru.future.biz.manager.FutureCollectManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
-import com.guru.future.common.enums.DailyCollectType;
 import com.guru.future.common.utils.DateUtil;
-import com.guru.future.domain.FutureDailyCollectDO;
+import com.guru.future.domain.FutureCollectDO;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,9 +18,9 @@ import java.util.concurrent.TimeUnit;
  **/
 @Slf4j
 public class DailyCollectTask implements Runnable {
-    private FutureDailyCollectManager dailyCollectManager;
+    private FutureCollectManager dailyCollectManager;
 
-    public DailyCollectTask(FutureDailyCollectManager dailyCollectManager) {
+    public DailyCollectTask(FutureCollectManager dailyCollectManager) {
         this.dailyCollectManager = dailyCollectManager;
     }
 
@@ -42,8 +36,8 @@ public class DailyCollectTask implements Runnable {
                 return;
             }
             for (ContractRealtimeDTO contractRealtimeDTO : realtimeDTOList) {
-                FutureDailyCollectDO dailyCollectDO = ContractRealtimeConverter.convert2DailyCollectDO(dailyCollectManager.getCollectType(), contractRealtimeDTO);
-                FutureDailyCollectDO lastDailyDO = dailyCollectManager.getLastDailyByCode(dailyCollectDO.getCode());
+                FutureCollectDO dailyCollectDO = ContractRealtimeConverter.convert2DailyCollectDO(dailyCollectManager.getCollectType(), contractRealtimeDTO);
+                FutureCollectDO lastDailyDO = dailyCollectManager.getLastDailyByCode(dailyCollectDO.getCode());
                 if (lastDailyDO == null || DateUtil.diff(lastDailyDO.getCreateTime(), new Date(), TimeUnit.MINUTES) > 5) {
                     dailyCollectManager.addDailyCollect(dailyCollectDO);
                     log.info("[DailyCollectTask] success! {}", dailyCollectDO);

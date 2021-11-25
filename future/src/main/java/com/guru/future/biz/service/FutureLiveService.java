@@ -8,7 +8,7 @@ import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.FutureLiveVO;
 import com.guru.future.common.utils.DateUtil;
-import com.guru.future.common.utils.WaveUtil;
+import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureLiveDO;
@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author j
@@ -56,7 +55,7 @@ public class FutureLiveService {
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
             FutureLiveVO futureLiveVO = new FutureLiveVO();
             BeanUtils.copyProperties(futureLiveDO, futureLiveVO);
-            futureLiveVO.setWave(WaveUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), futureLiveVO.getPrice()));
+            futureLiveVO.setWave(FutureUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), futureLiveVO.getPrice()));
             futureLiveVOList.add(futureLiveVO);
         }
         Collections.sort(futureLiveVOList);

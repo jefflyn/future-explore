@@ -1,6 +1,6 @@
 package com.guru.future.common.enums;
 
-public enum DailyCollectType {
+public enum CollectType {
     COLLECT_TIMED(1, "定时采集"),
     COLLECT_SCHEDULE(2, "延时采集"),
 
@@ -11,7 +11,7 @@ public enum DailyCollectType {
     private Integer id;
     private String desc;
 
-    DailyCollectType(Integer id, String desc) {
+    CollectType(Integer id, String desc) {
         this.id = id;
         this.desc = desc;
     }

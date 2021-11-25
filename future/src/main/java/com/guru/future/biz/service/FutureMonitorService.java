@@ -3,7 +3,7 @@ package com.guru.future.biz.service;
 import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureLogManager;
 import com.guru.future.common.cache.PriceFlashCache;
-import com.guru.future.common.enums.DailyCollectType;
+import com.guru.future.common.enums.CollectType;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureLiveDO;
@@ -41,7 +41,7 @@ public class FutureMonitorService {
     }
 
     @Resource
-    private FutureDailyCollectService collectService;
+    private FutureCollectService collectService;
     @Resource
     private FutureGapService openGapService;
     @Resource
@@ -63,9 +63,9 @@ public class FutureMonitorService {
     @Transactional
     public void addPositionLog(FutureLiveDO futureLiveDO) {
         int position = -1;
-        if (futureLiveDO.getPosition().compareTo(BigDecimal.ZERO) <= 0) {
+        if (futureLiveDO.getPosition() <= 0) {
             position = 0;
-        } else if (futureLiveDO.getPosition().compareTo(BigDecimal.valueOf(100)) >= 0) {
+        } else if (futureLiveDO.getPosition() >= 0) {
             position = 100;
         }
         if (position > -1) {
@@ -191,7 +191,7 @@ public class FutureMonitorService {
             this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
             log.info("add price flash log >>> {}, {}", futureLogDO.getName(), futureLogDO.getDiff());
-            collectService.scheduleTradeDailyCollect(Lists.newArrayList(code), DailyCollectType.COLLECT_SCHEDULE);
+            collectService.scheduleTradeDailyCollect(Lists.newArrayList(code), CollectType.COLLECT_SCHEDULE);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(cachedKey);
         }

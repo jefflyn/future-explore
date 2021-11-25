@@ -43,7 +43,7 @@ public class FutureMonitorServiceTest extends PowerMockTestCase {
         futureLiveDO.setChange(new BigDecimal("1.23"));
         futureLiveDO.setLow(new BigDecimal("980"));
         futureLiveDO.setHigh(new BigDecimal("1033"));
-        futureLiveDO.setPosition(new BigDecimal("10"));
+        futureLiveDO.setPosition(10);
         when(futureLogManager.addFutureLog(any())).thenReturn(true);
         String histHighLowFlag = " ";
 //        futureMonitorService.triggerPriceFlash(futureLiveDO, histHighLowFlag);
@@ -58,7 +58,7 @@ public class FutureMonitorServiceTest extends PowerMockTestCase {
         futureLiveDO.setChange(new BigDecimal("1.23"));
         futureLiveDO.setLow(new BigDecimal("980"));
         futureLiveDO.setHigh(new BigDecimal("1033"));
-        futureLiveDO.setPosition(new BigDecimal("10"));
+        futureLiveDO.setPosition(10);
         PowerMockito.mockStatic(PriceFlashCache.class);
         when(PriceFlashCache.length(any())).thenReturn(10);
         when(PriceFlashCache.lPop(any())).thenReturn(BigDecimal.valueOf(1033));

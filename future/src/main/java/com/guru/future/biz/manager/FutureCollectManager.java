@@ -1,8 +1,8 @@
 package com.guru.future.biz.manager;
 
-import com.guru.future.common.enums.DailyCollectType;
-import com.guru.future.domain.FutureDailyCollectDO;
-import com.guru.future.mapper.FutureDailyCollectDAO;
+import com.guru.future.common.enums.CollectType;
+import com.guru.future.domain.FutureCollectDO;
+import com.guru.future.mapper.FutureCollectDAO;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,31 +13,30 @@ import java.util.List;
  * @author j
  */
 @Component
-public class FutureDailyCollectManager {
+public class FutureCollectManager {
     private List<String> collectCodes;
 
-    private DailyCollectType collectType = DailyCollectType.COLLECT_TIMED;
+    private CollectType collectType = CollectType.COLLECT_TIMED;
 
     @Resource
     private FutureSinaManager futureSinaManager;
 
     @Resource
-    private FutureDailyCollectDAO futureDailyCollectDAO;
+    private FutureCollectDAO futureDailyCollectDAO;
 
-    public FutureDailyCollectDO getLastDailyByCode(String code) {
+    public FutureCollectDO getLastDailyByCode(String code) {
         return futureDailyCollectDAO.selectLastByCode(code);
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public Boolean addDailyCollect(FutureDailyCollectDO futureDailyCollectDO) {
-        return futureDailyCollectDAO.insertSelective(futureDailyCollectDO) > 0;
+    public Boolean addDailyCollect(FutureCollectDO futureCollectDO) {
+        return futureDailyCollectDAO.insertSelective(futureCollectDO) > 0;
     }
 
-    public DailyCollectType getCollectType() {
+    public CollectType getCollectType() {
         return collectType;
     }
 
-    public void setCollectType(DailyCollectType collectType) {
+    public void setCollectType(CollectType collectType) {
         this.collectType = collectType;
     }
 

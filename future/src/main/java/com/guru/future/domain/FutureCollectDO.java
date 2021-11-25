@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class FutureDailyCollectDO {
+public class FutureCollectDO {
     private Long id;
 
     private String tradeDate;
@@ -16,6 +16,8 @@ public class FutureDailyCollectDO {
     private String name;
 
     private Integer type;
+
+    private Integer position;
 
     private BigDecimal price;
 

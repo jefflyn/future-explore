@@ -128,8 +128,8 @@
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
 
-        <table tableName="future_daily_collect"
-               domainObjectName="FutureDailyCollectDO" mapperName="FutureDailyCollectDAO"
+        <table tableName="future_collect"
+               domainObjectName="FutureCollectDO" mapperName="FutureCollectDAO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

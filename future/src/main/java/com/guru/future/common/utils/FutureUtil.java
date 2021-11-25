@@ -11,10 +11,10 @@ import java.math.RoundingMode;
  * @author j
  */
 @Slf4j
-public class WaveUtil {
+public class FutureUtil {
     public static final String PERCENTAGE_SYMBOL = "%";
 
-    private WaveUtil() {
+    private FutureUtil() {
     }
 
     public static String getDirectionTag(BigDecimal rate) {
@@ -22,6 +22,17 @@ public class WaveUtil {
             return "/";
         }
         return "\\";
+    }
+
+    public static int getPosition(BigDecimal price, BigDecimal high, BigDecimal low){
+        BigDecimal position = BigDecimal.ZERO;
+        if (high.compareTo(low) != 0) {
+            position = (price.subtract(low)).multiply(BigDecimal.valueOf(100))
+                    .divide((high.subtract(low)), 0, RoundingMode.HALF_UP);
+        } else if (high.compareTo(low) == 0 && price.compareTo(BigDecimal.ZERO) > 0) {
+            position = BigDecimal.valueOf(100);
+        }
+        return position.intValue();
     }
 
     public static String generateWave(BigDecimal a, BigDecimal b, BigDecimal c, BigDecimal price) {

@@ -57,7 +57,7 @@ create index idx_future_daily_code
 create index idx_future_daily_code_date
     on future_daily (code, trade_date);
 
-create table future_daily_collect
+create table future_collect
 (
     id bigint auto_increment comment '主键id'
         primary key,
@@ -75,8 +75,8 @@ create table future_daily_collect
 )
     comment '定时数据采集分析';
 
-create index idx_future_daily_collect_code_date
-    on future_daily_collect (code, trade_date);
+create index idx_future_collect_code_date
+    on future_collect (code, trade_date);
 
 create table future_live
 (

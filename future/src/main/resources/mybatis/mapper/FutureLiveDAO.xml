@@ -12,7 +12,7 @@
         <result column="open" jdbcType="DECIMAL" property="open"/>
         <result column="low" jdbcType="DECIMAL" property="low"/>
         <result column="high" jdbcType="DECIMAL" property="high"/>
-        <result column="position" jdbcType="DECIMAL" property="position"/>
+        <result column="position" jdbcType="INTEGER" property="position"/>
         <result column="amp" jdbcType="DECIMAL" property="amp"/>
         <result column="wave" jdbcType="VARCHAR" property="wave"/>
         <result column="lowest_change" jdbcType="DECIMAL" property="lowestChange"/>
@@ -113,7 +113,7 @@
                 #{high,jdbcType=DECIMAL},
             </if>
             <if test="position != null">
-                #{position,jdbcType=DECIMAL},
+                #{position,jdbcType=INTEGER},
             </if>
             <if test="amp != null">
                 #{amp,jdbcType=DECIMAL},
@@ -160,7 +160,7 @@
                 high = #{high,jdbcType=DECIMAL},
             </if>
             <if test="position != null">
-                `position` = #{position,jdbcType=DECIMAL},
+                `position` = #{position,jdbcType=INTEGER},
             </if>
             <if test="amp != null">
                 amp = #{amp,jdbcType=DECIMAL},

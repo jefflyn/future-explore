@@ -1,8 +1,9 @@
 package com.guru.future.common.entity.converter;
 
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
-import com.guru.future.common.enums.DailyCollectType;
-import com.guru.future.domain.FutureDailyCollectDO;
+import com.guru.future.common.enums.CollectType;
+import com.guru.future.common.utils.FutureUtil;
+import com.guru.future.domain.FutureCollectDO;
 import com.guru.future.domain.FutureDailyDO;
 import com.guru.future.domain.FutureLiveDO;
 
@@ -25,15 +26,8 @@ public class ContractRealtimeConverter {
         futureLiveDO.setOpen(contractRealtimeDTO.getOpen());
         futureLiveDO.setLow(contractRealtimeDTO.getLow());
         futureLiveDO.setHigh(contractRealtimeDTO.getHigh());
-        BigDecimal position = BigDecimal.ZERO;
-        if (contractRealtimeDTO.getHigh().compareTo(contractRealtimeDTO.getLow()) != 0) {
-            position = (contractRealtimeDTO.getPrice().subtract(contractRealtimeDTO.getLow()))
-                    .multiply(BigDecimal.valueOf(100))
-                    .divide((contractRealtimeDTO.getHigh().subtract(contractRealtimeDTO.getLow())), 0, RoundingMode.HALF_UP);
-        } else if (contractRealtimeDTO.getHigh().compareTo(contractRealtimeDTO.getLow()) == 0
-                && contractRealtimeDTO.getLow().compareTo(contractRealtimeDTO.getPrice()) > 0) {
-            position = BigDecimal.valueOf(100);
-        }
+        int position = FutureUtil.getPosition(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getHigh(),
+                contractRealtimeDTO.getLow());
         futureLiveDO.setPosition(position);
         futureLiveDO.setAmp((contractRealtimeDTO.getHigh().subtract(contractRealtimeDTO.getLow()))
                 .multiply(BigDecimal.valueOf(100))
@@ -81,15 +75,17 @@ public class ContractRealtimeConverter {
         return dailyDO;
     }
 
-    public static FutureDailyCollectDO convert2DailyCollectDO(DailyCollectType collectType, ContractRealtimeDTO contractRealtimeDTO) {
-        FutureDailyCollectDO dailyDO = new FutureDailyCollectDO();
+    public static FutureCollectDO convert2DailyCollectDO(CollectType collectType, ContractRealtimeDTO contractRealtimeDTO) {
+        FutureCollectDO dailyDO = new FutureCollectDO();
         dailyDO.setType(collectType.getId());
         dailyDO.setTradeDate(contractRealtimeDTO.getTradeDate());
         dailyDO.setCode(contractRealtimeDTO.getCode());
         dailyDO.setName(contractRealtimeDTO.getName());
         dailyDO.setPrice(contractRealtimeDTO.getPrice());
-        dailyDO.setLow(contractRealtimeDTO.getLow());
+        dailyDO.setPosition(FutureUtil.getPosition(contractRealtimeDTO.getPrice(),contractRealtimeDTO.getHigh(),
+                contractRealtimeDTO.getLow()));
         dailyDO.setHigh(contractRealtimeDTO.getHigh());
+        dailyDO.setLow(contractRealtimeDTO.getLow());
         dailyDO.setDealVol(contractRealtimeDTO.getDealVol());
         dailyDO.setHoldVol(contractRealtimeDTO.getHoldVol());
         dailyDO.setRemark(collectType.getDesc());

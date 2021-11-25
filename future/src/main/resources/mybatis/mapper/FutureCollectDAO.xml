@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.guru.future.mapper.FutureDailyCollectDAO">
-    <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureDailyCollectDO">
+<mapper namespace="com.guru.future.mapper.FutureCollectDAO">
+    <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureCollectDO">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
         <result column="code" jdbcType="VARCHAR" property="code"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="type" jdbcType="INTEGER" property="type"/>
         <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="position" jdbcType="INTEGER" property="position"/>
         <result column="high" jdbcType="DECIMAL" property="high"/>
         <result column="low" jdbcType="DECIMAL" property="low"/>
         <result column="deal_vol" jdbcType="INTEGER" property="dealVol"/>
@@ -24,13 +25,13 @@
     <select id="selectLastByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from future_daily_collect
+        from future_collect
         where code = #{code,jdbcType=VARCHAR}
         order by id desc limit 1
     </select>
 
-    <insert id="insertSelective" parameterType="com.guru.future.domain.FutureDailyCollectDO">
-        insert into future_daily_collect
+    <insert id="insertSelective" parameterType="com.guru.future.domain.FutureCollectDO">
+        insert into future_collect
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,

@@ -26,7 +26,7 @@ public class FutureLiveDO {
 
     private BigDecimal high;
 
-    private BigDecimal position;
+    private Integer position;
 
     private BigDecimal amp;
 

@@ -1,30 +1,26 @@
 package com.guru.future.biz.service;
 
-import com.guru.future.biz.manager.FutureDailyCollectManager;
-import com.guru.future.biz.manager.FutureLogManager;
+import com.guru.future.biz.manager.FutureCollectManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
-import com.guru.future.common.enums.DailyCollectType;
-import com.guru.future.domain.FutureDailyCollectDO;
-import com.guru.future.task.DailyCollectTask;
+import com.guru.future.common.enums.CollectType;
+import com.guru.future.domain.FutureCollectDO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author j
  */
 @Service
 @Slf4j
-public class FutureDailyCollectService {
+public class FutureCollectService {
     private final ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(2, new ThreadFactory() {
         @Override
         public Thread newThread(Runnable r) {
@@ -36,7 +32,7 @@ public class FutureDailyCollectService {
     });
 
     @Resource
-    private FutureDailyCollectManager dailyCollectManager;
+    private FutureCollectManager dailyCollectManager;
 
     /**
      * 延时任务每5分钟采集数据
@@ -44,30 +40,24 @@ public class FutureDailyCollectService {
      * @param codes
      * @param collectType
      */
-    public void scheduleTradeDailyCollect(List<String> codes, DailyCollectType collectType) {
+    public void scheduleTradeDailyCollect(List<String> codes, CollectType collectType) {
         if (CollectionUtils.isEmpty(codes)) {
             return;
         }
         dailyCollectManager.setCollectType(collectType);
         dailyCollectManager.setCollectCodes(codes);
-        this.executorService.scheduleWithFixedDelay(new DailyCollectTask(dailyCollectManager),
-                5L, 10L, TimeUnit.MINUTES);
+//        this.executorService.scheduleWithFixedDelay(new DailyCollectTask(dailyCollectManager),
+//                5L, 10L, TimeUnit.MINUTES);
     }
 
-    public void addTradeDailyCollect(DailyCollectType collectType) {
-        List<String> codes = new ArrayList<>(); //futureLogManager.getLogCodes();
-        List<ContractRealtimeDTO> realtimeDTOList;
-        if (CollectionUtils.isEmpty(codes)) {
-            realtimeDTOList = dailyCollectManager.getFutureSinaManager().getAllRealtimeFromSina();
-        } else {
-            realtimeDTOList = dailyCollectManager.getFutureSinaManager().getRealtimeFromSina(codes);
-        }
+    public void addTradeDailyCollect(CollectType collectType) {
+        List<ContractRealtimeDTO> realtimeDTOList= dailyCollectManager.getFutureSinaManager().getAllRealtimeFromSina();
         if (CollectionUtils.isEmpty(realtimeDTOList)) {
             return;
         }
         dailyCollectManager.setCollectType(collectType);
         for (ContractRealtimeDTO contractRealtimeDTO : realtimeDTOList) {
-            FutureDailyCollectDO dailyCollectDO = ContractRealtimeConverter.convert2DailyCollectDO(dailyCollectManager.getCollectType(), contractRealtimeDTO);
+            FutureCollectDO dailyCollectDO = ContractRealtimeConverter.convert2DailyCollectDO(dailyCollectManager.getCollectType(), contractRealtimeDTO);
             dailyCollectManager.addDailyCollect(dailyCollectDO);
             log.info("data collect success! {}", contractRealtimeDTO);
         }

@@ -20,7 +20,7 @@ public class DailyUpdateJob {
     private FutureDailyService futureDailyService;
 
     @Async
-    @Scheduled(cron = "8 8 15,03 * * ?")
+    @Scheduled(cron = "8 8 15,03 * * MON-SAT")
     public void updateTradeDaily() {
         futureDailyService.addTradeDaily();
     }

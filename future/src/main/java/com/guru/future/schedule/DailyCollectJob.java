@@ -1,7 +1,7 @@
 package com.guru.future.schedule;
 
-import com.guru.future.biz.service.FutureDailyCollectService;
-import com.guru.future.common.enums.DailyCollectType;
+import com.guru.future.biz.service.FutureCollectService;
+import com.guru.future.common.enums.CollectType;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,18 +17,12 @@ import javax.annotation.Resource;
 @EnableScheduling
 public class DailyCollectJob {
     @Resource
-    private FutureDailyCollectService dailyCollectService;
+    private FutureCollectService dailyCollectService;
 
     @Async
-    @Scheduled(cron = "0 30 9,10,11 * * ?")
-    public void dailyCollect1() {
-        dailyCollectService.addTradeDailyCollect(DailyCollectType.COLLECT_TIMED);
-    }
-
-    @Async
-    @Scheduled(cron = "0 0 14,15,22,23 * * ?")
-    public void dailyCollect2() {
-        dailyCollectService.addTradeDailyCollect(DailyCollectType.COLLECT_TIMED);
+    @Scheduled(cron = "10 0/5 9-15 * * MON-FRI")
+    public void dailyCollect() {
+        dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
     }
 
 }
