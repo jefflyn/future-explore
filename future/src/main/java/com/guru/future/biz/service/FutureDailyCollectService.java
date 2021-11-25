@@ -25,8 +25,16 @@ import java.util.concurrent.TimeUnit;
 @Service
 @Slf4j
 public class FutureDailyCollectService {
-    @Resource
-    private ScheduledExecutorService scheduledExecutor;
+    private final ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(2, new ThreadFactory() {
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread t = new Thread(r);
+            t.setName("collectSchedule-" + t.getId());
+            t.setDaemon(true);
+            return t;
+        }
+    });
+
     @Resource
     private FutureDailyCollectManager dailyCollectManager;
 
@@ -42,7 +50,7 @@ public class FutureDailyCollectService {
         }
         dailyCollectManager.setCollectType(collectType);
         dailyCollectManager.setCollectCodes(codes);
-        scheduledExecutor.scheduleWithFixedDelay(new DailyCollectTask(dailyCollectManager),
+        this.executorService.scheduleWithFixedDelay(new DailyCollectTask(dailyCollectManager),
                 5L, 10L, TimeUnit.MINUTES);
     }
 
