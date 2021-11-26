@@ -21,6 +21,28 @@ create table future_basic
 )
     comment '合约基本信息';
 
+create table future_collect
+(
+    id bigint auto_increment comment '主键id'
+        primary key,
+    trade_date varchar(10) not null comment '交易日期',
+    code varchar(10) not null comment '合约代码',
+    name varchar(20) not null comment '合约名称',
+    type tinyint(1) not null comment '采集类型',
+    price decimal(10,2) not null comment '现价',
+    position tinyint default 0 not null comment '相对位置',
+    high decimal(10,2) not null comment '最高价',
+    low decimal(10,2) not null comment '最低价',
+    deal_vol int null comment '交易量',
+    hold_vol int null comment '持仓量',
+    create_time timestamp default CURRENT_TIMESTAMP not null comment '创建时间',
+    remark varchar(64) null
+)
+    comment '定时数据采集分析';
+
+create index idx_future_daily_collect_code_date
+    on future_collect (code, trade_date);
+
 create table future_daily
 (
     id bigint auto_increment comment '主键id'
@@ -57,35 +79,15 @@ create index idx_future_daily_code
 create index idx_future_daily_code_date
     on future_daily (code, trade_date);
 
-create table future_collect
-(
-    id bigint auto_increment comment '主键id'
-        primary key,
-    trade_date varchar(10) not null comment '交易日期',
-    code varchar(10) not null comment '合约代码',
-    name varchar(20) not null comment '合约名称',
-    type tinyint(1) not null comment '采集类型',
-    price decimal(10,2) not null comment '现价',
-    high decimal(10,2) not null comment '最高价',
-    low decimal(10,2) not null comment '最低价',
-    deal_vol int null comment '交易量',
-    hold_vol int null comment '持仓量',
-    create_time timestamp default CURRENT_TIMESTAMP not null comment '创建时间',
-    remark varchar(64) null
-)
-    comment '定时数据采集分析';
-
-create index idx_future_collect_code_date
-    on future_collect (code, trade_date);
-
 create table future_live
 (
     code varchar(8) not null comment '合约code'
         primary key,
+    type varchar(8) not null comment '品种',
     name varchar(16) not null comment '合约名',
     price decimal(10,2) not null comment '现价',
     `change` decimal(10,2) not null comment '涨跌幅%',
-    position decimal null comment '相对位置%',
+    position tinyint default 0 not null comment '相对位置%',
     bid1 decimal(10,2) null comment 'buy 1',
     ask1 decimal(10,2) null comment 'sell 1',
     open decimal(10,2) null comment '开',
