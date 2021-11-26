@@ -1,9 +1,7 @@
 package com.guru.future.biz.manager;
 
-import com.guru.future.common.utils.MailUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
@@ -26,14 +24,14 @@ public class FutureMailManager {
     @Value("${spring.mail.username}")
     private String from;
 
-    public void notifyOpenGapHtml(String content) throws Exception {
+    public void sendHtmlMail(String subject, String content) throws Exception {
         try {
-            log.info("send mail of open gap report >>>");
-            this.sendHtmlMail("缺口报告", from, from, content);
+            log.info("发送邮件>>>  主题：{}", subject);
+            this.sendHtmlMail(subject, from, from, content);
         } catch (Exception e) {
             log.error("send mail failed, retry after 5 secs!, error={}", e);
             TimeUnit.SECONDS.sleep(5L);
-            this.sendHtmlMail("缺口报告(重试)", from, from, content);
+            this.sendHtmlMail(subject + "(重试)", from, from, content);
         }
     }
 

@@ -21,4 +21,10 @@ public class FutureLiveController {
         FutureOverviewVO overviewVO = futureLiveService.getMarketOverview();
         return overviewVO.toString();
     }
+
+    @GetMapping(value = "/future/mail/overview")
+    public String mailOverview() throws Exception {
+        futureLiveService.sendMarketOverviewMail();
+        return "success";
+    }
 }

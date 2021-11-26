@@ -3,8 +3,10 @@ package com.guru.future.biz.service;
 import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureLiveManager;
+import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.common.cache.LiveDataCache;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
+import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.FutureLiveVO;
 import com.guru.future.common.entity.vo.FutureOverviewVO;
@@ -41,10 +43,16 @@ import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
 public class FutureLiveService {
     @Resource
     private FutureBasicManager futureBasicManager;
+
     @Resource
     private FutureLiveManager futureLiveManager;
+
     @Resource
     private FutureMonitorService monitorService;
+
+    @Resource
+    private FutureMailManager mailManager;
+
 
     @Async()
     public void reloadLiveCache(List<ContractRealtimeDTO> contractRealtimeDTOList, Map<String, FutureBasicDO> basicMap) {
@@ -196,5 +204,41 @@ public class FutureLiveService {
         } else {
             return Math.abs(change) > 1.5 ? "空" : "偏空";
         }
+    }
+
+    public void sendMarketOverviewMail() throws Exception {
+        FutureOverviewVO overviewVO = getMarketOverview();
+        String upStyle = "color:red;\"";
+        StringBuilder content = new StringBuilder();
+        content.append("\r\n");
+        content.append("<html><head></head><body>");
+        String head3 = "<h3 style=\"" + (overviewVO.getTotalAvgChangeStr().contains("+") ? upStyle : "\"") + ">";
+        content.append(head3);
+        content.append("市场平均涨幅: " + overviewVO.getTotalAvgChangeStr() + "【" + overviewVO.getOverviewDesc() + "】").append("</h3>");
+        content.append("<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" style=\"border:solid 1px #E8F2F9;font-size=14px;;font-size:12px;\">");
+        content.append("<tr style=\"background-color: #428BCA; color:#ffffff\">" +
+                "<th width=\"10px\">序号</th>" +
+                "<th width=\"40px\">板块</th>" +
+                "<th width=\"30px\">涨跌幅</th>" +
+                "<th width=\"50px\">领涨品种</th>" +
+                "<th width=\"30px\">涨跌幅</th>" +
+                "<th width=\"50px\">领涨品种</th>" +
+                "<th width=\"30px\">涨跌幅</th>" +
+                "</tr>");
+        int seq = 0;
+        for (FutureOverviewVO.CategorySummary categorySummary : overviewVO.getCategorySummaryList()) {
+            content.append("</tr>");
+            content.append("<td style=\"text-align:left\">" + (++seq) + "</td>");
+            content.append("<td style=\"text-align:left;" + (categorySummary.getAvgChangeStr().contains("+") ? upStyle : "\"") + ">" + categorySummary.getCategoryName() + "</td>");
+            content.append("<td style=\"text-align:center;" + (categorySummary.getAvgChangeStr().contains("+") ? upStyle : "\"") + ">" + categorySummary.getAvgChangeStr() + "</td>");
+            content.append("<td style=\"text-align:left;" + (categorySummary.getBestChange().contains("+") ? upStyle : "\"") + ">" + categorySummary.getBestName() + "</td>");
+            content.append("<td style=\"text-align:center;" + (categorySummary.getBestChange().contains("+") ? upStyle : "\"") + ">" + categorySummary.getBestChange() + "</td>");
+            content.append("<td style=\"text-align:left;" + (categorySummary.getWorstChange().contains("+") ? upStyle : "\"") + ">" + categorySummary.getWorstName() + "</td>");
+            content.append("<td style=\"text-align:center;" + (categorySummary.getWorstChange().contains("+") ? upStyle : "\"") + ">" + categorySummary.getWorstChange() + "</td>");
+            content.append("</tr>");
+        }
+        content.append("</table>");
+        content.append("</body></html>");
+        mailManager.sendHtmlMail("市场概况", content.toString());
     }
 }

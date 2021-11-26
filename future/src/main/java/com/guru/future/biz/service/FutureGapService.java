@@ -265,6 +265,6 @@ public class FutureGapService {
         }
         stringBuilder.append("</table>");
         stringBuilder.append("</body></html>");
-        futureMailManager.notifyOpenGapHtml(stringBuilder.toString());
+        futureMailManager.sendHtmlMail("缺口报告", stringBuilder.toString());
     }
 }
