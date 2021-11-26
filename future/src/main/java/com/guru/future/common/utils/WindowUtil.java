@@ -46,7 +46,7 @@ public class WindowUtil {
         }
     }
 
-    public static void createMsgFrame(String overview, String content) {
+    public static void createMsgFrame(String content) {
         try {
 //          Runtime.getRuntime().exec("say ");
             if (!Strings.isNullOrEmpty(content)) {
@@ -59,9 +59,8 @@ public class WindowUtil {
                 priceModel.add(0, label);
             }
             buildTopModel();
-            String frameTitle = "Trade Log【" + overview + "】";
             if (frame == null) {
-                frame = new JFrame(frameTitle);
+                frame = new JFrame("Trade Log");
                 frame.setLayout(new FlowLayout());
                 frame.setBounds(0, 1000, 530, 358);
                 frame.addWindowListener(new WindowAdapter() {
@@ -74,7 +73,6 @@ public class WindowUtil {
                 refreshContentPane();
                 frame.setVisible(true);
             } else {
-                frame.setTitle(frameTitle);
                 refreshContentPane();
             }
             frame.validate();
@@ -125,7 +123,7 @@ public class WindowUtil {
 
     public static void main(String[] args) {
         for (int i = 0; i < 20; i++) {
-            WindowUtil.createMsgFrame("多", "A2201" + i + ": 50秒 上涨0.36%【823.0-826.0】看多");
+            WindowUtil.createMsgFrame("A2201" + i + ": 50秒 上涨0.36%【823.0-826.0】看多");
         }
     }
 }

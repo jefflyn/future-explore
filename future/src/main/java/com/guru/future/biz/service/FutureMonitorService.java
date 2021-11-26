@@ -43,8 +43,6 @@ public class FutureMonitorService {
     @Resource
     private FutureCollectService collectService;
     @Resource
-    private FutureGapService openGapService;
-    @Resource
     private FutureLogManager futureLogManager;
 
     public void monitorPriceFlash(FutureLiveDO futureLiveDO, String histHighLowFlag) {
@@ -209,7 +207,7 @@ public class FutureMonitorService {
                 .append(" ").append(futureLogDO.getPctChange()).append("%")
                 .append("【").append(futureLogDO.getPosition()).append("】");
         // show msg frame
-        WindowUtil.createMsgFrame(openGapService.getMarketOverview(futureLogDO.getTradeDate()), DateUtil.currentTime() + " "
+        WindowUtil.createMsgFrame(DateUtil.currentTime() + " "
                 + futureLogDO.getName() + " " + content);
     }
 }

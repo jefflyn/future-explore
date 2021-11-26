@@ -8,7 +8,6 @@ import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.FutureLiveVO;
 import com.guru.future.common.entity.vo.FutureOverviewVO;
-import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureBasicDO;
@@ -32,14 +31,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
+
 /**
  * @author j
  */
 @Service
 @Slf4j
 public class FutureLiveService {
-    @Resource
-    private FutureGapService openGapService;
     @Resource
     private FutureBasicManager futureBasicManager;
     @Resource
@@ -70,7 +69,7 @@ public class FutureLiveService {
         Collections.reverse(highTop10List);
         LiveDataCache.setHighTop10(highTop10List);
         LiveDataCache.setLowTop10(lowTop10List);
-        WindowUtil.createMsgFrame(openGapService.getMarketOverview(DateUtil.currentTradeDate()), null);
+        WindowUtil.createMsgFrame(null);
     }
 
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList, Boolean refresh) {
@@ -134,14 +133,14 @@ public class FutureLiveService {
         return Pair.of(histHigh, histLow);
     }
 
-    public FutureOverviewVO overview() {
-        BigDecimal avgChange = BigDecimal.ZERO;
+    public FutureOverviewVO getMarketOverview() {
+        BigDecimal totalAvgChange = BigDecimal.ZERO;
         Map<String, List<FutureLiveDO>> categoryLiveMap = new HashMap<>();
         List<FutureLiveDO> futureLiveDOList = futureLiveManager.getAll();
         if (!CollectionUtils.isEmpty(futureLiveDOList)) {
             for (FutureLiveDO liveDO : futureLiveDOList) {
                 BigDecimal change = liveDO.getChange();
-                avgChange = avgChange.add(change);
+                totalAvgChange = totalAvgChange.add(change);
                 String type = liveDO.getType();
                 List<FutureLiveDO> categoryLiveList = ObjectUtils.defaultIfNull(categoryLiveMap.get(type), new ArrayList<>());
                 categoryLiveList.add(liveDO);
@@ -149,10 +148,9 @@ public class FutureLiveService {
             }
         }
         List<FutureOverviewVO.CategorySummary> categorySummaryList = new ArrayList<>();
-        for (String category : categoryLiveMap.keySet()) {
-            List<FutureLiveDO> categoryLiveList = categoryLiveMap.get(category);
-            FutureOverviewVO.CategorySummary categorySummary = new FutureOverviewVO.CategorySummary();
-            categorySummary.setCategoryName(category);
+        for (Map.Entry<String, List<FutureLiveDO>> entry : categoryLiveMap.entrySet()) {
+            String category = entry.getKey();
+            List<FutureLiveDO> categoryLiveList = entry.getValue();
             List<Double> changeList = categoryLiveList.stream().map(e -> e.getChange().doubleValue()).collect(Collectors.toList());
             double[] changeArr = new double[changeList.toArray().length];
             FutureLiveDO best = new FutureLiveDO();
@@ -161,34 +159,42 @@ public class FutureLiveService {
                 FutureLiveDO futureLiveDO = categoryLiveList.get(i);
                 double change = futureLiveDO.getChange().doubleValue();
                 changeArr[i] = change;
-                if (best == null || change > best.getChange().doubleValue()) {
+                if (best.getChange() == null || change > best.getChange().doubleValue()) {
                     best = futureLiveDO;
                 }
-                if (worst == null || change < worst.getChange().doubleValue()) {
+                if (worst.getChange() == null || change < worst.getChange().doubleValue()) {
                     worst = futureLiveDO;
                 }
             }
-            categorySummary.setAvgChange(BigDecimal.valueOf(StatUtils.mean(changeArr)));
+            FutureOverviewVO.CategorySummary categorySummary = new FutureOverviewVO.CategorySummary();
+            categorySummary.setCategoryName(category);
+            BigDecimal categoryAvgChange = BigDecimal.valueOf(StatUtils.mean(changeArr)).setScale(2, RoundingMode.HALF_UP);
+            categorySummary.setAvgChange(categoryAvgChange);
+            categorySummary.setAvgChangeStr((categoryAvgChange.floatValue() > 0 ? "+" : "") + categoryAvgChange + PERCENTAGE_SYMBOL);
             categorySummary.setBestName(best.getName());
-            categorySummary.setBestChange(best.getChange());
+            categorySummary.setBestChange((best.getChange().floatValue() > 0 ? "+" : "") + best.getChange() + PERCENTAGE_SYMBOL);
             categorySummary.setWorstName(worst.getName());
-            categorySummary.setWorstChange(worst.getChange());
+            categorySummary.setWorstChange((worst.getChange().floatValue() > 0 ? "+" : "") + worst.getChange() + PERCENTAGE_SYMBOL);
             categorySummaryList.add(categorySummary);
         }
-        Collections.sort(categorySummaryList);
-        avgChange = avgChange.divide(BigDecimal.valueOf(futureLiveDOList.size()), 2, RoundingMode.HALF_UP);
+        if (totalAvgChange.compareTo(BigDecimal.ZERO) > 0) {
+            Collections.reverse(categorySummaryList);
+        } else {
+            Collections.sort(categorySummaryList);
+        }
+        totalAvgChange = totalAvgChange.divide(BigDecimal.valueOf(futureLiveDOList.size()), 2, RoundingMode.HALF_UP);
         FutureOverviewVO overviewVO = new FutureOverviewVO();
-        overviewVO.setAvgChange(avgChange);
-        overviewVO.setOverviewDesc(overviewDesc(avgChange.intValue()));
+        overviewVO.setTotalAvgChangeStr((totalAvgChange.floatValue() > 0 ? "+" : "") + totalAvgChange + PERCENTAGE_SYMBOL);
+        overviewVO.setOverviewDesc(overviewDesc(totalAvgChange.floatValue()));
         overviewVO.setCategorySummaryList(categorySummaryList);
         return overviewVO;
     }
 
-    private String overviewDesc(int change) {
+    private String overviewDesc(float change) {
         if (change > 0) {
-            return change > 2 ? "多" : "偏多";
+            return change > 1.5 ? "多" : "偏多";
         } else {
-            return Math.abs(change) > 2 ? "空" : "偏空";
+            return Math.abs(change) > 1.5 ? "空" : "偏空";
         }
     }
 }

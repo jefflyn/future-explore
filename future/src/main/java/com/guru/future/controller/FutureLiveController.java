@@ -1,6 +1,7 @@
 package com.guru.future.controller;
 
 import com.guru.future.biz.service.FutureLiveService;
+import com.guru.future.common.entity.vo.FutureOverviewVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +18,7 @@ public class FutureLiveController {
 
     @GetMapping(value = "/future/live/overview")
     public String liveOverview() {
-        return futureLiveService.overview().toString();
+        FutureOverviewVO overviewVO = futureLiveService.getMarketOverview();
+        return overviewVO.toString();
     }
 }
