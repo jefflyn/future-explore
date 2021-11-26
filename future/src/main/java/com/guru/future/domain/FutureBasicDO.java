@@ -38,4 +38,8 @@ public class FutureBasicDO {
     private Integer isTarget;
 
     private String remark;
+
+    public boolean hasNightTrade(){
+        return night == 1;
+    }
 }

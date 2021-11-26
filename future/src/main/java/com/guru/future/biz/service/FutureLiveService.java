@@ -10,6 +10,7 @@ import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.FutureLiveVO;
 import com.guru.future.common.entity.vo.FutureOverviewVO;
+import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureBasicDO;
@@ -84,8 +85,11 @@ public class FutureLiveService {
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap(refresh);
         reloadLiveCache(contractRealtimeDTOList, basicMap);
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
+            FutureBasicDO futureBasicDO = basicMap.get(contractRealtimeDTO.getCode());
+            if (DateUtil.isNight() && Boolean.FALSE.equals(futureBasicDO.hasNightTrade())){
+                continue;
+            }
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
-            FutureBasicDO futureBasicDO = basicMap.get(futureLiveDO.getCode());
             futureLiveDO.setType(futureBasicDO.getType());
             Pair<BigDecimal, BigDecimal> highLow = updateHistHighLow(contractRealtimeDTO, futureBasicDO);
             BigDecimal histHigh = highLow.getLeft();

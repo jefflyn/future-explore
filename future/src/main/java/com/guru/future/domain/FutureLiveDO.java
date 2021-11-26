@@ -1,6 +1,5 @@
 package com.guru.future.domain;
 
-import com.guru.future.common.entity.vo.FutureOverviewVO;
 import lombok.Data;
 import org.apache.commons.lang3.ObjectUtils;
 

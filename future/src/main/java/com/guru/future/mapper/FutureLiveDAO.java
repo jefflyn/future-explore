@@ -8,6 +8,7 @@ public interface FutureLiveDAO {
     int deleteByPrimaryKey(String code);
 
     int insertSelective(FutureLiveDO futureLiveDO);
+
     FutureLiveDO selectByPrimaryKey(String code);
 
     List<FutureLiveDO> selectAll();

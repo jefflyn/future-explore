@@ -1,8 +1,10 @@
 package com.guru.future.controller;
 
+import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.vo.FutureOverviewVO;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -14,7 +16,26 @@ import javax.annotation.Resource;
 @RestController
 public class FutureLiveController {
     @Resource
+    private FutureTaskDispatcher futureTaskDispatcher;
+
+    @Resource
     private FutureLiveService futureLiveService;
+
+    @GetMapping(value = "/future/live/start")
+    public String start(@RequestParam(required = false) Boolean refresh) {
+        try {
+            futureTaskDispatcher.executePulling(refresh);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+        return "success";
+    }
+
+    @GetMapping(value = "/future/live/stop")
+    public Boolean stop() {
+        return futureTaskDispatcher.stopRunning();
+    }
 
     @GetMapping(value = "/future/live/overview")
     public String liveOverview() {
