@@ -7,6 +7,7 @@ import com.guru.future.common.cache.LiveDataCache;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.FutureLiveVO;
+import com.guru.future.common.entity.vo.FutureOverviewVO;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.WindowUtil;
@@ -15,6 +16,7 @@ import com.guru.future.domain.FutureLiveDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.math3.stat.StatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -25,8 +27,10 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author j
@@ -128,5 +132,63 @@ public class FutureLiveService {
             log.info("{} update hist high, refresh basic data", contractRealtimeDTO.getCode());
         }
         return Pair.of(histHigh, histLow);
+    }
+
+    public FutureOverviewVO overview() {
+        BigDecimal avgChange = BigDecimal.ZERO;
+        Map<String, List<FutureLiveDO>> categoryLiveMap = new HashMap<>();
+        List<FutureLiveDO> futureLiveDOList = futureLiveManager.getAll();
+        if (!CollectionUtils.isEmpty(futureLiveDOList)) {
+            for (FutureLiveDO liveDO : futureLiveDOList) {
+                BigDecimal change = liveDO.getChange();
+                avgChange = avgChange.add(change);
+                String type = liveDO.getType();
+                List<FutureLiveDO> categoryLiveList = ObjectUtils.defaultIfNull(categoryLiveMap.get(type), new ArrayList<>());
+                categoryLiveList.add(liveDO);
+                categoryLiveMap.put(type, categoryLiveList);
+            }
+        }
+        List<FutureOverviewVO.CategorySummary> categorySummaryList = new ArrayList<>();
+        for (String category : categoryLiveMap.keySet()) {
+            List<FutureLiveDO> categoryLiveList = categoryLiveMap.get(category);
+            FutureOverviewVO.CategorySummary categorySummary = new FutureOverviewVO.CategorySummary();
+            categorySummary.setCategoryName(category);
+            List<Double> changeList = categoryLiveList.stream().map(e -> e.getChange().doubleValue()).collect(Collectors.toList());
+            double[] changeArr = new double[changeList.toArray().length];
+            FutureLiveDO best = new FutureLiveDO();
+            FutureLiveDO worst = new FutureLiveDO();
+            for (int i = 0; i < categoryLiveList.size(); i++) {
+                FutureLiveDO futureLiveDO = categoryLiveList.get(i);
+                double change = futureLiveDO.getChange().doubleValue();
+                changeArr[i] = change;
+                if (best == null || change > best.getChange().doubleValue()) {
+                    best = futureLiveDO;
+                }
+                if (worst == null || change < worst.getChange().doubleValue()) {
+                    worst = futureLiveDO;
+                }
+            }
+            categorySummary.setAvgChange(BigDecimal.valueOf(StatUtils.mean(changeArr)));
+            categorySummary.setBestName(best.getName());
+            categorySummary.setBestChange(best.getChange());
+            categorySummary.setWorstName(worst.getName());
+            categorySummary.setWorstChange(worst.getChange());
+            categorySummaryList.add(categorySummary);
+        }
+        Collections.sort(categorySummaryList);
+        avgChange = avgChange.divide(BigDecimal.valueOf(futureLiveDOList.size()), 2, RoundingMode.HALF_UP);
+        FutureOverviewVO overviewVO = new FutureOverviewVO();
+        overviewVO.setAvgChange(avgChange);
+        overviewVO.setOverviewDesc(overviewDesc(avgChange.intValue()));
+        overviewVO.setCategorySummaryList(categorySummaryList);
+        return overviewVO;
+    }
+
+    private String overviewDesc(int change) {
+        if (change > 0) {
+            return change > 2 ? "多" : "偏多";
+        } else {
+            return Math.abs(change) > 2 ? "空" : "偏空";
+        }
     }
 }

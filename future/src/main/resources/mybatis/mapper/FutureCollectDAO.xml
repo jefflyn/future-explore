@@ -50,6 +50,9 @@
             <if test="price != null">
                 price,
             </if>
+            <if test="position != null">
+                position,
+            </if>
             <if test="high != null">
                 high,
             </if>
@@ -84,6 +87,9 @@
             </if>
             <if test="price != null">
                 #{price,jdbcType=DECIMAL},
+            </if>
+            <if test="position != null">
+                #{position,jdbcType=INTEGER},
             </if>
             <if test="high != null">
                 #{high,jdbcType=DECIMAL},

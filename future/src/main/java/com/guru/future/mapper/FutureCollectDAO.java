@@ -7,6 +7,6 @@ public interface FutureCollectDAO {
 
     FutureCollectDO selectLastByCode(@Param("code") String code);
 
-    int insertSelective(FutureCollectDO record);
+    int insertSelective(FutureCollectDO collectDO);
 
 }

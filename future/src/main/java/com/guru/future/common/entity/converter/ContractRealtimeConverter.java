@@ -76,19 +76,19 @@ public class ContractRealtimeConverter {
     }
 
     public static FutureCollectDO convert2DailyCollectDO(CollectType collectType, ContractRealtimeDTO contractRealtimeDTO) {
-        FutureCollectDO dailyDO = new FutureCollectDO();
-        dailyDO.setType(collectType.getId());
-        dailyDO.setTradeDate(contractRealtimeDTO.getTradeDate());
-        dailyDO.setCode(contractRealtimeDTO.getCode());
-        dailyDO.setName(contractRealtimeDTO.getName());
-        dailyDO.setPrice(contractRealtimeDTO.getPrice());
-        dailyDO.setPosition(FutureUtil.getPosition(contractRealtimeDTO.getPrice(),contractRealtimeDTO.getHigh(),
+        FutureCollectDO collectDO = new FutureCollectDO();
+        collectDO.setType(collectType.getId());
+        collectDO.setTradeDate(contractRealtimeDTO.getTradeDate());
+        collectDO.setCode(contractRealtimeDTO.getCode());
+        collectDO.setName(contractRealtimeDTO.getName());
+        collectDO.setPrice(contractRealtimeDTO.getPrice());
+        collectDO.setPosition(FutureUtil.getPosition(contractRealtimeDTO.getPrice(),contractRealtimeDTO.getHigh(),
                 contractRealtimeDTO.getLow()));
-        dailyDO.setHigh(contractRealtimeDTO.getHigh());
-        dailyDO.setLow(contractRealtimeDTO.getLow());
-        dailyDO.setDealVol(contractRealtimeDTO.getDealVol());
-        dailyDO.setHoldVol(contractRealtimeDTO.getHoldVol());
-        dailyDO.setRemark(collectType.getDesc());
-        return dailyDO;
+        collectDO.setHigh(contractRealtimeDTO.getHigh());
+        collectDO.setLow(contractRealtimeDTO.getLow());
+        collectDO.setDealVol(contractRealtimeDTO.getDealVol());
+        collectDO.setHoldVol(contractRealtimeDTO.getHoldVol());
+        collectDO.setRemark(collectType.getDesc());
+        return collectDO;
     }
 }

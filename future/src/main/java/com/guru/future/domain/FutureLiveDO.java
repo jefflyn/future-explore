@@ -1,5 +1,6 @@
 package com.guru.future.domain;
 
+import com.guru.future.common.entity.vo.FutureOverviewVO;
 import lombok.Data;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -7,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class FutureLiveDO {
+public class FutureLiveDO implements Comparable<FutureLiveDO>{
     private String type;
 
     private String code;
@@ -46,5 +47,10 @@ public class FutureLiveDO {
                 "," + ObjectUtils.defaultIfNull(ask1, 0).floatValue() +
                 "," + ObjectUtils.defaultIfNull(low, 0).floatValue() +
                 "," + ObjectUtils.defaultIfNull(high, 0).floatValue();
+    }
+
+    @Override
+    public int compareTo(FutureLiveDO liveDO) {
+        return this.change.compareTo(liveDO.change);
     }
 }

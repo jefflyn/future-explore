@@ -32,6 +32,14 @@
         from future_live
         where code = #{code,jdbcType=VARCHAR}
     </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from future_live
+        limit 100
+    </select>
+
     <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
         delete
         from future_live

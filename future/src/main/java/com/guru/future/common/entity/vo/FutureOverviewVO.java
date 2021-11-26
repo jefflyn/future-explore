@@ -14,7 +14,7 @@ public class FutureOverviewVO {
     private List<CategorySummary> categorySummaryList;
 
     @Data
-    static class CategorySummary implements Comparable<CategorySummary> {
+    public static class CategorySummary implements Comparable<CategorySummary> {
         private String categoryName;
 
         private BigDecimal avgChange;
