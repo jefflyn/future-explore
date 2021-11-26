@@ -3,27 +3,41 @@ package com.guru.future.common.entity.vo;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class FutureOverviewVO {
-    private BigDecimal avg;
+    private BigDecimal avgChange;
 
-    private String name;
+    private String overviewDesc;
 
-    private BigDecimal price;
+    private List<CategorySummary> categorySummaryList;
 
-    private BigDecimal change;
+    @Data
+    static class CategorySummary implements Comparable<CategorySummary> {
+        private String categoryName;
 
-    private BigDecimal low;
+        private BigDecimal avgChange;
 
-    private BigDecimal high;
+        private String bestName;
 
-    private Boolean highTop;
+        private BigDecimal bestChange;
 
-    private BigDecimal position;
+        private String worstName;
 
-    private String direction = " ";
+        private BigDecimal worstChange;
 
-    private String wave;
+        @Override
+        public int compareTo(CategorySummary o) {
+            return o.avgChange.compareTo(this.avgChange);
+        }
+
+        @Override
+        public String toString(){
+            return categoryName + " 平均涨幅: " + avgChange
+                    + "[领涨品种: " + bestName + " " + bestChange+ "]"
+                    + "[领跌品种: " + worstName + " " + worstChange+ "]";
+        }
+    }
 
 }

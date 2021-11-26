@@ -8,6 +8,8 @@ import java.util.Date;
 
 @Data
 public class FutureLiveDO {
+    private String type;
+
     private String code;
 
     private String name;

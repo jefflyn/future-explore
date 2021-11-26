@@ -29,6 +29,11 @@ public class FutureUtil {
         if (high.compareTo(low) != 0) {
             position = (price.subtract(low)).multiply(BigDecimal.valueOf(100))
                     .divide((high.subtract(low)), 0, RoundingMode.HALF_UP);
+            if (position.intValue() < 0){
+                position = BigDecimal.ZERO;
+            } else if (position.intValue() > 100){
+                position = BigDecimal.valueOf(100);
+            }
         } else if (high.compareTo(low) == 0 && price.compareTo(BigDecimal.ZERO) > 0) {
             position = BigDecimal.valueOf(100);
         }

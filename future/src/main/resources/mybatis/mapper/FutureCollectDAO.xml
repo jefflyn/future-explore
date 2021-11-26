@@ -16,17 +16,16 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
     </resultMap>
+
     <sql id="Base_Column_List">
-        id
-        , trade_date, code, `name`, `type`, price, high, low, deal_vol, hold_vol, create_time,
-    remark
+        `id`, trade_date, `code`, `name`, `type`, price, position, high, low, deal_vol, hold_vol, create_time, remark
     </sql>
 
     <select id="selectLastByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
         from future_collect
-        where code = #{code,jdbcType=VARCHAR}
+        where `code` = #{code,jdbcType=VARCHAR}
         order by id desc limit 1
     </select>
 

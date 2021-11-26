@@ -65,7 +65,7 @@ public class FutureMonitorService {
         int position = -1;
         if (futureLiveDO.getPosition() <= 0) {
             position = 0;
-        } else if (futureLiveDO.getPosition() >= 0) {
+        } else if (futureLiveDO.getPosition() >= 100) {
             position = 100;
         }
         if (position > -1) {
@@ -114,7 +114,7 @@ public class FutureMonitorService {
             }
             futureLogDO.setSuggest(futureLiveDO.getPrice());
             futureLogDO.setPctChange(futureLiveDO.getChange());
-            futureLogDO.setPosition(futureLiveDO.getPosition().intValue());
+            futureLogDO.setPosition(futureLiveDO.getPosition());
             this.msgNotice(position == 100, futureLogDO);
             futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
             futureLogManager.addFutureLog(futureLogDO);

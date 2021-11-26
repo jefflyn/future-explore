@@ -20,7 +20,7 @@ public class DailyCollectJob {
     private FutureCollectService dailyCollectService;
 
     @Async
-    @Scheduled(cron = "10 0/5 9-15 * * MON-FRI")
+    @Scheduled(cron = "8 0,5,10,15,20,25,30,35,40,45,50,55 9,10,11,13,14,15 * * MON-FRI")
     public void dailyCollect() {
         dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
     }

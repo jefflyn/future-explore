@@ -75,7 +75,7 @@ public class FutureLiveService {
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
             FutureBasicDO futureBasicDO = basicMap.get(futureLiveDO.getCode());
-
+            futureLiveDO.setType(futureBasicDO.getType());
             Pair<BigDecimal, BigDecimal> highLow = updateHistHighLow(contractRealtimeDTO, futureBasicDO);
             BigDecimal histHigh = highLow.getLeft();
             BigDecimal histLow = highLow.getRight();

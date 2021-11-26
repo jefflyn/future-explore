@@ -4,6 +4,7 @@
 <mapper namespace="com.guru.future.mapper.FutureLiveDAO">
     <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureLiveDO">
         <id column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="type" jdbcType="VARCHAR" property="type"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="price" jdbcType="DECIMAL" property="price"/>
         <result column="change" jdbcType="DECIMAL" property="change"/>
@@ -19,10 +20,12 @@
         <result column="highest_change" jdbcType="DECIMAL" property="highestChange"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
+
     <sql id="Base_Column_List">
-        code, `name`, price, `change`, bid1, ask1, open, low, high, `position`, amp, wave, lowest_change,
+        `code`, `type`, `name`, price, `change`, bid1, ask1, open, low, high, `position`, amp, wave, lowest_change,
     highest_change, update_time
     </sql>
+
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -38,6 +41,9 @@
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLiveDO">
         insert into future_live
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="type != null">
+                `type`,
+            </if>
             <if test="code != null">
                 code,
             </if>
@@ -85,6 +91,9 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="type != null">
+                `type` = #{type,jdbcType=VARCHAR},
+            </if>
             <if test="code != null">
                 #{code,jdbcType=VARCHAR},
             </if>
@@ -135,6 +144,9 @@
     <update id="updateByPrimaryKeySelective" parameterType="com.guru.future.domain.FutureLiveDO">
         update future_live
         <set>
+            <if test="type != null">
+                `type` = #{type,jdbcType=VARCHAR},
+            </if>
             <if test="name != null">
                 `name` = #{name,jdbcType=VARCHAR},
             </if>
@@ -151,7 +163,7 @@
                 ask1 = #{ask1,jdbcType=DECIMAL},
             </if>
             <if test="open != null">
-                open = #{open,jdbcType=DECIMAL},
+                `open` = #{open,jdbcType=DECIMAL},
             </if>
             <if test="low != null">
                 low = #{low,jdbcType=DECIMAL},
@@ -180,5 +192,4 @@
         </set>
         where code = #{code,jdbcType=VARCHAR}
     </update>
-
 </mapper>

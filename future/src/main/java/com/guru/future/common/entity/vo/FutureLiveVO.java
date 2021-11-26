@@ -23,7 +23,7 @@ public class FutureLiveVO implements Comparable<FutureLiveVO> {
 
     private Boolean highTop;
 
-    private BigDecimal position;
+    private Integer position;
 
     private String direction = " ";
 
