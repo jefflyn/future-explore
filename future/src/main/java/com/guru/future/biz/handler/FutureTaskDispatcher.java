@@ -6,6 +6,7 @@ import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
+import jdk.jfr.Timespan;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -13,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * @author j
@@ -42,13 +44,20 @@ public class FutureTaskDispatcher {
     public void executePulling(Boolean refresh) throws InterruptedException {
         PriceFlashCache.deleteAll();
         keepRunning = true;
+        LongAdder times = new LongAdder();
         REFRESH = refresh == null ? false : refresh;
         List<String> codeList = futureBasicManager.getAllCodes();
         log.info(">>> smell the coffee, let's get this party started!");
         while (keepRunning) {
             if (!DateUtil.isTradeTime()) {
                 log.info(">>> music off, party over!");
-                break;
+                times.increment();
+                if (times.intValue() > 5) {
+                    break;
+                } else {
+                    TimeUnit.SECONDS.sleep(1L);
+                    continue;
+                }
             }
             if (REFRESH) {
                 codeList = futureBasicManager.getAllCodes();

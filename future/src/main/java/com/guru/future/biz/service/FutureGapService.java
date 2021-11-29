@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * @author j
@@ -85,9 +86,14 @@ public class FutureGapService {
     }
 
     public void monitorOpenGap() throws InterruptedException {
-        if (DateUtil.beforeBidTime()) {
+        LongAdder times = new LongAdder();
+        while (DateUtil.beforeBidTime()) {
             log.warn("monitorOpenGap before bid time !!!");
-            TimeUnit.SECONDS.sleep(5L);
+            times.increment();
+            TimeUnit.SECONDS.sleep(1L);
+            if (times.intValue() > 4){
+                return;
+            }
         }
 
         List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getAllRealtimeFromSina();

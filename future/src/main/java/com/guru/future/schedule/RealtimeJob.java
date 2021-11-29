@@ -26,13 +26,13 @@ public class RealtimeJob {
     @Resource
     private FutureLiveService futureLiveService;
 
-    @Scheduled(cron = "3 0 9,21 * * MON-FRI")
+    @Scheduled(cron = "0 0 9,21 * * MON-FRI")
     private void realtime1() throws InterruptedException {
         log.info("realtime task start...");
         futureTaskDispatcher.executePulling(false);
     }
 
-    @Scheduled(cron = "3 30 13 * * MON-FRI")
+    @Scheduled(cron = "0 30 13 * * MON-FRI")
     private void realtime2() throws InterruptedException {
         log.info("realtime task start...");
         futureTaskDispatcher.executePulling(false);
