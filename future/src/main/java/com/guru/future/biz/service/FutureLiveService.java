@@ -86,7 +86,7 @@ public class FutureLiveService {
         reloadLiveCache(contractRealtimeDTOList, basicMap);
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureBasicDO futureBasicDO = basicMap.get(contractRealtimeDTO.getCode());
-            if (DateUtil.isNight() && Boolean.FALSE.equals(futureBasicDO.hasNightTrade())){
+            if (DateUtil.isNight() && Boolean.FALSE.equals(futureBasicDO.hasNightTrade())) {
                 continue;
             }
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
@@ -189,10 +189,9 @@ public class FutureLiveService {
             categorySummary.setWorstChange((worst.getChange().floatValue() > 0 ? "+" : "") + worst.getChange() + PERCENTAGE_SYMBOL);
             categorySummaryList.add(categorySummary);
         }
+        Collections.sort(categorySummaryList);
         if (totalAvgChange.compareTo(BigDecimal.ZERO) > 0) {
             Collections.reverse(categorySummaryList);
-        } else {
-            Collections.sort(categorySummaryList);
         }
         totalAvgChange = totalAvgChange.divide(BigDecimal.valueOf(futureLiveDOList.size()), 2, RoundingMode.HALF_UP);
         FutureOverviewVO overviewVO = new FutureOverviewVO();
