@@ -191,10 +191,9 @@ public class FutureLiveService {
             categorySummary.setWorstPrice(worst.getPrice());
             categorySummaryList.add(categorySummary);
         }
+        Collections.sort(categorySummaryList);
         if (totalAvgChange.compareTo(BigDecimal.ZERO) > 0) {
             Collections.reverse(categorySummaryList);
-        } else {
-            Collections.sort(categorySummaryList);
         }
         totalAvgChange = totalAvgChange.divide(BigDecimal.valueOf(futureLiveDOList.size()), 2, RoundingMode.HALF_UP);
         FutureOverviewVO overviewVO = new FutureOverviewVO();
