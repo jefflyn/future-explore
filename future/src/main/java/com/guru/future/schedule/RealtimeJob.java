@@ -39,7 +39,7 @@ public class RealtimeJob {
         futureTaskDispatcher.executePulling(false);
     }
 
-    @Async
+    @Async("bizAsyncTaskExecutor")
     @Scheduled(cron = "0 5,40 9,21 * * MON-FRI")
     public void sendMarketOverview() throws Exception {
         log.info("send market overview task start...");
