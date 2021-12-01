@@ -6,6 +6,7 @@ import com.guru.future.biz.service.FutureGapService;
 import com.guru.future.biz.service.FutureLiveService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
@@ -26,20 +27,21 @@ public class RealtimeJob {
     @Resource
     private FutureLiveService futureLiveService;
 
-    @Scheduled(cron = "0 0 9,21 * * MON-FRI")
-    private void realtime1() throws InterruptedException {
+    @Scheduled(cron = "3 0 9,21 * * MON-FRI")
+    public void realtime1() throws InterruptedException {
         log.info("realtime task start...");
         futureTaskDispatcher.executePulling(false);
     }
 
-    @Scheduled(cron = "0 30 13 * * MON-FRI")
-    private void realtime2() throws InterruptedException {
+    @Scheduled(cron = "3 30 13 * * MON-FRI")
+    public void realtime2() throws InterruptedException {
         log.info("realtime task start...");
         futureTaskDispatcher.executePulling(false);
     }
 
-    @Scheduled(cron = "0 5,40 9,21 * * MON-FRI")
-    private void sendMarketOverview() throws Exception {
+    @Async
+    @Scheduled(cron = "0 5,40 9,21 * ? MON-FRI")
+    public void sendMarketOverview() throws Exception {
         log.info("send market overview task start...");
         futureLiveService.sendMarketOverviewMail();
     }

@@ -137,7 +137,7 @@ public class FutureGapService {
             BigDecimal preLow = lastDailyDO.getLow();
             BigDecimal currentOpen = realtimeDTO.getOpen();
             if (currentOpen.compareTo(preOpen) == 0) {
-                log.warn("{}-{}昨开等于今开{}!!!", realtimeDTO.getName(), code, currentOpen);
+                log.warn("{} 昨开等于今开 {}!!!", realtimeDTO.getName(), currentOpen);
                 continue;
             }
             BigDecimal priceDiff = currentOpen.subtract(preClose);

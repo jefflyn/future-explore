@@ -1,21 +1,30 @@
 package com.guru.future.biz.service;
 
 import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.FutureCollectManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
+import com.guru.future.common.entity.vo.PositionCollectVO;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.domain.FutureBasicDO;
+import com.guru.future.domain.FutureCollectDO;
 import com.guru.future.domain.FutureDailyDO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author j
@@ -29,6 +38,8 @@ public class FutureDailyService {
     private FutureDailyManager futureDailyManager;
     @Resource
     private FutureSinaManager futureSinaManager;
+    @Resource
+    private FutureCollectManager futureCollectManager;
 
     @Async()
     public void addTradeDaily() {
@@ -85,5 +96,59 @@ public class FutureDailyService {
         } catch (Exception e) {
             log.error("futureDailyManager.addFutureDaily failed! error:", e);
         }
+    }
+
+    public PositionCollectVO getCurrentPositionList() {
+        List<FutureCollectDO> futureCollectDOList = futureCollectManager.getCurrentDateDaily();
+        Map<String, List<FutureCollectDO>> collectMap = futureCollectDOList.stream()
+                .collect(Collectors.groupingBy(e -> DateUtil.toHourMinute(e.getCreateTime())));
+        Map<Integer, Integer> countMap = new HashMap<>();
+        Map<Integer, Set<String>> sizeTimeMap = new HashMap<>();
+        for (Map.Entry<String, List<FutureCollectDO>> entry : collectMap.entrySet()) {
+            Integer size = entry.getValue().size();
+            Set<String> sizeTimeList = ObjectUtils.defaultIfNull(sizeTimeMap.get(size), new HashSet<>());
+            List<String> times = entry.getValue().stream().map(e -> DateUtil.toHourMinute(e.getCreateTime())).collect(Collectors.toList());
+            sizeTimeList.addAll(times);
+            sizeTimeMap.put(size, sizeTimeList);
+            countMap.put(size, ObjectUtils.defaultIfNull(countMap.get(size), 0) + 1);
+        }
+        int mostNumber = 0;
+        int mostSize = Collections.max(countMap.values());
+        for (Map.Entry<Integer, Integer> entry : countMap.entrySet()) {
+            //循环遍历，在HashMap中找到vmaxCount（最大重复次数）所对应的key（最大重复次数所对应的数值）
+            if (entry.getValue() == mostSize) {
+                mostNumber = entry.getKey();
+                break;
+            }
+        }
+        Set<String> mostTimes = sizeTimeMap.get(mostNumber);
+        Map<String, List<FutureCollectDO>> nameCollectMap = futureCollectDOList.stream()
+                .collect(Collectors.groupingBy(FutureCollectDO::getName));
+        List<PositionCollectVO.Position> positionDataList = new ArrayList<>();
+        List<String> timeList = new ArrayList<>();
+        for (Map.Entry<String, List<FutureCollectDO>> entry : nameCollectMap.entrySet()) {
+            String name = entry.getKey();
+            List<Integer> positions = new ArrayList<>();
+            for (FutureCollectDO collectDO : entry.getValue()) {
+                String hourMinuteTime = DateUtil.toHourMinute(collectDO.getCreateTime());
+                if (!mostTimes.contains(hourMinuteTime)) {
+                    log.warn("不包含的时间={}, 跳过", hourMinuteTime);
+                    continue;
+                }
+                positions.add(collectDO.getPosition());
+                if (timeList.size() < mostSize) {
+                    timeList.add(hourMinuteTime);
+                }
+            }
+            PositionCollectVO.Position position = new PositionCollectVO.Position();
+            position.setName(name);
+            position.setPositions(positions);
+            positionDataList.add(position);
+        }
+
+        PositionCollectVO positionCollectVO = new PositionCollectVO();
+        positionCollectVO.setTimeList(timeList);
+        positionCollectVO.setPositionData(positionDataList);
+        return positionCollectVO;
     }
 }

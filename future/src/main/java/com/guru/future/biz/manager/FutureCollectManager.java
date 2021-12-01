@@ -32,6 +32,10 @@ public class FutureCollectManager {
         return futureDailyCollectDAO.insertSelective(futureCollectDO) > 0;
     }
 
+    public List<FutureCollectDO> getCurrentDateDaily() {
+        return futureDailyCollectDAO.selectByCurrentDate();
+    }
+
     public CollectType getCollectType() {
         return collectType;
     }

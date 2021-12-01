@@ -29,6 +29,12 @@
         order by id desc limit 1
     </select>
 
+    <select id="selectByCurrentDate" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from future_collect where `trade_date` = CURDATE()
+    </select>
+
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureCollectDO">
         insert into future_collect
         <trim prefix="(" suffix=")" suffixOverrides=",">

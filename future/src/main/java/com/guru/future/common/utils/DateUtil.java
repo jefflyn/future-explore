@@ -56,6 +56,10 @@ public class DateUtil {
     private DateUtil() {
     }
 
+    public static String toHourMinute(Date time){
+        return DateFormatUtils.format(time, HOUR_MINUTE_PATTERN);
+    }
+
     public static Boolean isHoliday(Date date) {
         return isHoliday(DateUtils.toCalendar(date));
     }
@@ -213,4 +217,5 @@ public class DateUtil {
             return diff / SECOND_SCALE;
         }
     }
+
 }

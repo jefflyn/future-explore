@@ -1,6 +1,7 @@
 package com.guru.future.controller;
 
 import com.guru.future.biz.service.FutureDailyService;
+import com.guru.future.common.entity.vo.PositionCollectVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,5 +22,8 @@ public class FutureDailyController {
         return "success";
     }
 
-
+    @GetMapping(value = "/future/daily/position/list")
+    public PositionCollectVO listPosition() {
+        return futureDailyService.getCurrentPositionList();
+    }
 }
