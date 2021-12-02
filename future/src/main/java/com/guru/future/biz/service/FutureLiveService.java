@@ -1,12 +1,12 @@
 package com.guru.future.biz.service;
 
+import com.alibaba.fastjson.JSON;
 import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureLiveManager;
 import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.common.cache.LiveDataCache;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
-import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.FutureLiveVO;
 import com.guru.future.common.entity.vo.FutureOverviewVO;
@@ -124,20 +124,50 @@ public class FutureLiveService {
     private Pair<BigDecimal, BigDecimal> updateHistHighLow(ContractRealtimeDTO contractRealtimeDTO, FutureBasicDO futureBasicDO) {
         BigDecimal histHigh = ObjectUtils.defaultIfNull(futureBasicDO.getHigh(), BigDecimal.ZERO);
         BigDecimal histLow = ObjectUtils.defaultIfNull(futureBasicDO.getLow(), BigDecimal.ZERO);
-        if (contractRealtimeDTO.getLow().compareTo(histLow) < 0) {
+        BigDecimal waveB = futureBasicDO.getB();
+        BigDecimal waveC = futureBasicDO.getC();
+        if (contractRealtimeDTO.getLow().compareTo(histLow) < 0
+                || (waveC.floatValue() < waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() < waveC.floatValue())
+                || (waveC.floatValue() < waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() > waveB.floatValue())
+        ) {
             FutureBasicDO updateBasicDO = new FutureBasicDO();
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setLow(contractRealtimeDTO.getLow());
             updateBasicDO.setRemark("合同新低");
+            if (waveC.floatValue() < waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() < waveC.floatValue()) {
+                updateBasicDO.setC(contractRealtimeDTO.getPrice());
+                updateBasicDO.setRemark("update c");
+                log.info("update c = ", JSON.toJSONString(updateBasicDO));
+            }
+            if (waveC.floatValue() < waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() > waveB.floatValue()) {
+                updateBasicDO.setB(contractRealtimeDTO.getPrice());
+                updateBasicDO.setC(contractRealtimeDTO.getPrice());
+                updateBasicDO.setRemark("update b & c");
+                log.info("update b & c = ", JSON.toJSONString(updateBasicDO));
+            }
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist low, refresh basic data", contractRealtimeDTO.getCode());
         }
-        if (contractRealtimeDTO.getHigh().compareTo(histHigh) > 0) {
+        if (contractRealtimeDTO.getHigh().compareTo(histHigh) > 0
+                || (waveC.floatValue() > waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() > waveC.floatValue())
+                || (waveC.floatValue() > waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue())
+        ) {
             FutureBasicDO updateBasicDO = new FutureBasicDO();
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setHigh(contractRealtimeDTO.getHigh());
             updateBasicDO.setRemark("合同新高");
+            if (waveC.floatValue() > waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() > waveC.floatValue()) {
+                updateBasicDO.setC(contractRealtimeDTO.getPrice());
+                updateBasicDO.setRemark("update c");
+                log.info("update c = ", JSON.toJSONString(updateBasicDO));
+            }
+            if (waveC.floatValue() > waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue()) {
+                updateBasicDO.setB(contractRealtimeDTO.getPrice());
+                updateBasicDO.setC(contractRealtimeDTO.getPrice());
+                updateBasicDO.setRemark("update b & c");
+                log.info("update b & c = ", JSON.toJSONString(updateBasicDO));
+            }
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist high, refresh basic data", contractRealtimeDTO.getCode());
