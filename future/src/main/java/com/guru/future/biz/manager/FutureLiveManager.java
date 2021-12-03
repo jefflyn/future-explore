@@ -39,4 +39,8 @@ public class FutureLiveManager {
         }
     }
 
+    public Boolean removeAllData() {
+        return futureLiveDAO.deleteAll() > 0;
+    }
+
 }

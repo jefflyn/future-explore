@@ -54,6 +54,9 @@ public class FutureLiveService {
     @Resource
     private FutureMailManager mailManager;
 
+    public void refreshLiveData(){
+        futureLiveManager.removeAllData();
+    }
 
     @Async()
     public void reloadLiveCache(List<ContractRealtimeDTO> contractRealtimeDTOList, Map<String, FutureBasicDO> basicMap) {
@@ -124,53 +127,44 @@ public class FutureLiveService {
     private Pair<BigDecimal, BigDecimal> updateHistHighLow(ContractRealtimeDTO contractRealtimeDTO, FutureBasicDO futureBasicDO) {
         BigDecimal histHigh = ObjectUtils.defaultIfNull(futureBasicDO.getHigh(), BigDecimal.ZERO);
         BigDecimal histLow = ObjectUtils.defaultIfNull(futureBasicDO.getLow(), BigDecimal.ZERO);
-        BigDecimal waveB = futureBasicDO.getB();
-        BigDecimal waveC = futureBasicDO.getC();
-        if (contractRealtimeDTO.getLow().compareTo(histLow) < 0
-                || (waveC.floatValue() < waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() < waveC.floatValue())
-                || (waveC.floatValue() < waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() > waveB.floatValue())
-        ) {
+        if (contractRealtimeDTO.getLow().compareTo(histLow) < 0) {
             FutureBasicDO updateBasicDO = new FutureBasicDO();
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setLow(contractRealtimeDTO.getLow());
             updateBasicDO.setRemark("合同新低");
-            if (waveC.floatValue() < waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() < waveC.floatValue()) {
-                updateBasicDO.setC(contractRealtimeDTO.getPrice());
-                updateBasicDO.setRemark("update c");
-                log.info("update c = ", JSON.toJSONString(updateBasicDO));
-            }
-            if (waveC.floatValue() < waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() > waveB.floatValue()) {
-                updateBasicDO.setB(contractRealtimeDTO.getPrice());
-                updateBasicDO.setC(contractRealtimeDTO.getPrice());
-                updateBasicDO.setRemark("update b & c");
-                log.info("update b & c = ", JSON.toJSONString(updateBasicDO));
-            }
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist low, refresh basic data", contractRealtimeDTO.getCode());
         }
-        if (contractRealtimeDTO.getHigh().compareTo(histHigh) > 0
-                || (waveC.floatValue() > waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() > waveC.floatValue())
-                || (waveC.floatValue() > waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue())
-        ) {
+        if (contractRealtimeDTO.getHigh().compareTo(histHigh) > 0) {
             FutureBasicDO updateBasicDO = new FutureBasicDO();
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setHigh(contractRealtimeDTO.getHigh());
             updateBasicDO.setRemark("合同新高");
-            if (waveC.floatValue() > waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() > waveC.floatValue()) {
-                updateBasicDO.setC(contractRealtimeDTO.getPrice());
-                updateBasicDO.setRemark("update c");
-                log.info("update c = ", JSON.toJSONString(updateBasicDO));
-            }
-            if (waveC.floatValue() > waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue()) {
-                updateBasicDO.setB(contractRealtimeDTO.getPrice());
-                updateBasicDO.setC(contractRealtimeDTO.getPrice());
-                updateBasicDO.setRemark("update b & c");
-                log.info("update b & c = ", JSON.toJSONString(updateBasicDO));
-            }
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist high, refresh basic data", contractRealtimeDTO.getCode());
+        }
+        BigDecimal waveB = futureBasicDO.getB();
+        BigDecimal waveC = futureBasicDO.getC();
+        if (waveC.floatValue() < waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() < waveC.floatValue()
+                || waveC.floatValue() > waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() > waveC.floatValue()) {
+            FutureBasicDO updateBasicDO = new FutureBasicDO();
+            updateBasicDO.setCode(contractRealtimeDTO.getCode());
+            updateBasicDO.setC(contractRealtimeDTO.getPrice());
+            updateBasicDO.setRemark("update c");
+            futureBasicManager.updateBasic(updateBasicDO);
+            log.info("update c = {}", JSON.toJSONString(updateBasicDO));
+        }
+        if (waveC.floatValue() < waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() > waveB.floatValue()
+                || waveC.floatValue() > waveB.floatValue() && contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue()) {
+            FutureBasicDO updateBasicDO = new FutureBasicDO();
+            updateBasicDO.setCode(contractRealtimeDTO.getCode());
+            updateBasicDO.setB(contractRealtimeDTO.getPrice());
+            updateBasicDO.setC(contractRealtimeDTO.getPrice());
+            updateBasicDO.setRemark("update b & c");
+            futureBasicManager.updateBasic(updateBasicDO);
+            log.info("update b & c = {}", JSON.toJSONString(updateBasicDO));
         }
         return Pair.of(histHigh, histLow);
     }

@@ -75,6 +75,15 @@
             <if test="high != null">
                 high = #{high,jdbcType=DECIMAL},
             </if>
+            <if test="a != null">
+                a = #{a,jdbcType=DECIMAL},
+            </if>
+            <if test="b != null">
+                b = #{b,jdbcType=DECIMAL},
+            </if>
+            <if test="c != null">
+                c = #{c,jdbcType=DECIMAL},
+            </if>
             <if test="amount != null">
                 amount = #{amount,jdbcType=INTEGER},
             </if>

@@ -6,7 +6,6 @@ import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
-import jdk.jfr.Timespan;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -48,6 +47,7 @@ public class FutureTaskDispatcher {
         REFRESH = refresh == null ? false : refresh;
         List<String> codeList = futureBasicManager.getAllCodes();
         log.info(">>> smell the coffee, let's get this party started!");
+        futureLiveService.refreshLiveData();
         while (keepRunning) {
             if (!DateUtil.isTradeTime()) {
                 log.info(">>> music off, party over!");

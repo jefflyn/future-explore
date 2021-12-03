@@ -40,10 +40,8 @@
         limit 100
     </select>
 
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
-        delete
-        from future_live
-        where code = #{code,jdbcType=VARCHAR}
+    <delete id="deleteAll">
+        delete from future_live
     </delete>
 
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLiveDO">

@@ -5,7 +5,7 @@ import com.guru.future.domain.FutureLiveDO;
 import java.util.List;
 
 public interface FutureLiveDAO {
-    int deleteByPrimaryKey(String code);
+    int deleteAll();
 
     int insertSelective(FutureLiveDO futureLiveDO);
 
