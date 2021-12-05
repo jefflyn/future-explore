@@ -40,6 +40,9 @@ create table future_collect
 )
     comment '定时数据采集分析';
 
+create index idx_future_collect_trade_date
+    on future_collect (trade_date);
+
 create index idx_future_daily_collect_code_date
     on future_collect (code, trade_date);
 
@@ -150,4 +153,3 @@ create table open_gap
 
 create index idx_open_gap_trade_date
     on open_gap (trade_date);
-
