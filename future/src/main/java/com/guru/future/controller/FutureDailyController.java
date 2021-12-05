@@ -1,11 +1,17 @@
 package com.guru.future.controller;
 
+import com.google.common.base.Splitter;
 import com.guru.future.biz.service.FutureDailyService;
 import com.guru.future.common.entity.vo.PositionCollectVO;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /***
  * @author j
@@ -22,8 +28,14 @@ public class FutureDailyController {
         return "success";
     }
 
+    @CrossOrigin
     @GetMapping(value = "/future/daily/position/list")
-    public PositionCollectVO listPosition() {
-        return futureDailyService.getCurrentPositionList();
+    public PositionCollectVO listPosition(@RequestParam(value = "tradeDate", required = false) String tradeDate,
+                                          @RequestParam(value = "codes", required = false) String codes) {
+        List<String> codeList = new ArrayList<>();
+        if (Strings.isNotBlank(codes)) {
+            codeList = (List<String>) Splitter.on(",").trimResults().omitEmptyStrings().split(codes);
+        }
+        return futureDailyService.getCurrentPositionList(tradeDate, codeList);
     }
 }

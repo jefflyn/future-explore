@@ -1,5 +1,6 @@
 package com.guru.future.mapper;
 
+import com.guru.future.common.entity.query.FutureDailyQuery;
 import com.guru.future.domain.FutureCollectDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,7 +10,7 @@ public interface FutureCollectDAO {
 
     FutureCollectDO selectLastByCode(@Param("code") String code);
 
-    List<FutureCollectDO> selectByCurrentDate();
+    List<FutureCollectDO> selectByQuery(FutureDailyQuery dailyQuery);
 
     int insertSelective(FutureCollectDO collectDO);
 

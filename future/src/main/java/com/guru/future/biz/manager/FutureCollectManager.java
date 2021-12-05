@@ -1,5 +1,6 @@
 package com.guru.future.biz.manager;
 
+import com.guru.future.common.entity.query.FutureDailyQuery;
 import com.guru.future.common.enums.CollectType;
 import com.guru.future.domain.FutureCollectDO;
 import com.guru.future.mapper.FutureCollectDAO;
@@ -32,8 +33,11 @@ public class FutureCollectManager {
         return futureDailyCollectDAO.insertSelective(futureCollectDO) > 0;
     }
 
-    public List<FutureCollectDO> getCurrentDateDaily() {
-        return futureDailyCollectDAO.selectByCurrentDate();
+    public List<FutureCollectDO> getDailyCollect(String tradeDate, List<String> codes) {
+        FutureDailyQuery dailyQuery = new FutureDailyQuery();
+        dailyQuery.setTradeDate(tradeDate);
+        dailyQuery.setCodes(codes);
+        return futureDailyCollectDAO.selectByQuery(dailyQuery);
     }
 
     public CollectType getCollectType() {

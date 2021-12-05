@@ -1,5 +1,7 @@
 package com.guru.future.biz.service;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureCollectManager;
 import com.guru.future.biz.manager.FutureDailyManager;
@@ -15,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -98,8 +101,14 @@ public class FutureDailyService {
         }
     }
 
-    public PositionCollectVO getCurrentPositionList() {
-        List<FutureCollectDO> futureCollectDOList = futureCollectManager.getCurrentDateDaily();
+    public PositionCollectVO getCurrentPositionList(String tradeDate, List<String> codes) {
+        if (Strings.isNullOrEmpty(tradeDate)) {
+            tradeDate = DateUtil.getLastTradeDate("");
+        }
+        if (CollectionUtils.isEmpty(codes)) {
+            codes = Lists.newArrayList("AP2205", "CJ2205", "CF2205", "RU2205", "SA2205", "NI2202", "P2205", "EG2205", "UR2205", "J2205", "FU2205", "SF2205", "I2205", "RB2205");
+        }
+        List<FutureCollectDO> futureCollectDOList = futureCollectManager.getDailyCollect(tradeDate, codes);
         Map<String, List<FutureCollectDO>> collectMap = futureCollectDOList.stream()
                 .collect(Collectors.groupingBy(e -> DateUtil.toHourMinute(e.getCreateTime())));
         Map<Integer, Integer> countMap = new HashMap<>();
@@ -142,7 +151,7 @@ public class FutureDailyService {
             }
             PositionCollectVO.Position position = new PositionCollectVO.Position();
             position.setName(name);
-            position.setPositions(positions);
+            position.setData(positions);
             positionDataList.add(position);
         }
 

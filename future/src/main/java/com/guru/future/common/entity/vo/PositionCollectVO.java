@@ -14,6 +14,6 @@ public class PositionCollectVO  {
     public static class Position{
         private String name;
 
-        private List<Integer> positions;
+        private List<Integer> data;
     }
 }
