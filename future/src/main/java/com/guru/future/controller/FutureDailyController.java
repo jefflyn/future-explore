@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /***
@@ -34,7 +35,10 @@ public class FutureDailyController {
                                           @RequestParam(value = "codes", required = false) String codes) {
         List<String> codeList = new ArrayList<>();
         if (Strings.isNotBlank(codes)) {
-            codeList = (List<String>) Splitter.on(",").trimResults().omitEmptyStrings().split(codes);
+            Iterator<String> codeIte = Splitter.on(",").trimResults().omitEmptyStrings().split(codes).iterator();
+            while (codeIte.hasNext()) {
+                codeList.add(codeIte.next());
+            }
         }
         return futureDailyService.getCurrentPositionList(tradeDate, codeList);
     }

@@ -35,6 +35,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
+import static com.guru.future.common.utils.NumberUtil.decimal2String;
 
 /**
  * @author j
@@ -54,7 +55,7 @@ public class FutureLiveService {
     @Resource
     private FutureMailManager mailManager;
 
-    public void refreshLiveData(){
+    public void refreshLiveData() {
         futureLiveManager.removeAllData();
     }
 
@@ -286,7 +287,63 @@ public class FutureLiveService {
             content.append("</tr>");
         }
         content.append("</table>");
+        content.append("<br/>");
+        content.append(highTopContent());
+        content.append("<br/>");
+        content.append(lowTopContent());
         content.append("</body></html>");
         mailManager.sendHtmlMail("市场概况", content.toString());
+    }
+
+    private String highTopContent() {
+        StringBuilder content = new StringBuilder();
+        content.append("<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" style=\"border:solid 1px #E8F2F9;font-size=14px;;font-size:12px;\">");
+        content.append("<tr style=\"background-color: #428BCA; color:#ffffff\">" +
+                "<th width=\"10px\">序号</th>" +
+                "<th width=\"50px\">名称</th>" +
+                "<th width=\"40px\">价格</th>" +
+                "<th width=\"30px\">涨跌幅</th>" +
+                "<th width=\"30px\">相对位置</th>" +
+                "<th width=\"80px\">波段</th>" +
+                "</tr>");
+        for (int i = 0; i < LiveDataCache.getHighTop10().size(); i++) {
+            FutureLiveVO highTop = LiveDataCache.getHighTop10().get(i);
+            content.append("</tr>");
+            content.append("<td style=\"text-align:left\">" + highTop.getSortNo() + "</td>");
+            content.append("<td style=\"text-align:left\">" + highTop.getName() + "</td>");
+            content.append("<td style=\"text-align:center\">" + decimal2String(highTop.getPrice()) + "</td>");
+            content.append("<td style=\"text-align:left\">" + highTop.getChange() + FutureUtil.PERCENTAGE_SYMBOL + "</td>");
+            content.append("<td style=\"text-align:center\">" + highTop.getPosition() + "</td>");
+            content.append("<td style=\"text-align:left\">" + highTop.getWave() + "</td>");
+            content.append("</tr>");
+        }
+        content.append("</table>");
+        return content.toString();
+    }
+
+    private String lowTopContent() {
+        StringBuilder content = new StringBuilder();
+        content.append("<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" style=\"border:solid 1px #E8F2F9;font-size=14px;;font-size:12px;\">");
+        content.append("<tr style=\"background-color: #428BCA; color:#ffffff\">" +
+                "<th width=\"10px\">序号</th>" +
+                "<th width=\"50px\">名称</th>" +
+                "<th width=\"40px\">价格</th>" +
+                "<th width=\"30px\">涨跌幅</th>" +
+                "<th width=\"30px\">相对位置</th>" +
+                "<th width=\"80px\">波段</th>" +
+                "</tr>");
+        for (int i = 0; i < LiveDataCache.getLowTop10().size(); i++) {
+            FutureLiveVO lowTop = LiveDataCache.getLowTop10().get(i);
+            content.append("</tr>");
+            content.append("<td style=\"text-align:left\">" + lowTop.getSortNo() + "</td>");
+            content.append("<td style=\"text-align:left\">" + lowTop.getName() + "</td>");
+            content.append("<td style=\"text-align:center\">" + decimal2String(lowTop.getPrice()) + "</td>");
+            content.append("<td style=\"text-align:left\">" + lowTop.getChange() + FutureUtil.PERCENTAGE_SYMBOL + "</td>");
+            content.append("<td style=\"text-align:center\">" + lowTop.getPosition() + "</td>");
+            content.append("<td style=\"text-align:left\">" + lowTop.getWave() + "</td>");
+            content.append("</tr>");
+        }
+        content.append("</table>");
+        return content.toString();
     }
 }
