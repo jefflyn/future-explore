@@ -66,7 +66,6 @@ public class FutureTaskDispatcher {
                 return;
             }
             List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getRealtimeFromSina(codeList);
-
             // async live data
             futureLiveService.refreshLiveData(contractRealtimeDTOList, REFRESH);
             REFRESH = false;

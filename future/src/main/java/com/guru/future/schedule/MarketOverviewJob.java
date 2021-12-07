@@ -20,7 +20,7 @@ public class MarketOverviewJob {
     @Resource
     private FutureLiveService futureLiveService;
 
-    @Scheduled(cron = "0 30 9,21 * * MON-FRI")
+    @Scheduled(cron = "0 10,40 9,21,22 * * MON-FRI")
     public void sendMarketOverview() throws Exception {
         log.info("send market overview task start...");
         futureLiveService.sendMarketOverviewMail();
