@@ -31,7 +31,7 @@ public class FutureUtil {
         return change;
     }
 
-    public static int getPosition(BigDecimal price, BigDecimal high, BigDecimal low){
+    public static int calcPosition(BigDecimal price, BigDecimal high, BigDecimal low){
         BigDecimal position = BigDecimal.ZERO;
         if (high.compareTo(low) != 0) {
             position = (price.subtract(low)).multiply(BigDecimal.valueOf(100))

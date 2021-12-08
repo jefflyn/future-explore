@@ -148,8 +148,7 @@ public class FutureMonitorService {
         BigDecimal maxPrice = minMaxPrices.getValue1();
         boolean isTrigger = false;
         String blastTip = "";
-        float diff = (price.subtract(maxPrice)).multiply(BigDecimal.valueOf(100))
-                .divide(maxPrice, 2, RoundingMode.HALF_UP).floatValue();
+        float diff = FutureUtil.calcChange(price, maxPrice).floatValue();
         if (Math.abs(diff) >= triggerDiff) {
             isTrigger = true;
             lastPrice = maxPrice;
@@ -157,8 +156,7 @@ public class FutureMonitorService {
                 blastTip = "+";
             }
         } else {
-            diff = (price.subtract(minPrice)).multiply(BigDecimal.valueOf(100))
-                    .divide(minPrice, 2, RoundingMode.HALF_UP).floatValue();
+            diff = FutureUtil.calcChange(price, minPrice).floatValue();
             if (Math.abs(diff) >= triggerDiff) {
                 isTrigger = true;
                 lastPrice = minPrice;
@@ -215,7 +213,7 @@ public class FutureMonitorService {
         }
         futureLogDO.setSuggest(contractRealtimeDTO.getPrice());
         futureLogDO.setPctChange(FutureUtil.calcChange(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getPreSettle()));
-        futureLogDO.setPosition(FutureUtil.getPosition(contractRealtimeDTO.getPrice(),
+        futureLogDO.setPosition(FutureUtil.calcPosition(contractRealtimeDTO.getPrice(),
                 contractRealtimeDTO.getHigh(), contractRealtimeDTO.getLow()));
         msgNotice(newHigh, futureLogDO);
         futureLogManager.addFutureLog(futureLogDO);

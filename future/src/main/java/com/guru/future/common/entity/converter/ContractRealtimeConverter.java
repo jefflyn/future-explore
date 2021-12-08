@@ -23,7 +23,7 @@ public class ContractRealtimeConverter {
         futureLiveDO.setOpen(contractRealtimeDTO.getOpen());
         futureLiveDO.setLow(contractRealtimeDTO.getLow());
         futureLiveDO.setHigh(contractRealtimeDTO.getHigh());
-        int position = FutureUtil.getPosition(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getHigh(),
+        int position = FutureUtil.calcPosition(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getHigh(),
                 contractRealtimeDTO.getLow());
         futureLiveDO.setPosition(position);
         futureLiveDO.setAmp((contractRealtimeDTO.getHigh().subtract(contractRealtimeDTO.getLow()))
@@ -43,19 +43,13 @@ public class ContractRealtimeConverter {
         dailyDO.setCode(contractRealtimeDTO.getCode());
         dailyDO.setName(contractRealtimeDTO.getName());
         dailyDO.setClose(contractRealtimeDTO.getPrice());
-        BigDecimal change = (contractRealtimeDTO.getPrice().subtract(contractRealtimeDTO.getPreSettle())
-                .multiply(BigDecimal.valueOf(100))
-                .divide(contractRealtimeDTO.getPreSettle(), 2, RoundingMode.HALF_UP));
-        dailyDO.setCloseChange(change);
+        dailyDO.setCloseChange(FutureUtil.calcChange(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getPreSettle()));
         if (contractRealtimeDTO.getSettle() == null || BigDecimal.ZERO.compareTo(contractRealtimeDTO.getSettle()) == 0) {
             dailyDO.setSettle(contractRealtimeDTO.getAvgPrice());
         } else {
             dailyDO.setSettle(contractRealtimeDTO.getSettle());
         }
-        BigDecimal settleChange = (contractRealtimeDTO.getPrice().subtract(contractRealtimeDTO.getPreSettle())
-                .multiply(BigDecimal.valueOf(100))
-                .divide(contractRealtimeDTO.getPreSettle(), 2, RoundingMode.HALF_UP));
-        dailyDO.setSettleChange(settleChange);
+        dailyDO.setSettleChange(FutureUtil.calcChange(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getPreSettle()));
         dailyDO.setOpen(contractRealtimeDTO.getOpen());
         dailyDO.setLow(contractRealtimeDTO.getLow());
         dailyDO.setHigh(contractRealtimeDTO.getHigh());
@@ -79,7 +73,7 @@ public class ContractRealtimeConverter {
         collectDO.setCode(contractRealtimeDTO.getCode());
         collectDO.setName(contractRealtimeDTO.getName());
         collectDO.setPrice(contractRealtimeDTO.getPrice());
-        collectDO.setPosition(FutureUtil.getPosition(contractRealtimeDTO.getPrice(),contractRealtimeDTO.getHigh(),
+        collectDO.setPosition(FutureUtil.calcPosition(contractRealtimeDTO.getPrice(),contractRealtimeDTO.getHigh(),
                 contractRealtimeDTO.getLow()));
         collectDO.setHigh(contractRealtimeDTO.getHigh());
         collectDO.setLow(contractRealtimeDTO.getLow());
