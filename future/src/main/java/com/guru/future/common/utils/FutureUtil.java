@@ -24,6 +24,13 @@ public class FutureUtil {
         return "\\";
     }
 
+    public static BigDecimal calcChange(BigDecimal price, BigDecimal prePrice){
+        BigDecimal change = (price.subtract(prePrice)
+                .multiply(BigDecimal.valueOf(100))
+                .divide(prePrice, 2, RoundingMode.HALF_UP));
+        return change;
+    }
+
     public static int getPosition(BigDecimal price, BigDecimal high, BigDecimal low){
         BigDecimal position = BigDecimal.ZERO;
         if (high.compareTo(low) != 0) {

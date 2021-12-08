@@ -3,8 +3,10 @@ package com.guru.future.biz.service;
 import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureLogManager;
 import com.guru.future.common.cache.PriceFlashCache;
+import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.enums.CollectType;
 import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
@@ -193,6 +195,31 @@ public class FutureMonitorService {
             // 删除价格列表，重新获取
             PriceFlashCache.delete(cachedKey);
         }
+    }
+
+    @Async
+    public void addNewHighLowLog(ContractRealtimeDTO contractRealtimeDTO, Boolean newHigh){
+        FutureLogDO futureLogDO = new FutureLogDO();
+        futureLogDO.setTradeDate(DateUtil.currentTradeDate());
+        futureLogDO.setCode(contractRealtimeDTO.getCode());
+        futureLogDO.setFactor(-1);
+        futureLogDO.setName(contractRealtimeDTO.getName());
+        if (newHigh) {
+            futureLogDO.setType("波段新高");
+            futureLogDO.setContent("波段新高");
+            futureLogDO.setOption("做多");
+        } else {
+            futureLogDO.setType("波段新低");
+            futureLogDO.setContent("波段新低");
+            futureLogDO.setOption("做空");
+        }
+        futureLogDO.setSuggest(contractRealtimeDTO.getPrice());
+        futureLogDO.setPctChange(FutureUtil.calcChange(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getPreSettle()));
+        futureLogDO.setPosition(FutureUtil.getPosition(contractRealtimeDTO.getPrice(),
+                contractRealtimeDTO.getHigh(), contractRealtimeDTO.getLow()));
+        msgNotice(newHigh, futureLogDO);
+        futureLogManager.addFutureLog(futureLogDO);
+        log.info("add wave log >>> {}, {}", futureLogDO.getName(), futureLogDO.getContent());
     }
 
     private void msgNotice(boolean isUp, FutureLogDO futureLogDO) {

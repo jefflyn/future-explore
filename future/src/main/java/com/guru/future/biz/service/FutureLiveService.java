@@ -15,6 +15,7 @@ import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureLiveDO;
+import com.guru.future.domain.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -32,6 +33,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.LongAdder;
 import java.util.stream.Collectors;
 
 import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
@@ -151,6 +153,8 @@ public class FutureLiveService {
         // up wave
         if (waveC.floatValue() >= waveB.floatValue()){
             if(contractRealtimeDTO.getPrice().floatValue() > waveC.floatValue()){
+                monitorService.addNewHighLowLog(contractRealtimeDTO, true);
+
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
                 updateBasicDO.setCode(contractRealtimeDTO.getCode());
                 updateBasicDO.setC(contractRealtimeDTO.getHigh());
@@ -159,6 +163,8 @@ public class FutureLiveService {
                 log.info("update c with high = {}", JSON.toJSONString(updateBasicDO));
             }
             if(contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue()){
+                monitorService.addNewHighLowLog(contractRealtimeDTO, false);
+
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
                 updateBasicDO.setCode(contractRealtimeDTO.getCode());
                 updateBasicDO.setB(contractRealtimeDTO.getLow());
@@ -169,6 +175,8 @@ public class FutureLiveService {
             }
         } else {
             if(contractRealtimeDTO.getPrice().floatValue() < waveC.floatValue()){
+                monitorService.addNewHighLowLog(contractRealtimeDTO, false);
+
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
                 updateBasicDO.setCode(contractRealtimeDTO.getCode());
                 updateBasicDO.setC(contractRealtimeDTO.getLow());
@@ -177,6 +185,8 @@ public class FutureLiveService {
                 log.info("update c with low = {}", JSON.toJSONString(updateBasicDO));
             }
             if(contractRealtimeDTO.getPrice().floatValue() > waveB.floatValue()){
+                monitorService.addNewHighLowLog(contractRealtimeDTO, true);
+
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
                 updateBasicDO.setCode(contractRealtimeDTO.getCode());
                 updateBasicDO.setB(contractRealtimeDTO.getHigh());

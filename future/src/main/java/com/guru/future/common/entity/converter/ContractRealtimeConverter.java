@@ -17,10 +17,7 @@ public class ContractRealtimeConverter {
         futureLiveDO.setCode(contractRealtimeDTO.getCode());
         futureLiveDO.setName(contractRealtimeDTO.getName());
         futureLiveDO.setPrice(contractRealtimeDTO.getPrice());
-        BigDecimal change = (contractRealtimeDTO.getPrice().subtract(contractRealtimeDTO.getPreSettle())
-                .multiply(BigDecimal.valueOf(100))
-                .divide(contractRealtimeDTO.getPreSettle(), 2, RoundingMode.HALF_UP));
-        futureLiveDO.setChange(change);
+        futureLiveDO.setChange(FutureUtil.calcChange(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getPreSettle()));
         futureLiveDO.setBid1(contractRealtimeDTO.getBid());
         futureLiveDO.setAsk1(contractRealtimeDTO.getAsk());
         futureLiveDO.setOpen(contractRealtimeDTO.getOpen());
