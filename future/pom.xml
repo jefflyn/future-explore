@@ -46,6 +46,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-quartz</artifactId>
+            <version>2.6.1</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
@@ -220,10 +226,10 @@
                         <groupId>com.guru.ocean</groupId>
                         <artifactId>bule-whale</artifactId>
                         <version>0.0.1-SNAPSHOT</version>
-<!--                        <scope>system</scope>-->
-<!--                        <systemPath>-->
-<!--                            ${project.basedir}/src/main/resources/blue-whale-0.0.1-SNAPSHOT.jar-->
-<!--                        </systemPath>-->
+                        <!--                        <scope>system</scope>-->
+                        <!--                        <systemPath>-->
+                        <!--                            ${project.basedir}/src/main/resources/blue-whale-0.0.1-SNAPSHOT.jar-->
+                        <!--                        </systemPath>-->
                     </dependency>
                 </dependencies>
             </plugin>

@@ -116,7 +116,7 @@ public class FutureMonitorService {
             futureLogDO.setPctChange(futureLiveDO.getChange());
             futureLogDO.setPosition(futureLiveDO.getPosition());
             this.msgNotice(position == 100, futureLogDO);
-            futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
+//            futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
             futureLogManager.addFutureLog(futureLogDO);
             log.info("add position log >>> {}, {}", futureLogDO.getName(), futureLogDO.getPosition());
         }

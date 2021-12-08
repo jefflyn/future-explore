@@ -1,8 +1,12 @@
-package com.guru.future.schedule;
+package com.guru.future.schedule.job;
 
 import com.guru.future.biz.service.FutureGapService;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.A;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -15,18 +19,15 @@ import javax.annotation.Resource;
  * @date 2021/7/29 9:17 下午
  **/
 
-@Configuration
-@EnableScheduling
 @Slf4j
-public class OpenGapJob {
+public class OpenGapJob implements Job {
     @Resource
     private FutureGapService futureGapService;
 
-    @Async
-    @Scheduled(cron = "3 0 9,21 * * MON-FRI")
-    public void monitorOpenGap() throws InterruptedException {
+    @SneakyThrows
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) {
         log.info("open gap job start ...");
         futureGapService.monitorOpenGap();
     }
-
 }
