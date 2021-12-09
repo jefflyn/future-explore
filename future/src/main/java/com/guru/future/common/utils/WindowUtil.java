@@ -1,21 +1,29 @@
 package com.guru.future.common.utils;
 
 import com.google.common.base.Strings;
+import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.cache.LiveDataCache;
 import com.guru.future.common.entity.vo.FutureLiveVO;
+import com.guru.future.common.entity.vo.FutureOverviewVO;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Resource;
 import javax.swing.DefaultListModel;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextPane;
 import javax.swing.ListCellRenderer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -28,6 +36,8 @@ public class WindowUtil {
     private static DefaultListModel<JLabel> priceModel = new DefaultListModel<>();
     private static DefaultListModel<JLabel> highTopModel = new DefaultListModel<>();
     private static DefaultListModel<JLabel> lowTopModel = new DefaultListModel<>();
+    @Resource
+    private static FutureLiveService futureLiveService;
 
     private static void buildTopModel() {
         highTopModel = new DefaultListModel<>();
@@ -70,6 +80,10 @@ public class WindowUtil {
                         frame.getContentPane().removeAll();
                     }
                 });
+                JTabbedPane tabbedPane = new JTabbedPane();
+                tabbedPane.addTab("log", createPanel());
+                tabbedPane.addTab("view", createPanel());
+                frame.add(tabbedPane);
                 refreshContentPane();
                 frame.setVisible(true);
             } else {
@@ -81,26 +95,42 @@ public class WindowUtil {
         }
     }
 
+    private static JPanel createPanel() {
+        JPanel panel = new JPanel(false);
+        panel.setLayout(new GridLayout(3, 1));
+        return panel;
+    }
+
     private static void refreshContentPane() {
         JList list = new JList(priceModel);
         list.setCellRenderer(new MyListCellRenderer());
-        JScrollPane pane = new JScrollPane(list);
-        pane.setPreferredSize(new Dimension(520, 130));
-        Container c = frame.getContentPane();
-        c.removeAll();
-        c.add(pane);
+        JScrollPane pricePane = new JScrollPane(list);
+        pricePane.setPreferredSize(new Dimension(520, 130));
 
         JList highTopList = new JList(highTopModel);
         highTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane highTopPane = new JScrollPane(highTopList);
         highTopPane.setPreferredSize(new Dimension(520, 100));
-        c.add(highTopPane);
 
         JList lowTopList = new JList(lowTopModel);
         lowTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane lowTopPane = new JScrollPane(lowTopList);
         lowTopPane.setPreferredSize(new Dimension(520, 100));
-        c.add(lowTopPane);
+
+        Container c = frame.getContentPane();
+        JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);
+        JPanel logPanel = (JPanel) tabbedPane.getComponent(0);
+        logPanel.removeAll();
+        logPanel.add(pricePane, 0);
+        logPanel.add(highTopPane, 1);
+        logPanel.add(lowTopPane, 2);
+
+        JPanel viewPanel = (JPanel) tabbedPane.getComponent(1);
+        viewPanel.removeAll();
+        JTextPane txtPane = new JTextPane();
+        FutureOverviewVO overviewVO = futureLiveService.getMarketOverview();
+        txtPane.setText(overviewVO.toString());
+        viewPanel.add(txtPane);
     }
 
     public static class MyListCellRenderer extends JLabel implements ListCellRenderer {

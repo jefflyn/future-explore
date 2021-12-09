@@ -1,6 +1,7 @@
 package com.guru.future.schedule;
 
 import com.guru.future.schedule.job.MarketOverviewJob;
+import com.guru.future.schedule.job.OpenGapJob;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
@@ -25,7 +26,7 @@ public class CronScheduleJobs {
     }
 
     private void openGapJob(Scheduler scheduler) throws SchedulerException {
-        JobDetail jobDetail = JobBuilder.newJob(MarketOverviewJob.class).withIdentity("OpenGapJob", "group1").build();
+        JobDetail jobDetail = JobBuilder.newJob(OpenGapJob.class).withIdentity("OpenGapJob", "group1").build();
         CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("3 0 9,21 ? * 2-6");
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("OpenGapJobTrigger", "group1").withSchedule(scheduleBuilder).build();
         scheduler.scheduleJob(jobDetail, cronTrigger);
