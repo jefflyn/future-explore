@@ -6,7 +6,20 @@ import org.springframework.util.NumberUtils;
 import java.math.BigDecimal;
 
 public class NumberUtil {
-    public static String decimal2String(BigDecimal numberVal) {
+
+    public static String changePrefix(BigDecimal change) {
+        if (BigDecimal.ZERO.compareTo(change) < 0) {
+            return "+" + change;
+        }
+        return change.toString();
+    }
+
+    /**
+     * 去掉无效的小数位
+     * @param numberVal
+     * @return
+     */
+    public static String price2String(BigDecimal numberVal) {
         String numberStr = String.valueOf(numberVal);
         String[] numberArr = numberStr.split("\\.");
         if (numberArr.length > 1) {

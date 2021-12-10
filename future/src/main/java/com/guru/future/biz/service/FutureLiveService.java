@@ -28,13 +28,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
-import static com.guru.future.common.utils.NumberUtil.decimal2String;
+import static com.guru.future.common.utils.NumberUtil.price2String;
 
 /**
  * @author j
@@ -73,16 +74,27 @@ public class FutureLiveService {
             futureLiveVO.setWave(FutureUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), futureLiveVO.getPrice()));
             futureLiveVOList.add(futureLiveVO);
         }
-        Collections.sort(futureLiveVOList);
         int size = futureLiveVOList.size();
         int topN = size > 10 ? 10 : size;
+        // position
+        Collections.sort(futureLiveVOList);
         List<FutureLiveVO> lowTop10List = futureLiveVOList.subList(0, topN);
         List<FutureLiveVO> highTop10List = futureLiveVOList.subList(size - topN, size);
         Collections.reverse(highTop10List);
-        LiveDataCache.setHighTop10(highTop10List);
-        LiveDataCache.setLowTop10(lowTop10List);
-//        FutureFrame futureFrame = FutureFrame.buildFutureFrame(getMarketOverview().toString());
-//        futureFrame.createMsgFrame(null);
+        LiveDataCache.setPositionHighTop10(highTop10List);
+        LiveDataCache.setPositionLowTop10(lowTop10List);
+        // change
+        Collections.sort(futureLiveVOList, new Comparator<FutureLiveVO>() {
+            @Override
+            public int compare(FutureLiveVO o1, FutureLiveVO o2) {
+                return o1.getChange().compareTo(o2.getChange());
+            }
+        });
+        List<FutureLiveVO> changeLowTop10List = futureLiveVOList.subList(0, topN);
+        List<FutureLiveVO> changeHighTop10List = futureLiveVOList.subList(size - topN, size);
+        Collections.reverse(changeHighTop10List);
+        LiveDataCache.setChangeHighTop10(changeHighTop10List);
+        LiveDataCache.setChangeLowTop10(changeLowTop10List);
     }
 
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList, Boolean refresh) {
@@ -247,6 +259,10 @@ public class FutureLiveService {
         if (totalAvgChange.compareTo(BigDecimal.ZERO) > 0) {
             Collections.reverse(categorySummaryList);
         }
+        int sortNo = 0;
+        for (FutureOverviewVO.CategorySummary categorySummary : categorySummaryList) {
+            categorySummary.setSortNo(++sortNo);
+        }
         totalAvgChange = totalAvgChange.divide(BigDecimal.valueOf(futureLiveDOList.size()), 2, RoundingMode.HALF_UP);
         FutureOverviewVO overviewVO = new FutureOverviewVO();
         overviewVO.setTotalAvgChangeStr((totalAvgChange.floatValue() > 0 ? "+" : "") + totalAvgChange + PERCENTAGE_SYMBOL);
@@ -314,12 +330,12 @@ public class FutureLiveService {
                 "<th width=\"30px\">相对位置</th>" +
                 "<th width=\"80px\">波段</th>" +
                 "</tr>");
-        for (int i = 0; i < LiveDataCache.getHighTop10().size(); i++) {
-            FutureLiveVO highTop = LiveDataCache.getHighTop10().get(i);
+        for (int i = 0; i < LiveDataCache.getPositionHighTop10().size(); i++) {
+            FutureLiveVO highTop = LiveDataCache.getPositionHighTop10().get(i);
             content.append("</tr>");
             content.append("<td style=\"text-align:left\">" + highTop.getSortNo() + "</td>");
             content.append("<td style=\"text-align:left\">" + highTop.getName() + "</td>");
-            content.append("<td style=\"text-align:center\">" + decimal2String(highTop.getPrice()) + "</td>");
+            content.append("<td style=\"text-align:center\">" + price2String(highTop.getPrice()) + "</td>");
             content.append("<td style=\"text-align:left\">" + highTop.getChange() + FutureUtil.PERCENTAGE_SYMBOL + "</td>");
             content.append("<td style=\"text-align:center\">" + highTop.getPosition() + "</td>");
             content.append("<td style=\"text-align:left\">" + highTop.getWave() + "</td>");
@@ -340,12 +356,12 @@ public class FutureLiveService {
                 "<th width=\"30px\">相对位置</th>" +
                 "<th width=\"80px\">波段</th>" +
                 "</tr>");
-        for (int i = 0; i < LiveDataCache.getLowTop10().size(); i++) {
-            FutureLiveVO lowTop = LiveDataCache.getLowTop10().get(i);
+        for (int i = 0; i < LiveDataCache.getPositionLowTop10().size(); i++) {
+            FutureLiveVO lowTop = LiveDataCache.getPositionLowTop10().get(i);
             content.append("</tr>");
             content.append("<td style=\"text-align:left\">" + lowTop.getSortNo() + "</td>");
             content.append("<td style=\"text-align:left\">" + lowTop.getName() + "</td>");
-            content.append("<td style=\"text-align:center\">" + decimal2String(lowTop.getPrice()) + "</td>");
+            content.append("<td style=\"text-align:center\">" + price2String(lowTop.getPrice()) + "</td>");
             content.append("<td style=\"text-align:left\">" + lowTop.getChange() + FutureUtil.PERCENTAGE_SYMBOL + "</td>");
             content.append("<td style=\"text-align:center\">" + lowTop.getPosition() + "</td>");
             content.append("<td style=\"text-align:left\">" + lowTop.getWave() + "</td>");

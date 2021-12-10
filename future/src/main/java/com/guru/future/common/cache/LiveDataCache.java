@@ -3,6 +3,7 @@ package com.guru.future.common.cache;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.guru.future.common.entity.vo.FutureLiveVO;
+import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +16,16 @@ public class LiveDataCache {
             .expireAfterWrite(3, TimeUnit.MINUTES)
             .maximumSize(20)
             .build();
-    //    private static Map<String, FutureLiveVO> top10Snapshot = new HashMap<>(20);
-    private static List<FutureLiveVO> highTop10 = new ArrayList<>(10);
-    private static List<FutureLiveVO> lowTop10 = new ArrayList<>(10);
+    private static List<FutureLiveVO> positionHighTop10 = new ArrayList<>(10);
+    private static List<FutureLiveVO> positionLowTop10 = new ArrayList<>(10);
+    private static List<FutureLiveVO> changeHighTop10 = new ArrayList<>(10);
+    private static List<FutureLiveVO> changeLowTop10 = new ArrayList<>(10);
 
     private LiveDataCache() {
     }
 
-    public static void setHighTop10(List<FutureLiveVO> futureLiveVOList) {
-        highTop10.clear();
+    public static void setPositionHighTop10(List<FutureLiveVO> futureLiveVOList) {
+        positionHighTop10.clear();
         for (int i = 0; i < futureLiveVOList.size(); i++) {
             FutureLiveVO highTopVo = futureLiveVOList.get(i);
             highTopVo.setSortNo(i + 1);
@@ -34,12 +36,12 @@ public class LiveDataCache {
             } else {
                 top10Snapshot.put(highTopVo.getName(), highTopVo);
             }
-            highTop10.add(highTopVo);
+            positionHighTop10.add(highTopVo);
         }
     }
 
-    public static void setLowTop10(List<FutureLiveVO> futureLiveVOList) {
-        lowTop10.clear();
+    public static void setPositionLowTop10(List<FutureLiveVO> futureLiveVOList) {
+        positionLowTop10.clear();
         for (int i = 0; i < futureLiveVOList.size(); i++) {
             FutureLiveVO lowTopVo = futureLiveVOList.get(i);
             lowTopVo.setSortNo(i + 1);
@@ -50,15 +52,49 @@ public class LiveDataCache {
             } else {
                 top10Snapshot.put(lowTopVo.getName(), lowTopVo);
             }
-            lowTop10.add(lowTopVo);
+            positionLowTop10.add(lowTopVo);
         }
     }
 
-    public static List<FutureLiveVO> getHighTop10() {
-        return highTop10;
+    public static List<FutureLiveVO> getPositionHighTop10() {
+        return positionHighTop10;
     }
 
-    public static List<FutureLiveVO> getLowTop10() {
-        return lowTop10;
+    public static List<FutureLiveVO> getPositionLowTop10() {
+        return positionLowTop10;
+    }
+
+    public static void setChangeHighTop10(List<FutureLiveVO> changeHighTop10List) {
+        changeHighTop10.clear();
+        for (int i = 0; i < changeHighTop10List.size(); i++) {
+            FutureLiveVO highTopVo = changeHighTop10List.get(i);
+            FutureLiveVO newVo = new FutureLiveVO();
+            BeanUtils.copyProperties(highTopVo, newVo);
+            newVo.setSortNo(i + 1);
+            newVo.setHighTop(true);
+            newVo.setDirection("");
+            changeHighTop10.add(newVo);
+        }
+    }
+
+    public static List<FutureLiveVO> getChangeHighTop10() {
+        return changeHighTop10;
+    }
+
+    public static void setChangeLowTop10(List<FutureLiveVO> changeLowTop10List) {
+        changeLowTop10.clear();
+        for (int i = 0; i < changeLowTop10List.size(); i++) {
+            FutureLiveVO lowTopVo = changeLowTop10List.get(i);
+            FutureLiveVO newVo = new FutureLiveVO();
+            BeanUtils.copyProperties(lowTopVo, newVo);
+            newVo.setSortNo(i + 1);
+            newVo.setHighTop(false);
+            newVo.setDirection("");
+            changeLowTop10.add(newVo);
+        }
+    }
+
+    public static List<FutureLiveVO> getChangeLowTop10() {
+        return changeLowTop10;
     }
 }

@@ -12,7 +12,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import java.awt.Color;
 import java.awt.Component;
@@ -31,6 +31,8 @@ public class FutureFrame {
     private static DefaultListModel<JLabel> priceModel = new DefaultListModel<>();
     private static DefaultListModel<JLabel> highTopModel = new DefaultListModel<>();
     private static DefaultListModel<JLabel> lowTopModel = new DefaultListModel<>();
+    private static DefaultListModel<JLabel> changeHighTopModel = new DefaultListModel<>();
+    private static DefaultListModel<JLabel> changeLowTopModel = new DefaultListModel<>();
     private static String overview;
 
     private FutureFrame() {
@@ -46,17 +48,31 @@ public class FutureFrame {
     private void buildTopModel() {
         highTopModel = new DefaultListModel<>();
         lowTopModel = new DefaultListModel<>();
-        for (int i = 0; i < LiveDataCache.getHighTop10().size(); i++) {
-            FutureLiveVO highTop = LiveDataCache.getHighTop10().get(i);
+        for (int i = 0; i < LiveDataCache.getPositionHighTop10().size(); i++) {
+            FutureLiveVO highTop = LiveDataCache.getPositionHighTop10().get(i);
             JLabel label = new JLabel();
             label.setText(highTop.toString());
             highTopModel.add(i, label);
         }
-        for (int i = 0; i < LiveDataCache.getLowTop10().size(); i++) {
-            FutureLiveVO lowTop = LiveDataCache.getLowTop10().get(i);
+        for (int i = 0; i < LiveDataCache.getPositionLowTop10().size(); i++) {
+            FutureLiveVO lowTop = LiveDataCache.getPositionLowTop10().get(i);
             JLabel label = new JLabel();
             label.setText(lowTop.toString());
             lowTopModel.add(i, label);
+        }
+        changeHighTopModel = new DefaultListModel<>();
+        changeLowTopModel = new DefaultListModel<>();
+        for (int i = 0; i < LiveDataCache.getChangeHighTop10().size(); i++) {
+            FutureLiveVO highTop = LiveDataCache.getChangeHighTop10().get(i);
+            JLabel label = new JLabel();
+            label.setText(highTop.toString());
+            changeHighTopModel.add(i, label);
+        }
+        for (int i = 0; i < LiveDataCache.getChangeLowTop10().size(); i++) {
+            FutureLiveVO lowTop = LiveDataCache.getChangeLowTop10().get(i);
+            JLabel label = new JLabel();
+            label.setText(lowTop.toString());
+            changeLowTopModel.add(i, label);
         }
     }
 
@@ -114,6 +130,9 @@ public class FutureFrame {
         return panel;
     }
 
+    /**
+     * 刷新面板数据
+     */
     private void refreshContentPane() {
         JList list = new JList(priceModel);
         list.setCellRenderer(new MyListCellRenderer());
@@ -138,11 +157,27 @@ public class FutureFrame {
         logPanel.add(highTopPane, 1);
         logPanel.add(lowTopPane, 2);
 
+        // overview tab
+        JTextArea overviewTxt = new JTextArea(overview);
+        overviewTxt.setEditable(false);
+        JScrollPane overviewPane = new JScrollPane(overviewTxt);
+        overviewPane.setPreferredSize(new Dimension(520, 130));
+
+        JList changeHighTopList = new JList(changeHighTopModel);
+        changeHighTopList.setCellRenderer(new MyListCellRenderer());
+        JScrollPane changeHighTopPane = new JScrollPane(changeHighTopList);
+        changeHighTopPane.setPreferredSize(new Dimension(520, 85));
+
+        JList changeLowTopList = new JList(changeLowTopModel);
+        changeLowTopList.setCellRenderer(new MyListCellRenderer());
+        JScrollPane changeLowTopPane = new JScrollPane(changeLowTopList);
+        changeLowTopPane.setPreferredSize(new Dimension(520, 85));
+
         JPanel viewPanel = (JPanel) tabbedPane.getComponent(1);
         viewPanel.removeAll();
-        JTextPane txtPane = new JTextPane();
-        txtPane.setText(overview);
-        viewPanel.add(txtPane);
+        viewPanel.add(overviewPane, 0);
+        viewPanel.add(changeHighTopPane, 1);
+        viewPanel.add(changeLowTopPane, 2);
     }
 
     public static class MyListCellRenderer extends JLabel implements ListCellRenderer {

@@ -1,5 +1,6 @@
 package com.guru.future.common.entity.vo;
 
+import com.guru.future.common.utils.NumberUtil;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -15,6 +16,8 @@ public class FutureOverviewVO {
 
     @Data
     public static class CategorySummary implements Comparable<CategorySummary> {
+        private  Integer sortNo;
+
         private String categoryName;
 
         private BigDecimal avgChange;
@@ -43,13 +46,14 @@ public class FutureOverviewVO {
     public String toString(){
         StringBuilder resultStr = new StringBuilder("市场平均涨幅: " + getTotalAvgChangeStr() + "【" + getOverviewDesc() + "】\n");
         for (FutureOverviewVO.CategorySummary categorySummary : getCategorySummaryList()) {
-            resultStr.append(String.format("%-4s", categorySummary.getCategoryName()))
+            resultStr.append(categorySummary.getSortNo()).append(".")
+                    .append(String.format("%-4s", categorySummary.getCategoryName()))
                     .append(categorySummary.getAvgChangeStr())
                     .append(" 【")
                     .append(String.format("%s: ", categorySummary.getBestName()))
-                    .append(categorySummary.getBestChange()).append("(").append(categorySummary.getBestPrice()).append("), ")
+                    .append(categorySummary.getBestChange()).append(" ").append(NumberUtil.price2String(categorySummary.getBestPrice())).append(" | ")
                     .append(String.format("%s: ", categorySummary.getWorstName()))
-                    .append(categorySummary.getWorstChange()).append("(").append(categorySummary.getWorstPrice()).append(")")
+                    .append(categorySummary.getWorstChange()).append(" ").append(NumberUtil.price2String(categorySummary.getWorstPrice()))
                     .append("】\n");
         }
         return resultStr.toString();

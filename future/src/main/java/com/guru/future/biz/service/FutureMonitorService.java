@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.atomic.LongAdder;
 
-import static com.guru.future.common.utils.NumberUtil.decimal2String;
+import static com.guru.future.common.utils.NumberUtil.price2String;
 
 @Service
 @Slf4j
@@ -228,7 +228,7 @@ public class FutureMonitorService {
         StringBuilder content = new StringBuilder();
         content.append(futureLogDO.getType()).append(" ").append(factorStr).append(diffStr)
                 .append("【").append(futureLogDO.getContent()).append("】")
-                .append(futureLogDO.getOption()).append(" ").append(decimal2String(futureLogDO.getSuggest()))
+                .append(futureLogDO.getOption()).append(" ").append(price2String(futureLogDO.getSuggest()))
                 .append(" ").append(futureLogDO.getPctChange()).append("%")
                 .append("【").append(futureLogDO.getPosition()).append("】");
         // show msg frame
