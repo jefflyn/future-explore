@@ -1,15 +1,11 @@
-package com.guru.future.common.utils;
+package com.guru.future.common.ui;
 
 import com.google.common.base.Strings;
-import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.cache.LiveDataCache;
 import com.guru.future.common.entity.vo.FutureLiveVO;
-import com.guru.future.common.entity.vo.FutureOverviewVO;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Resource;
 import javax.swing.DefaultListModel;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -23,7 +19,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -31,15 +26,24 @@ import java.awt.event.WindowEvent;
  * @author j
  */
 @Slf4j
-public class WindowUtil {
+public class FutureFrame {
     private static JFrame frame = null;
     private static DefaultListModel<JLabel> priceModel = new DefaultListModel<>();
     private static DefaultListModel<JLabel> highTopModel = new DefaultListModel<>();
     private static DefaultListModel<JLabel> lowTopModel = new DefaultListModel<>();
-    @Resource
-    private static FutureLiveService futureLiveService;
+    private static String overview;
 
-    private static void buildTopModel() {
+    private FutureFrame() {
+    }
+
+    public static FutureFrame buildFutureFrame(String overviewStr) {
+        if (!Strings.isNullOrEmpty(overviewStr)) {
+            overview = overviewStr;
+        }
+        return new FutureFrame();
+    }
+
+    private void buildTopModel() {
         highTopModel = new DefaultListModel<>();
         lowTopModel = new DefaultListModel<>();
         for (int i = 0; i < LiveDataCache.getHighTop10().size(); i++) {
@@ -56,7 +60,7 @@ public class WindowUtil {
         }
     }
 
-    public static void createMsgFrame(String content) {
+    public void createMsgFrame(String content) {
         try {
 //          Runtime.getRuntime().exec("say ");
             if (!Strings.isNullOrEmpty(content)) {
@@ -70,19 +74,24 @@ public class WindowUtil {
             }
             buildTopModel();
             if (frame == null) {
-                frame = new JFrame("Trade Log");
+                frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 530, 358);
+                frame.setBounds(0, 1000, 530, 390);
                 frame.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e) {
                         frame.dispose();
-                        frame.getContentPane().removeAll();
+//                        Container c = frame.getContentPane();
+//                        JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);
+//                        for (Component component : tabbedPane.getComponents()) {
+//                            JPanel panel = (JPanel) component;
+//                            panel.removeAll();
+//                        }
                     }
                 });
                 JTabbedPane tabbedPane = new JTabbedPane();
-                tabbedPane.addTab("log", createPanel());
-                tabbedPane.addTab("view", createPanel());
+                tabbedPane.addTab("trade log", createPanel());
+                tabbedPane.addTab("overview", createPanel());
                 frame.add(tabbedPane);
                 refreshContentPane();
                 frame.setVisible(true);
@@ -90,18 +99,22 @@ public class WindowUtil {
                 refreshContentPane();
             }
             frame.validate();
+//            if (Boolean.FALSE.equals(frame.isVisible())) {
+//                frame.setVisible(true);
+//            }
         } catch (Exception e) {
             log.error("create trade log frame failed, error={}", e);
         }
     }
 
-    private static JPanel createPanel() {
+    private JPanel createPanel() {
         JPanel panel = new JPanel(false);
-        panel.setLayout(new GridLayout(3, 1));
+//        panel.setLayout(new GridLayout(3, 1));
+        panel.setPreferredSize(new Dimension(520, 360));
         return panel;
     }
 
-    private static void refreshContentPane() {
+    private void refreshContentPane() {
         JList list = new JList(priceModel);
         list.setCellRenderer(new MyListCellRenderer());
         JScrollPane pricePane = new JScrollPane(list);
@@ -110,12 +123,12 @@ public class WindowUtil {
         JList highTopList = new JList(highTopModel);
         highTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane highTopPane = new JScrollPane(highTopList);
-        highTopPane.setPreferredSize(new Dimension(520, 100));
+        highTopPane.setPreferredSize(new Dimension(520, 85));
 
         JList lowTopList = new JList(lowTopModel);
         lowTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane lowTopPane = new JScrollPane(lowTopList);
-        lowTopPane.setPreferredSize(new Dimension(520, 100));
+        lowTopPane.setPreferredSize(new Dimension(520, 85));
 
         Container c = frame.getContentPane();
         JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);
@@ -128,8 +141,7 @@ public class WindowUtil {
         JPanel viewPanel = (JPanel) tabbedPane.getComponent(1);
         viewPanel.removeAll();
         JTextPane txtPane = new JTextPane();
-        FutureOverviewVO overviewVO = futureLiveService.getMarketOverview();
-        txtPane.setText(overviewVO.toString());
+        txtPane.setText(overview);
         viewPanel.add(txtPane);
     }
 
@@ -148,12 +160,6 @@ public class WindowUtil {
                 setForeground(Color.BLACK);
             }
             return this;
-        }
-    }
-
-    public static void main(String[] args) {
-        for (int i = 0; i < 20; i++) {
-            WindowUtil.createMsgFrame("A2201" + i + ": 50秒 上涨0.36%【823.0-826.0】看多");
         }
     }
 }

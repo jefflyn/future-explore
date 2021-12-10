@@ -5,9 +5,9 @@ import com.guru.future.biz.manager.FutureLogManager;
 import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.enums.CollectType;
+import com.guru.future.common.ui.FutureFrame;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.FutureUtil;
-import com.guru.future.common.utils.WindowUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -44,6 +43,7 @@ public class FutureMonitorService {
 
     @Resource
     private FutureCollectService collectService;
+
     @Resource
     private FutureLogManager futureLogManager;
 
@@ -196,7 +196,7 @@ public class FutureMonitorService {
     }
 
     @Async
-    public void addNewHighLowLog(ContractRealtimeDTO contractRealtimeDTO, Boolean newHigh){
+    public void addNewHighLowLog(ContractRealtimeDTO contractRealtimeDTO, Boolean newHigh) {
         FutureLogDO futureLogDO = new FutureLogDO();
         futureLogDO.setTradeDate(DateUtil.currentTradeDate());
         futureLogDO.setCode(contractRealtimeDTO.getCode());
@@ -232,7 +232,8 @@ public class FutureMonitorService {
                 .append(" ").append(futureLogDO.getPctChange()).append("%")
                 .append("【").append(futureLogDO.getPosition()).append("】");
         // show msg frame
-        WindowUtil.createMsgFrame(DateUtil.currentTime() + " "
+        FutureFrame futureFrame = FutureFrame.buildFutureFrame(null);
+        futureFrame.createMsgFrame(DateUtil.currentTime() + " "
                 + futureLogDO.getName() + " " + content);
     }
 }

@@ -81,6 +81,14 @@ public class DateUtil {
         return DateFormatUtils.format(date, TRADE_DATE_PATTERN);
     }
 
+    public static String latestTradeDate() {
+        Date date = new Date();
+        if (Boolean.TRUE.equals(isHoliday(date))) {
+            return getLastTradeDate(date);
+        }
+        return DateFormatUtils.format(date, TRADE_DATE_PATTERN);
+    }
+
     public static String currentTime() {
         Date date = new Date();
         return DateFormatUtils.format(date, TIME_PATTERN);
@@ -191,9 +199,10 @@ public class DateUtil {
         String nightOpen = "21:00:00";
         String nightClose = "23:00:00";
 
-        return (nowTime.compareTo(morningOpen) >= 0 && nowTime.compareTo(morningClose) <= 0)
-                || (nowTime.compareTo(afternoonOpen) >= 0 && nowTime.compareTo(AFTERNOON_CLOSE_TIME) <= 0)
-                || (nowTime.compareTo(nightOpen) >= 0 && nowTime.compareTo(nightClose) <= 0);
+        return true; // temp
+//        return (nowTime.compareTo(morningOpen) >= 0 && nowTime.compareTo(morningClose) <= 0)
+//                || (nowTime.compareTo(afternoonOpen) >= 0 && nowTime.compareTo(AFTERNOON_CLOSE_TIME) <= 0)
+//                || (nowTime.compareTo(nightOpen) >= 0 && nowTime.compareTo(nightClose) <= 0);
     }
 
     public static Boolean isPriceMonitorTime() {

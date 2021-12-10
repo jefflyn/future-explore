@@ -5,6 +5,7 @@ import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
+import com.guru.future.common.ui.FutureFrame;
 import com.guru.future.common.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -68,6 +69,8 @@ public class FutureTaskDispatcher {
             List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getRealtimeFromSina(codeList);
             // async live data
             futureLiveService.refreshLiveData(contractRealtimeDTOList, REFRESH);
+            FutureFrame futureFrame = FutureFrame.buildFutureFrame(futureLiveService.getMarketOverview().toString());
+            futureFrame.createMsgFrame(null);
             REFRESH = false;
             TimeUnit.SECONDS.sleep(2L);
         }

@@ -103,7 +103,7 @@ public class FutureDailyService {
 
     public PositionCollectVO getCurrentPositionList(String tradeDate, List<String> codes) {
         if (Strings.isNullOrEmpty(tradeDate)) {
-            tradeDate = DateUtil.getLastTradeDate("");
+            tradeDate = DateUtil.latestTradeDate();
         }
         if (CollectionUtils.isEmpty(codes)) {
             codes = Lists.newArrayList("AP2205", "CJ2205", "CF2205", "RU2205", "SA2205", "NI2202", "P2205", "EG2205", "UR2205", "J2205", "FU2205", "SF2205", "I2205", "RB2205");
