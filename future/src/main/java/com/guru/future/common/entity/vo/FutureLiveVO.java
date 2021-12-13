@@ -37,7 +37,7 @@ public class FutureLiveVO implements Comparable<FutureLiveVO> {
 
     @Override
     public String toString() {
-        String lowHigh = highTop ? "【" + price2String(low) + "-" + price2String(high) + "】"
+        String lowHigh = Boolean.TRUE.equals(highTop) ? "【" + price2String(low) + "-" + price2String(high) + "】"
                 : "【" + price2String(high) + "-" + price2String(low) + "】";
         return sortNo + direction + " " + name + " " + NumberUtil.changePrefix(change) + FutureUtil.PERCENTAGE_SYMBOL
                 + lowHigh + price2String(price) + "【" + position + "】" + wave;

@@ -184,7 +184,7 @@ public class FutureMonitorService {
             futureLogDO.setContent(content.toString());
             futureLogDO.setSuggest(suggestPrice);
             futureLogDO.setPctChange(futureLiveDO.getChange());
-            futureLogDO.setPosition(futureLiveDO.getPosition().intValue());
+            futureLogDO.setPosition(futureLiveDO.getPosition());
             futureLogDO.setRemark(logType + " " + histHighLowFlag);
             this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
@@ -202,7 +202,7 @@ public class FutureMonitorService {
         futureLogDO.setCode(contractRealtimeDTO.getCode());
         futureLogDO.setFactor(-1);
         futureLogDO.setName(contractRealtimeDTO.getName());
-        if (newHigh) {
+        if (Boolean.TRUE.equals(newHigh)) {
             futureLogDO.setType("波段新高");
             futureLogDO.setContent("波段新高");
             futureLogDO.setOption("做多");

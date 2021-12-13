@@ -199,10 +199,10 @@ public class DateUtil {
         String nightOpen = "21:00:00";
         String nightClose = "23:00:00";
 
-        return true; // temp
-//        return (nowTime.compareTo(morningOpen) >= 0 && nowTime.compareTo(morningClose) <= 0)
-//                || (nowTime.compareTo(afternoonOpen) >= 0 && nowTime.compareTo(AFTERNOON_CLOSE_TIME) <= 0)
-//                || (nowTime.compareTo(nightOpen) >= 0 && nowTime.compareTo(nightClose) <= 0);
+//        return true; // temp
+        return (nowTime.compareTo(morningOpen) >= 0 && nowTime.compareTo(morningClose) <= 0)
+                || (nowTime.compareTo(afternoonOpen) >= 0 && nowTime.compareTo(AFTERNOON_CLOSE_TIME) <= 0)
+                || (nowTime.compareTo(nightOpen) >= 0 && nowTime.compareTo(nightClose) <= 0);
     }
 
     public static Boolean isPriceMonitorTime() {

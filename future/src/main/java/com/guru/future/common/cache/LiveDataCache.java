@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class LiveDataCache {
-    public final static String SYMBOL_UP = "↑";
-    public final static String SYMBOL_DOWN = "↓";
+    public static final String SYMBOL_UP = "↑";
+    public static final String SYMBOL_DOWN = "↓";
     private static Cache<String, FutureLiveVO> top10Snapshot = Caffeine.newBuilder()
             .expireAfterWrite(3, TimeUnit.MINUTES)
             .maximumSize(20)

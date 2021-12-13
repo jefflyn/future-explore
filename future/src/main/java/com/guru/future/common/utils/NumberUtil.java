@@ -7,6 +7,9 @@ import java.math.BigDecimal;
 
 public class NumberUtil {
 
+    private NumberUtil(){
+    }
+
     public static String changePrefix(BigDecimal change) {
         if (BigDecimal.ZERO.compareTo(change) < 0) {
             return "+" + change;
