@@ -36,7 +36,7 @@ public class FutureMonitorService {
     private static Map<String, Map<BigDecimal, LongAdder>> positionCount = new HashMap<>();
 
     static {
-//        MONITOR_PARAMS.add(Pair.with(30, 0.33F));
+        MONITOR_PARAMS.add(Pair.with(30, 0.33F));
         MONITOR_PARAMS.add(Pair.with(60, 0.66F));
         MONITOR_PARAMS.add(Pair.with(120, 1F));
     }
@@ -169,7 +169,8 @@ public class FutureMonitorService {
         if (isTrigger) {
             boolean isUp = price.compareTo(lastPrice) > 0;
             BigDecimal suggestPrice = lastPrice;
-            String logType = (isUp ? "上涨" : "下跌") + blastTip;
+            String positionStr = futureLiveDO.getPosition() > 85 ? "高位" : futureLiveDO.getPosition() < 15 ? "低位" : "";
+            String logType = positionStr + (isUp ? "上涨" : "下跌") + blastTip;
             String suggestParam = (isUp ? "做多" : "做空");
             StringBuilder content = new StringBuilder();
             content.append(lastPrice).append("-").append(price);
@@ -189,7 +190,7 @@ public class FutureMonitorService {
             this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
             log.info("add price flash log >>> {}, {}", futureLogDO.getName(), futureLogDO.getDiff());
-            collectService.scheduleTradeDailyCollect(Lists.newArrayList(code), CollectType.COLLECT_SCHEDULE);
+//            collectService.scheduleTradeDailyCollect(Lists.newArrayList(code), CollectType.COLLECT_SCHEDULE);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(cachedKey);
         }
