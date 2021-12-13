@@ -162,7 +162,8 @@ public class FutureLiveService {
         BigDecimal waveC = futureBasicDO.getC();
         // up wave
         if (waveC.floatValue() >= waveB.floatValue()) {
-            if (contractRealtimeDTO.getPrice().floatValue() > waveC.floatValue()) {
+            if (contractRealtimeDTO.getPrice().floatValue() > waveC.floatValue()
+                    || contractRealtimeDTO.getHigh().floatValue() > waveC.floatValue()) {
                 monitorService.addNewHighLowLog(contractRealtimeDTO, true);
 
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
@@ -172,7 +173,8 @@ public class FutureLiveService {
                 futureBasicManager.updateBasic(updateBasicDO);
                 log.info("update c with high = {}", JSON.toJSONString(updateBasicDO));
             }
-            if (contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue()) {
+            if (contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue()
+                    || contractRealtimeDTO.getHigh().floatValue() < waveB.floatValue()) {
                 monitorService.addNewHighLowLog(contractRealtimeDTO, false);
 
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
@@ -184,7 +186,8 @@ public class FutureLiveService {
                 log.info("update b with low c with high = {}", JSON.toJSONString(updateBasicDO));
             }
         } else {
-            if (contractRealtimeDTO.getPrice().floatValue() < waveC.floatValue()) {
+            if (contractRealtimeDTO.getPrice().floatValue() < waveC.floatValue()
+                    || contractRealtimeDTO.getLow().floatValue() < waveC.floatValue()) {
                 monitorService.addNewHighLowLog(contractRealtimeDTO, false);
 
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
@@ -194,7 +197,8 @@ public class FutureLiveService {
                 futureBasicManager.updateBasic(updateBasicDO);
                 log.info("update c with low = {}", JSON.toJSONString(updateBasicDO));
             }
-            if (contractRealtimeDTO.getPrice().floatValue() > waveB.floatValue()) {
+            if (contractRealtimeDTO.getPrice().floatValue() > waveB.floatValue()
+                    || contractRealtimeDTO.getLow().floatValue() > waveB.floatValue()) {
                 monitorService.addNewHighLowLog(contractRealtimeDTO, true);
 
                 FutureBasicDO updateBasicDO = new FutureBasicDO();

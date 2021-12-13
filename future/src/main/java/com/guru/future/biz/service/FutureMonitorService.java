@@ -9,6 +9,7 @@ import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.Strings;
 import org.javatuples.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -171,7 +172,7 @@ public class FutureMonitorService {
             String suggestParam = (isUp ? "做多" : "做空");
             String positionStr = futureLiveDO.getPosition() > 85 ? "高位" : futureLiveDO.getPosition() < 15 ? "低位" : "";
             StringBuilder content = new StringBuilder();
-            content.append(positionStr + logType + "!!!");
+            content.append(positionStr + logType + (Strings.isNotBlank(positionStr) ? "!!!" : ""));
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
