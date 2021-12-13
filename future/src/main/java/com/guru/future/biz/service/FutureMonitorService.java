@@ -1,10 +1,8 @@
 package com.guru.future.biz.service;
 
-import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureLogManager;
 import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
-import com.guru.future.common.enums.CollectType;
 import com.guru.future.common.ui.FutureFrame;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.FutureUtil;
@@ -36,7 +34,7 @@ public class FutureMonitorService {
     private static Map<String, Map<BigDecimal, LongAdder>> positionCount = new HashMap<>();
 
     static {
-        MONITOR_PARAMS.add(Pair.with(30, 0.33F));
+        MONITOR_PARAMS.add(Pair.with(30, 0.5F));
         MONITOR_PARAMS.add(Pair.with(60, 0.66F));
         MONITOR_PARAMS.add(Pair.with(120, 1F));
     }
