@@ -169,11 +169,11 @@ public class FutureMonitorService {
         if (isTrigger) {
             boolean isUp = price.compareTo(lastPrice) > 0;
             BigDecimal suggestPrice = lastPrice;
-            String positionStr = futureLiveDO.getPosition() > 85 ? "高位" : futureLiveDO.getPosition() < 15 ? "低位" : "";
-            String logType = positionStr + (isUp ? "上涨" : "下跌") + blastTip;
+            String logType = (isUp ? "上涨" : "下跌") + blastTip;
             String suggestParam = (isUp ? "做多" : "做空");
+            String positionStr = futureLiveDO.getPosition() > 85 ? "高位" : futureLiveDO.getPosition() < 15 ? "低位" : "";
             StringBuilder content = new StringBuilder();
-            content.append(lastPrice).append("-").append(price);
+            content.append(positionStr + logType + "!!!");
             FutureLogDO futureLogDO = new FutureLogDO();
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
