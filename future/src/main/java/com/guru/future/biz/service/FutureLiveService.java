@@ -103,6 +103,7 @@ public class FutureLiveService {
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureBasicDO futureBasicDO = basicMap.get(contractRealtimeDTO.getCode());
             if (DateUtil.isNight() && Boolean.FALSE.equals(futureBasicDO.hasNightTrade())) {
+                log.info(futureBasicDO.getName() + "has not night trade, skip");
                 continue;
             }
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);

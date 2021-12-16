@@ -34,7 +34,7 @@ public class CronScheduleJobs {
 
     private void marketOverviewJob(Scheduler scheduler) throws SchedulerException {
         JobDetail jobDetail = JobBuilder.newJob(MarketOverviewJob.class).withIdentity("MarketOverviewJob", "group1").build();
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 10 9,21,22 ? * 2-6");
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 20 21 ? * 2-6");
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("MarketOverviewTrigger", "group1").withSchedule(scheduleBuilder).build();
         scheduler.scheduleJob(jobDetail, cronTrigger);
     }

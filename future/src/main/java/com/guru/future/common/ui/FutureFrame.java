@@ -65,7 +65,7 @@ public class FutureFrame {
         for (int i = 0; i < LiveDataCache.getChangeHighTop10().size(); i++) {
             FutureLiveVO highTop = LiveDataCache.getChangeHighTop10().get(i);
             JLabel label = new JLabel();
-            label.setText(highTop.toString());
+            label.setText(highTop.toString() + " 做多");
             changeHighTopModel.add(i, label);
         }
         for (int i = 0; i < LiveDataCache.getChangeLowTop10().size(); i++) {
@@ -187,7 +187,8 @@ public class FutureFrame {
             // 设置JLable的文字
             JLabel text = (JLabel) value;
             setText(text.getText());
-            if (text.getText().contains("多") || text.getText().contains(LiveDataCache.SYMBOL_UP)) {
+            if (text.getText().contains("多")
+                    || text.getText().contains(LiveDataCache.SYMBOL_UP)) {
                 setForeground(Color.RED);
             } else if (text.getText().contains(LiveDataCache.SYMBOL_DOWN)) {
                 setForeground(Color.GREEN);
