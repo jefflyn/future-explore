@@ -21,31 +21,40 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author j
  */
 @Slf4j
 public class FutureFrame {
-    private static JFrame frame = null;
-    private static DefaultListModel<JLabel> priceModel = new DefaultListModel<>();
-    private static DefaultListModel<JLabel> highTopModel = new DefaultListModel<>();
-    private static DefaultListModel<JLabel> lowTopModel = new DefaultListModel<>();
-    private static DefaultListModel<JLabel> changeHighTopModel = new DefaultListModel<>();
-    private static DefaultListModel<JLabel> changeLowTopModel = new DefaultListModel<>();
+    private static FutureFrame futureFrame;
     private static String overview;
+
+    private JFrame frame;
+    private DefaultListModel<JLabel> priceModel = new DefaultListModel<>();
+    private DefaultListModel<JLabel> highTopModel = new DefaultListModel<>();
+    private DefaultListModel<JLabel> lowTopModel = new DefaultListModel<>();
+    private DefaultListModel<JLabel> changeHighTopModel = new DefaultListModel<>();
+    private DefaultListModel<JLabel> changeLowTopModel = new DefaultListModel<>();
+
+    private ReentrantLock lock = new ReentrantLock();
 
     private FutureFrame() {
     }
 
-    public static FutureFrame buildFutureFrame(String overviewStr) {
+    public static synchronized FutureFrame buildFutureFrame(String overviewStr) {
         if (!Strings.isNullOrEmpty(overviewStr)) {
             overview = overviewStr;
         }
-        return new FutureFrame();
+        if (futureFrame == null) {
+            futureFrame = new FutureFrame();
+        }
+        return futureFrame;
     }
 
     private void buildTopModel() {
+        lock.lock();
         highTopModel = new DefaultListModel<>();
         lowTopModel = new DefaultListModel<>();
         for (int i = 0; i < LiveDataCache.getPositionHighTop10().size(); i++) {
@@ -74,11 +83,11 @@ public class FutureFrame {
             label.setText(lowTop.toString());
             changeLowTopModel.add(i, label);
         }
+        lock.unlock();
     }
 
     public void createMsgFrame(String content) {
         try {
-//          Runtime.getRuntime().exec("say ");
             if (!Strings.isNullOrEmpty(content)) {
                 JLabel label = new JLabel();
                 label.setText(content);
@@ -97,12 +106,6 @@ public class FutureFrame {
                     @Override
                     public void windowClosing(WindowEvent e) {
                         frame.dispose();
-//                        Container c = frame.getContentPane();
-//                        JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);
-//                        for (Component component : tabbedPane.getComponents()) {
-//                            JPanel panel = (JPanel) component;
-//                            panel.removeAll();
-//                        }
                     }
                 });
                 JTabbedPane tabbedPane = new JTabbedPane();
@@ -115,9 +118,6 @@ public class FutureFrame {
                 refreshContentPane();
             }
             frame.validate();
-//            if (Boolean.FALSE.equals(frame.isVisible())) {
-//                frame.setVisible(true);
-//            }
         } catch (Exception e) {
             log.error("create trade log frame failed, error={}", e);
         }
@@ -125,7 +125,6 @@ public class FutureFrame {
 
     private JPanel createPanel() {
         JPanel panel = new JPanel(false);
-//        panel.setLayout(new GridLayout(3, 1));
         panel.setPreferredSize(new Dimension(520, 360));
         return panel;
     }
@@ -134,17 +133,17 @@ public class FutureFrame {
      * 刷新面板数据
      */
     private void refreshContentPane() {
-        JList list = new JList(priceModel);
+        JList<JLabel> list = new JList<>(priceModel);
         list.setCellRenderer(new MyListCellRenderer());
         JScrollPane pricePane = new JScrollPane(list);
         pricePane.setPreferredSize(new Dimension(520, 130));
 
-        JList highTopList = new JList(highTopModel);
+        JList<JLabel> highTopList = new JList<>(highTopModel);
         highTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane highTopPane = new JScrollPane(highTopList);
         highTopPane.setPreferredSize(new Dimension(520, 85));
 
-        JList lowTopList = new JList(lowTopModel);
+        JList<JLabel> lowTopList = new JList<>(lowTopModel);
         lowTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane lowTopPane = new JScrollPane(lowTopList);
         lowTopPane.setPreferredSize(new Dimension(520, 85));
@@ -153,9 +152,6 @@ public class FutureFrame {
         JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);
         JPanel logPanel = (JPanel) tabbedPane.getComponent(0);
         logPanel.removeAll();
-        logPanel.add(pricePane, 0);
-        logPanel.add(highTopPane, 1);
-        logPanel.add(lowTopPane, 2);
 
         // overview tab
         JTextArea overviewTxt = new JTextArea(overview);
@@ -163,24 +159,31 @@ public class FutureFrame {
         JScrollPane overviewPane = new JScrollPane(overviewTxt);
         overviewPane.setPreferredSize(new Dimension(520, 130));
 
-        JList changeHighTopList = new JList(changeHighTopModel);
+        JList<JLabel> changeHighTopList = new JList<>(changeHighTopModel);
         changeHighTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane changeHighTopPane = new JScrollPane(changeHighTopList);
         changeHighTopPane.setPreferredSize(new Dimension(520, 85));
 
-        JList changeLowTopList = new JList(changeLowTopModel);
+        JList<JLabel> changeLowTopList = new JList<>(changeLowTopModel);
         changeLowTopList.setCellRenderer(new MyListCellRenderer());
         JScrollPane changeLowTopPane = new JScrollPane(changeLowTopList);
         changeLowTopPane.setPreferredSize(new Dimension(520, 85));
 
         JPanel viewPanel = (JPanel) tabbedPane.getComponent(1);
         viewPanel.removeAll();
+
+        lock.lock();
+        logPanel.add(pricePane, 0);
+        logPanel.add(highTopPane, 1);
+        logPanel.add(lowTopPane, 2);
+
         viewPanel.add(overviewPane, 0);
         viewPanel.add(changeHighTopPane, 1);
         viewPanel.add(changeLowTopPane, 2);
+        lock.unlock();
     }
 
-    public static class MyListCellRenderer extends JLabel implements ListCellRenderer {
+    public static class MyListCellRenderer extends JLabel implements ListCellRenderer<Object> {
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
                                                       boolean cellHasFocus) {

@@ -34,6 +34,12 @@ spring:
     initialSize: 10
     minIdle: 10
     maxActive: 30
+  # 单机redis 配置
+  redis:
+    host: localhost
+    port: 6379
+    database: 0
+    password: admin
   mail:
     # 配置 SMTP 服务器地址
     host: smtp.qq.com
