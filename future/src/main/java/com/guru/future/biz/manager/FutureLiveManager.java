@@ -39,8 +39,8 @@ public class FutureLiveManager {
         }
     }
 
-    public Boolean removeAllData() {
-        return futureLiveDAO.deleteAll() > 0;
+    public Boolean removeAllData(List<String> codes) {
+        return futureLiveDAO.deleteAll(codes) > 0;
     }
 
 }

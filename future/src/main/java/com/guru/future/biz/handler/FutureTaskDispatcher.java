@@ -48,7 +48,7 @@ public class FutureTaskDispatcher {
         REFRESH = refresh == null ? false : refresh;
         List<String> codeList = futureBasicManager.getAllCodes();
         log.info(">>> smell the coffee, let's get this party started!");
-        futureLiveService.refreshLiveData();
+        futureLiveService.refreshLiveData(codeList);
         while (keepRunning) {
             if (!DateUtil.isTradeTime()) {
                 log.info(">>> music off, party over!");

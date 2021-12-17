@@ -55,8 +55,9 @@ public class FutureLiveService {
     @Resource
     private FutureMailManager mailManager;
 
-    public void refreshLiveData() {
-        futureLiveManager.removeAllData();
+    public void refreshLiveData(List<String> codes) {
+        futureLiveManager.removeAllData(codes);
+        log.info("delete all live data, codes={}", codes);
     }
 
     @Async()
@@ -103,7 +104,7 @@ public class FutureLiveService {
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureBasicDO futureBasicDO = basicMap.get(contractRealtimeDTO.getCode());
             if (DateUtil.isNight() && Boolean.FALSE.equals(futureBasicDO.hasNightTrade())) {
-                log.info(futureBasicDO.getName() + "has not night trade, skip");
+                log.info(futureBasicDO.getName() + " has not night trade, skip");
                 continue;
             }
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
@@ -298,9 +299,9 @@ public class FutureLiveService {
                 "<th width=\"10px\">序号</th>" +
                 "<th width=\"40px\">板块</th>" +
                 "<th width=\"30px\">涨跌幅</th>" +
-                "<th width=\"50px\">领涨品种</th>" +
+                "<th width=\"50px\">强势品种</th>" +
                 "<th width=\"30px\">涨跌幅</th>" +
-                "<th width=\"50px\">领涨品种</th>" +
+                "<th width=\"50px\">弱势品种</th>" +
                 "<th width=\"30px\">涨跌幅</th>" +
                 "</tr>");
         int seq = 0;

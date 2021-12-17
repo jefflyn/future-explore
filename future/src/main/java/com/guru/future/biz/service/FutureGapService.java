@@ -95,7 +95,6 @@ public class FutureGapService {
                 return;
             }
         }
-
         List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getAllRealtimeFromSina();
         try {
             noticeOpenGap(contractRealtimeDTOList);
