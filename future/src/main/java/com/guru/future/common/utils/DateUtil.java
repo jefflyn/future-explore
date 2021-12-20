@@ -27,9 +27,13 @@ public class DateUtil {
     protected static final Map<Integer, List<Integer>> HOLIDAY_MAP = new HashMap<>();
 
     static {
-        HOLIDAY_MAP.put(Calendar.JANUARY, Lists.newArrayList(1));
-        HOLIDAY_MAP.put(Calendar.SEPTEMBER, Lists.newArrayList(19, 20, 21));
-        HOLIDAY_MAP.put(Calendar.OCTOBER, Lists.newArrayList(1, 2, 3, 4, 5, 6, 7));
+        HOLIDAY_MAP.put(Calendar.JANUARY, Lists.newArrayList(3, 31));
+        HOLIDAY_MAP.put(Calendar.FEBRUARY, Lists.newArrayList(1, 2, 3, 4));
+        HOLIDAY_MAP.put(Calendar.APRIL, Lists.newArrayList(4, 5));
+        HOLIDAY_MAP.put(Calendar.MAY, Lists.newArrayList(2, 3, 4));
+        HOLIDAY_MAP.put(Calendar.JUNE, Lists.newArrayList(3));
+        HOLIDAY_MAP.put(Calendar.SEPTEMBER, Lists.newArrayList(12));
+        HOLIDAY_MAP.put(Calendar.OCTOBER, Lists.newArrayList(3, 4, 5, 6, 7));
     }
 
     /**
@@ -56,7 +60,7 @@ public class DateUtil {
     private DateUtil() {
     }
 
-    public static String toHourMinute(Date time){
+    public static String toHourMinute(Date time) {
         return DateFormatUtils.format(time, HOUR_MINUTE_PATTERN);
     }
 
