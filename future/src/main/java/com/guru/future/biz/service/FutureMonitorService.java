@@ -83,7 +83,7 @@ public class FutureMonitorService {
             String positionKey = futureLiveDO.getCode() + position;
             Map<BigDecimal, LongAdder> priceAdderMap = positionCount.get(positionKey);
             if (priceAdderMap == null) {
-                Integer cacheCount = NumberUtil.toInteger(futureCacheManager.get(positionKey));
+                Integer cacheCount = NumberUtil.toInteger(futureCacheManager.get(DateUtil.currentTradeDate() + positionKey));
                 priceAdderMap = new HashMap<>();
                 LongAdder adder = new LongAdder();
                 adder.add(cacheCount.longValue());
