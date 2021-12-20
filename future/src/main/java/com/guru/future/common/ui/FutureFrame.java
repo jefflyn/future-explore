@@ -54,7 +54,6 @@ public class FutureFrame {
     }
 
     private void buildTopModel() {
-        lock.lock();
         highTopModel = new DefaultListModel<>();
         lowTopModel = new DefaultListModel<>();
         for (int i = 0; i < LiveDataCache.getPositionHighTop10().size(); i++) {
@@ -83,11 +82,11 @@ public class FutureFrame {
             label.setText(lowTop.toString());
             changeLowTopModel.add(i, label);
         }
-        lock.unlock();
     }
 
     public void createMsgFrame(String content) {
         try {
+            lock.lock();
             if (!Strings.isNullOrEmpty(content)) {
                 JLabel label = new JLabel();
                 label.setText(content);
@@ -118,7 +117,9 @@ public class FutureFrame {
                 refreshContentPane();
             }
             frame.validate();
+            lock.unlock();
         } catch (Exception e) {
+            lock.unlock();
             log.error("create trade log frame failed, error={}", e);
         }
     }
@@ -148,8 +149,6 @@ public class FutureFrame {
         JScrollPane lowTopPane = new JScrollPane(lowTopList);
         lowTopPane.setPreferredSize(new Dimension(520, 85));
 
-        lock.lock();
-
         Container c = frame.getContentPane();
         JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);
         JPanel logPanel = (JPanel) tabbedPane.getComponent(0);
@@ -173,19 +172,13 @@ public class FutureFrame {
 
         JPanel viewPanel = (JPanel) tabbedPane.getComponent(1);
         viewPanel.removeAll();
-        try {
-            logPanel.add(pricePane, 0);
-            logPanel.add(highTopPane, 1);
-            logPanel.add(lowTopPane, 2);
+        logPanel.add(pricePane, 0);
+        logPanel.add(highTopPane, 1);
+        logPanel.add(lowTopPane, 2);
 
-            viewPanel.add(overviewPane, 0);
-            viewPanel.add(changeHighTopPane, 1);
-            viewPanel.add(changeLowTopPane, 2);
-            lock.unlock();
-        }catch (Exception e){
-            log.error("create frame error: ", e);
-            lock.unlock();
-        }
+        viewPanel.add(overviewPane, 0);
+        viewPanel.add(changeHighTopPane, 1);
+        viewPanel.add(changeLowTopPane, 2);
     }
 
     public static class MyListCellRenderer extends JLabel implements ListCellRenderer<Object> {
