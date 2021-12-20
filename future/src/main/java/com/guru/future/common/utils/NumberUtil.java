@@ -7,7 +7,14 @@ import java.math.BigDecimal;
 
 public class NumberUtil {
 
-    private NumberUtil(){
+    private NumberUtil() {
+    }
+
+    public static Integer toInteger(Object object) {
+        if (object == null) {
+            return Integer.valueOf(0);
+        }
+        return (Integer) object;
     }
 
     public static String changePrefix(BigDecimal change) {
@@ -19,6 +26,7 @@ public class NumberUtil {
 
     /**
      * 去掉无效的小数位
+     *
      * @param numberVal
      * @return
      */

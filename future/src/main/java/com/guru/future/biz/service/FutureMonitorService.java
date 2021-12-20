@@ -1,14 +1,17 @@
 package com.guru.future.biz.service;
 
 import com.guru.future.biz.manager.FutureLogManager;
+import com.guru.future.biz.manager.base.FutureCacheManager;
 import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.ui.FutureFrame;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.FutureUtil;
+import com.guru.future.common.utils.NumberUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.javatuples.Pair;
 import org.springframework.scheduling.annotation.Async;
@@ -23,6 +26,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
 import static com.guru.future.common.utils.NumberUtil.price2String;
@@ -41,7 +45,7 @@ public class FutureMonitorService {
     }
 
     @Resource
-    private FutureCollectService collectService;
+    private FutureCacheManager futureCacheManager;
 
     @Resource
     private FutureLogManager futureLogManager;
@@ -79,11 +83,14 @@ public class FutureMonitorService {
             String positionKey = futureLiveDO.getCode() + position;
             Map<BigDecimal, LongAdder> priceAdderMap = positionCount.get(positionKey);
             if (priceAdderMap == null) {
+                Integer cacheCount = NumberUtil.toInteger(futureCacheManager.get(positionKey));
                 priceAdderMap = new HashMap<>();
                 LongAdder adder = new LongAdder();
+                adder.add(cacheCount.longValue());
                 adder.increment();
                 priceAdderMap.put(futureLiveDO.getPrice(), adder);
                 positionCount.put(positionKey, priceAdderMap);
+                futureCacheManager.put(DateUtil.currentTradeDate() + positionKey, adder.intValue(), 6L, TimeUnit.HOURS);
             } else {
                 LongAdder lastAdder = priceAdderMap.values().stream().findFirst().get();
                 LongAdder adder = priceAdderMap.get(futureLiveDO.getPrice());
@@ -94,6 +101,7 @@ public class FutureMonitorService {
                     priceAdderMap.clear();
                     priceAdderMap.put(futureLiveDO.getPrice(), adder);
                     positionCount.put(positionKey, priceAdderMap);
+                    futureCacheManager.put(DateUtil.currentTradeDate() + positionKey, adder.intValue(), 6L, TimeUnit.HOURS);
                 }
             }
 

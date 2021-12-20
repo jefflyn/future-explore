@@ -148,6 +148,8 @@ public class FutureFrame {
         JScrollPane lowTopPane = new JScrollPane(lowTopList);
         lowTopPane.setPreferredSize(new Dimension(520, 85));
 
+        lock.lock();
+
         Container c = frame.getContentPane();
         JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);
         JPanel logPanel = (JPanel) tabbedPane.getComponent(0);
@@ -171,16 +173,19 @@ public class FutureFrame {
 
         JPanel viewPanel = (JPanel) tabbedPane.getComponent(1);
         viewPanel.removeAll();
+        try {
+            logPanel.add(pricePane, 0);
+            logPanel.add(highTopPane, 1);
+            logPanel.add(lowTopPane, 2);
 
-        lock.lock();
-        logPanel.add(pricePane, 0);
-        logPanel.add(highTopPane, 1);
-        logPanel.add(lowTopPane, 2);
-
-        viewPanel.add(overviewPane, 0);
-        viewPanel.add(changeHighTopPane, 1);
-        viewPanel.add(changeLowTopPane, 2);
-        lock.unlock();
+            viewPanel.add(overviewPane, 0);
+            viewPanel.add(changeHighTopPane, 1);
+            viewPanel.add(changeLowTopPane, 2);
+            lock.unlock();
+        }catch (Exception e){
+            log.error("create frame error: ", e);
+            lock.unlock();
+        }
     }
 
     public static class MyListCellRenderer extends JLabel implements ListCellRenderer<Object> {
