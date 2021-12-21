@@ -176,6 +176,7 @@ public class FutureLiveService {
                 log.info("update c with high = {}", JSON.toJSONString(updateBasicDO));
             }
             if (contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue()
+                    || contractRealtimeDTO.getLow().floatValue() < waveB.floatValue()
                     || contractRealtimeDTO.getHigh().floatValue() < waveB.floatValue()) {
                 monitorService.addNewHighLowLog(contractRealtimeDTO, false);
 
@@ -200,6 +201,7 @@ public class FutureLiveService {
                 log.info("update c with low = {}", JSON.toJSONString(updateBasicDO));
             }
             if (contractRealtimeDTO.getPrice().floatValue() > waveB.floatValue()
+                    || contractRealtimeDTO.getHigh().floatValue() > waveB.floatValue()
                     || contractRealtimeDTO.getLow().floatValue() > waveB.floatValue()) {
                 monitorService.addNewHighLowLog(contractRealtimeDTO, true);
 
