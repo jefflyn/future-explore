@@ -40,6 +40,6 @@ public class FutureBasicDO {
     private String remark;
 
     public boolean hasNightTrade(){
-        return night == 1;
+        return Integer.valueOf(1).equals(night);
     }
 }

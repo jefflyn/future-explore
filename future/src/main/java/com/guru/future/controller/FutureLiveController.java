@@ -1,13 +1,17 @@
 package com.guru.future.controller;
 
 import com.guru.future.biz.handler.FutureTaskDispatcher;
+import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.FutureSinaManager;
 import com.guru.future.biz.service.FutureLiveService;
+import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.FutureOverviewVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /***
  * @author j
@@ -17,6 +21,12 @@ import javax.annotation.Resource;
 public class FutureLiveController {
     @Resource
     private FutureTaskDispatcher futureTaskDispatcher;
+
+    @Resource
+    private FutureSinaManager futureSinaManager;
+
+    @Resource
+    private FutureBasicManager futureBasicManager;
 
     @Resource
     private FutureLiveService futureLiveService;
@@ -29,6 +39,14 @@ public class FutureLiveController {
             e.printStackTrace();
             Thread.currentThread().interrupt();
         }
+        return "success";
+    }
+
+    @GetMapping(value = "/future/live")
+    public String live() {
+        List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getRealtimeFromSina(futureBasicManager.getAllCodes());
+        // async live data
+        futureLiveService.refreshLiveData(contractRealtimeDTOList, true);
         return "success";
     }
 
