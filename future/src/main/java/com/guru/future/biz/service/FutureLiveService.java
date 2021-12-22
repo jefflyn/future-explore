@@ -69,6 +69,10 @@ public class FutureLiveService {
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             String code = contractRealtimeDTO.getCode();
             FutureBasicDO basicDO = basicMap.get(code);
+            if (DateUtil.isNight() && Boolean.FALSE.equals(basicDO.hasNightTrade())) {
+//                log.info(basicDO.getName() + " has not night trade, skip");
+                continue;
+            }
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
             FutureLiveVO futureLiveVO = new FutureLiveVO();
             BeanUtils.copyProperties(futureLiveDO, futureLiveVO);
@@ -104,7 +108,7 @@ public class FutureLiveService {
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureBasicDO futureBasicDO = basicMap.get(contractRealtimeDTO.getCode());
             if (DateUtil.isNight() && Boolean.FALSE.equals(futureBasicDO.hasNightTrade())) {
-                log.info(futureBasicDO.getName() + " has not night trade, skip");
+//                log.info(futureBasicDO.getName() + " has not night trade, skip");
                 continue;
             }
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
