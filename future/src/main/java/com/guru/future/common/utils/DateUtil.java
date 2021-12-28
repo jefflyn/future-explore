@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class DateUtil {
+    private static final boolean TRADE_TIME_TEMP = false;
     private static final long SECOND_SCALE = 1000L;
     private static final long MINUTE_SCALE = 60L * SECOND_SCALE;
     private static final long HOUR_SCALE = 60L * MINUTE_SCALE;
@@ -203,7 +204,9 @@ public class DateUtil {
         String nightOpen = "21:00:00";
         String nightClose = "23:00:00";
 
-//        return true; // temp
+        if (TRADE_TIME_TEMP) {
+            return true;
+        }
         return (nowTime.compareTo(morningOpen) >= 0 && nowTime.compareTo(morningClose) <= 0)
                 || (nowTime.compareTo(afternoonOpen) >= 0 && nowTime.compareTo(AFTERNOON_CLOSE_TIME) <= 0)
                 || (nowTime.compareTo(nightOpen) >= 0 && nowTime.compareTo(nightClose) <= 0);
