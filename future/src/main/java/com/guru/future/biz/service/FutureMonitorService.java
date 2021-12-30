@@ -11,6 +11,7 @@ import com.guru.future.common.utils.NumberUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.math3.util.MathUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.javatuples.Pair;
 import org.springframework.scheduling.annotation.Async;
@@ -124,7 +125,7 @@ public class FutureMonitorService {
             this.msgNotice(position == 100, futureLogDO);
 //            futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
             futureLogManager.addFutureLog(futureLogDO);
-            log.info("add position log >>> {}, {}", futureLogDO.getName(), futureLogDO.getPosition());
+            log.info("add position log >>> {}, {}", futureLogDO.getName(), futureLogDO.getPosition(), futureLogDO.getSuggest());
         }
     }
 
@@ -195,7 +196,7 @@ public class FutureMonitorService {
             futureLogDO.setRemark(logType + " " + histHighLowFlag);
             this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
-            log.info("add price flash log >>> {}, {}", futureLogDO.getName(), futureLogDO.getDiff());
+            log.info("add price flash log >>> {}, {}", futureLogDO.getName(), NumberUtil.price2String(futureLogDO.getDiff()), futureLogDO.getSuggest());
 //            collectService.scheduleTradeDailyCollect(Lists.newArrayList(code), CollectType.COLLECT_SCHEDULE);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(cachedKey);
