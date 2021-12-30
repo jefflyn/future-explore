@@ -61,7 +61,7 @@ public class FutureUtil {
             waveStr.append(getDirectionTag(waveA)).append(waveA).append(PERCENTAGE_SYMBOL);
             return waveStr.toString();
         }
-        BigDecimal waveB = null;
+        BigDecimal waveB;
         if (c != null) {
             waveB = c.subtract(b).multiply(BigDecimal.valueOf(100)).divide(b, 2, RoundingMode.HALF_UP);
             boolean waveEnd = false;
@@ -79,12 +79,12 @@ public class FutureUtil {
             String tagB = getDirectionTag(waveB);
             waveStr.append(tagB).append(waveB).append(PERCENTAGE_SYMBOL);
             if (Boolean.FALSE.equals(waveEnd)) {
-                BigDecimal waveC = price.subtract(c).multiply(BigDecimal.valueOf(100)).divide(price, 2, RoundingMode.HALF_UP);
+                BigDecimal waveC = price.subtract(c).multiply(BigDecimal.valueOf(100)).divide(c, 2, RoundingMode.HALF_UP);
                 String tagC = getDirectionTag(waveC);
                 waveStr.append(tagC).append(waveC).append(PERCENTAGE_SYMBOL);
             }
         } else {
-            waveB = price.subtract(b).multiply(BigDecimal.valueOf(100)).divide(price, 2, RoundingMode.HALF_UP);
+            waveB = price.subtract(b).multiply(BigDecimal.valueOf(100)).divide(b, 2, RoundingMode.HALF_UP);
             waveStr.append(getDirectionTag(waveB)).append(waveB).append(PERCENTAGE_SYMBOL);
         }
         return waveStr.toString();
