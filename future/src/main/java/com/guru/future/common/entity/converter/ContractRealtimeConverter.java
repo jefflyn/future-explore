@@ -14,6 +14,7 @@ public class ContractRealtimeConverter {
 
     public static FutureLiveDO convert2LiveDO(ContractRealtimeDTO contractRealtimeDTO) {
         FutureLiveDO futureLiveDO = new FutureLiveDO();
+        futureLiveDO.setTradeDate(contractRealtimeDTO.getTradeDate());
         futureLiveDO.setCode(contractRealtimeDTO.getCode());
         futureLiveDO.setName(contractRealtimeDTO.getName());
         futureLiveDO.setPrice(contractRealtimeDTO.getPrice());

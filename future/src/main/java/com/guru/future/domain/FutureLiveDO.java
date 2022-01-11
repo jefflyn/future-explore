@@ -8,6 +8,8 @@ import java.util.Date;
 
 @Data
 public class FutureLiveDO implements Comparable<FutureLiveDO>{
+    private String tradeDate;
+
     private String type;
 
     private String code;

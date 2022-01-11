@@ -4,6 +4,7 @@
 <mapper namespace="com.guru.future.mapper.FutureLiveDAO">
     <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureLiveDO">
         <id column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="price" jdbcType="DECIMAL" property="price"/>
@@ -22,7 +23,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        `code`, `type`, `name`, price, `change`, bid1, ask1, open, low, high, `position`, amp, wave, lowest_change,
+        trade_date, `code`, `type`, `name`, price, `change`, bid1, ask1, open, low, high, `position`, amp, wave, lowest_change,
     highest_change, update_time
     </sql>
 
@@ -55,6 +56,9 @@
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLiveDO">
         insert into future_live
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tradeDate != null">
+                `trade_date`,
+            </if>
             <if test="type != null">
                 `type`,
             </if>
@@ -105,6 +109,9 @@
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tradeDate != null">
+                #{tradeDate,jdbcType=VARCHAR},
+            </if>
             <if test="type != null">
                 #{type,jdbcType=VARCHAR},
             </if>
