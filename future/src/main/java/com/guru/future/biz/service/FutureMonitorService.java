@@ -21,11 +21,13 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
@@ -80,7 +82,8 @@ public class FutureMonitorService {
             if (contents.size() > 10) {
                 contents.removeLast();
             }
-            String positionKey = futureLiveDO.getCode() + position;
+            String positionKey = "_" + futureLiveDO.getCode() + "_" + position;
+            // 保存上一次的价格和次数
             Map<BigDecimal, LongAdder> priceAdderMap = positionCount.get(positionKey);
             if (priceAdderMap == null) {
                 Integer cacheCount = NumberUtil.toInteger(futureCacheManager.get(DateUtil.currentTradeDate() + positionKey));
@@ -94,7 +97,10 @@ public class FutureMonitorService {
             } else {
                 LongAdder lastAdder = priceAdderMap.values().stream().findFirst().get();
                 LongAdder adder = priceAdderMap.get(futureLiveDO.getPrice());
-                if (adder == null) {
+                BigDecimal lastPrice = priceAdderMap.keySet().iterator().next();
+                boolean newRecord = position == 0 ? futureLiveDO.getPrice().compareTo(lastPrice) < 0
+                        : futureLiveDO.getPrice().compareTo(lastPrice) > 0;
+                if (adder == null && newRecord) {
                     adder = new LongAdder();
                     adder.add(lastAdder.intValue());
                     adder.increment();
