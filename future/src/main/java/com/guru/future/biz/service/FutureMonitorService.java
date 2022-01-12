@@ -11,7 +11,6 @@ import com.guru.future.common.utils.NumberUtil;
 import com.guru.future.domain.FutureLiveDO;
 import com.guru.future.domain.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.math3.util.MathUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.javatuples.Pair;
 import org.springframework.scheduling.annotation.Async;
@@ -21,13 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
@@ -36,14 +33,14 @@ import static com.guru.future.common.utils.NumberUtil.price2String;
 @Service
 @Slf4j
 public class FutureMonitorService {
-    private static List<Pair<Integer, Float>> MONITOR_PARAMS = new ArrayList<>();
+    private static List<Pair<Integer, Float>> monitorParams = new ArrayList<>();
     private static LinkedList<String> contents = new LinkedList<>();
     private static Map<String, Map<BigDecimal, LongAdder>> positionCount = new HashMap<>();
 
     static {
-        MONITOR_PARAMS.add(Pair.with(30, 0.5F));
-        MONITOR_PARAMS.add(Pair.with(60, 0.66F));
-        MONITOR_PARAMS.add(Pair.with(120, 1F));
+        monitorParams.add(Pair.with(30, 0.5F));
+        monitorParams.add(Pair.with(60, 0.66F));
+        monitorParams.add(Pair.with(120, 1F));
     }
 
     @Resource
@@ -55,7 +52,7 @@ public class FutureMonitorService {
     public void monitorPriceFlash(FutureLiveDO futureLiveDO, String histHighLowFlag) {
         if (Boolean.TRUE.equals(DateUtil.isPriceMonitorTime())) {
             try {
-                for (Pair<Integer, Float> param : MONITOR_PARAMS) {
+                for (Pair<Integer, Float> param : monitorParams) {
                     triggerPriceFlash(param, futureLiveDO, histHighLowFlag);
                 }
             } catch (Exception e) {
@@ -82,6 +79,7 @@ public class FutureMonitorService {
             if (contents.size() > 10) {
                 contents.removeLast();
             }
+            boolean addLog = false;
             String positionKey = "_" + futureLiveDO.getCode() + "_" + position;
             // 保存上一次的价格和次数
             Map<BigDecimal, LongAdder> priceAdderMap = positionCount.get(positionKey);
@@ -94,6 +92,7 @@ public class FutureMonitorService {
                 priceAdderMap.put(futureLiveDO.getPrice(), adder);
                 positionCount.put(positionKey, priceAdderMap);
                 futureCacheManager.put(DateUtil.currentTradeDate() + positionKey, adder.intValue(), 6L, TimeUnit.HOURS);
+                addLog = true;
             } else {
                 LongAdder lastAdder = priceAdderMap.values().stream().findFirst().get();
                 LongAdder adder = priceAdderMap.get(futureLiveDO.getPrice());
@@ -108,30 +107,32 @@ public class FutureMonitorService {
                     priceAdderMap.put(futureLiveDO.getPrice(), adder);
                     positionCount.put(positionKey, priceAdderMap);
                     futureCacheManager.put(DateUtil.currentTradeDate() + positionKey, adder.intValue(), 6L, TimeUnit.HOURS);
+                    addLog = true;
                 }
             }
-
-            FutureLogDO futureLogDO = new FutureLogDO();
-            futureLogDO.setTradeDate(DateUtil.currentTradeDate());
-            futureLogDO.setCode(futureLiveDO.getCode());
-            futureLogDO.setFactor(priceAdderMap.values().stream().findFirst().orElse(new LongAdder()).intValue());
-            futureLogDO.setName(futureLiveDO.getName());
-            if (position == 0) {
-                futureLogDO.setType("日内低点");
-                futureLogDO.setContent("日内低点");
-                futureLogDO.setOption("做空");
-            } else {
-                futureLogDO.setType("日内高点");
-                futureLogDO.setContent("日内高点");
-                futureLogDO.setOption("做多");
-            }
-            futureLogDO.setSuggest(futureLiveDO.getPrice());
-            futureLogDO.setPctChange(futureLiveDO.getChange());
-            futureLogDO.setPosition(futureLiveDO.getPosition());
-            this.msgNotice(position == 100, futureLogDO);
+            if (addLog) {
+                FutureLogDO futureLogDO = new FutureLogDO();
+                futureLogDO.setTradeDate(DateUtil.currentTradeDate());
+                futureLogDO.setCode(futureLiveDO.getCode());
+                futureLogDO.setFactor(priceAdderMap.values().stream().findFirst().orElse(new LongAdder()).intValue());
+                futureLogDO.setName(futureLiveDO.getName());
+                if (position == 0) {
+                    futureLogDO.setType("日内低点");
+                    futureLogDO.setContent("日内低点");
+                    futureLogDO.setOption("做空");
+                } else {
+                    futureLogDO.setType("日内高点");
+                    futureLogDO.setContent("日内高点");
+                    futureLogDO.setOption("做多");
+                }
+                futureLogDO.setSuggest(futureLiveDO.getPrice());
+                futureLogDO.setPctChange(futureLiveDO.getChange());
+                futureLogDO.setPosition(futureLiveDO.getPosition());
+                this.msgNotice(position == 100, futureLogDO);
 //            futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
-            futureLogManager.addFutureLog(futureLogDO);
-            log.info("add position log >>> {}, {}", futureLogDO.getName(), futureLogDO.getPosition(), futureLogDO.getSuggest());
+                futureLogManager.addFutureLog(futureLogDO);
+                log.info("add position log >>> {}, {}", futureLogDO.getName(), futureLogDO.getPosition(), futureLogDO.getSuggest());
+            }
         }
     }
 
