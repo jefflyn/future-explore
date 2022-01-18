@@ -149,7 +149,8 @@ public class FutureLiveService {
         if (contractRealtimeDTO.getLow().compareTo(histLow) < 0) {
             FutureBasicDO updateBasicDO = new FutureBasicDO();
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
-            updateBasicDO.setLow(contractRealtimeDTO.getLow());
+            updateBasicDO.setLow(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
+                    contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
             updateBasicDO.setRemark("合同新低");
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
@@ -158,7 +159,8 @@ public class FutureLiveService {
         if (contractRealtimeDTO.getHigh().compareTo(histHigh) > 0) {
             FutureBasicDO updateBasicDO = new FutureBasicDO();
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
-            updateBasicDO.setHigh(contractRealtimeDTO.getHigh());
+            updateBasicDO.setHigh(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
+                    contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
             updateBasicDO.setRemark("合同新高");
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
@@ -174,10 +176,11 @@ public class FutureLiveService {
 
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
                 updateBasicDO.setCode(contractRealtimeDTO.getCode());
-                updateBasicDO.setC(contractRealtimeDTO.getHigh());
+                updateBasicDO.setC(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
+                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
                 updateBasicDO.setRemark("update c");
                 futureBasicManager.updateBasic(updateBasicDO);
-                log.info("update c with high = {}", JSON.toJSONString(updateBasicDO));
+                log.info("update c by high = {}", JSON.toJSONString(updateBasicDO));
             }
             if (contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue()
                     || contractRealtimeDTO.getLow().floatValue() < waveB.floatValue()
@@ -186,20 +189,22 @@ public class FutureLiveService {
 
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
                 updateBasicDO.setCode(contractRealtimeDTO.getCode());
-                updateBasicDO.setB(contractRealtimeDTO.getLow());
-                updateBasicDO.setC(contractRealtimeDTO.getHigh());
+                updateBasicDO.setB(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
+                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
+                updateBasicDO.setC(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
+                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
                 updateBasicDO.setRemark("update b & c");
                 futureBasicManager.updateBasic(updateBasicDO);
-                log.info("update b with low c with high = {}", JSON.toJSONString(updateBasicDO));
+                log.info("update b by low, c by high = {}", JSON.toJSONString(updateBasicDO));
             }
         } else {
             if (contractRealtimeDTO.getPrice().floatValue() < waveC.floatValue()
                     || contractRealtimeDTO.getLow().floatValue() < waveC.floatValue()) {
                 monitorService.addNewHighLowLog(contractRealtimeDTO, false);
-
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
                 updateBasicDO.setCode(contractRealtimeDTO.getCode());
-                updateBasicDO.setC(contractRealtimeDTO.getLow());
+                updateBasicDO.setC(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
+                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
                 updateBasicDO.setRemark("update c");
                 futureBasicManager.updateBasic(updateBasicDO);
                 log.info("update c with low = {}", JSON.toJSONString(updateBasicDO));
@@ -211,11 +216,13 @@ public class FutureLiveService {
 
                 FutureBasicDO updateBasicDO = new FutureBasicDO();
                 updateBasicDO.setCode(contractRealtimeDTO.getCode());
-                updateBasicDO.setB(contractRealtimeDTO.getHigh());
-                updateBasicDO.setC(contractRealtimeDTO.getLow());
+                updateBasicDO.setB(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
+                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
+                updateBasicDO.setC(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
+                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
                 updateBasicDO.setRemark("update b & c");
                 futureBasicManager.updateBasic(updateBasicDO);
-                log.info("update b with high c with low = {}", JSON.toJSONString(updateBasicDO));
+                log.info("update b by high, c by low = {}", JSON.toJSONString(updateBasicDO));
             }
         }
         return Pair.of(histHigh, histLow);

@@ -244,8 +244,8 @@ public class FutureMonitorService {
         content.append(futureLogDO.getType()).append(" ").append(factorStr).append(diffStr)
                 .append("【").append(futureLogDO.getContent()).append("】")
                 .append(futureLogDO.getOption()).append(" ").append(price2String(futureLogDO.getSuggest()))
-                .append(" ").append(futureLogDO.getPctChange()).append("%")
-                .append("【").append(futureLogDO.getPosition()).append("】");
+                .append("【").append(futureLogDO.getPosition()).append("】")
+                .append(futureLogDO.getPctChange()).append("%");
         // show msg frame
         FutureFrame futureFrame = FutureFrame.buildFutureFrame(null);
         futureFrame.createMsgFrame(DateUtil.currentTime() + " "
