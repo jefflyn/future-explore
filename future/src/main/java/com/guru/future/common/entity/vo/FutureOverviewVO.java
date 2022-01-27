@@ -2,6 +2,7 @@ package com.guru.future.common.entity.vo;
 
 import com.guru.future.common.utils.NumberUtil;
 import lombok.Data;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,7 +17,7 @@ public class FutureOverviewVO {
 
     @Data
     public static class CategorySummary implements Comparable<CategorySummary> {
-        private  Integer sortNo;
+        private Integer sortNo;
 
         private String categoryName;
 
@@ -43,8 +44,11 @@ public class FutureOverviewVO {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder resultStr = new StringBuilder("市场平均涨幅: " + getTotalAvgChangeStr() + "【" + getOverviewDesc() + "】\n");
+        if (CollectionUtils.isEmpty(getCategorySummaryList())) {
+            return resultStr.toString();
+        }
         for (FutureOverviewVO.CategorySummary categorySummary : getCategorySummaryList()) {
             resultStr.append(categorySummary.getSortNo()).append(".")
                     .append(String.format("%-4s", categorySummary.getCategoryName()))

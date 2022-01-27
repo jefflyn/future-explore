@@ -1,7 +1,7 @@
 package com.guru.future.biz.handler;
 
 import com.guru.future.TestBase;
-import com.guru.future.biz.manager.FutureSinaManager;
+import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.cache.PriceFlashCache;
 import lombok.extern.slf4j.Slf4j;

@@ -34,7 +34,7 @@ spring:
     initialSize: 10
     minIdle: 10
     maxActive: 30
-  # 单机redis 配置
+  # 单机配置，启动：redis-server /Users/ruian/etc/redis.conf &
   redis:
     host: localhost
     port: 6379

@@ -3,7 +3,7 @@ package com.guru.future.biz.service;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.FutureMailManager;
-import com.guru.future.biz.manager.FutureSinaManager;
+import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.biz.manager.OpenGapManager;
 import com.guru.future.common.entity.converter.ContractOpenGapConverter;
 import com.guru.future.common.entity.dto.ContractOpenGapDTO;

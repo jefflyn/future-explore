@@ -2,7 +2,7 @@ package com.guru.future.controller;
 
 import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.manager.FutureBasicManager;
-import com.guru.future.biz.manager.FutureSinaManager;
+import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.FutureOverviewVO;

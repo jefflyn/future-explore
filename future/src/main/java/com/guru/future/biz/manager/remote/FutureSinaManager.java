@@ -1,8 +1,10 @@
-package com.guru.future.biz.manager;
+package com.guru.future.biz.manager.remote;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.HttpUtil;
 import com.guru.future.common.utils.SinaHqUtil;
@@ -31,7 +33,10 @@ public class FutureSinaManager {
         for (String code : codeList) {
             reqCodes.append(SinaHqUtil.convert2HqCode(code)).append(",");
         }
-        String result = HttpUtil.doGet(SINA_HQ_URL + reqCodes);
+//        String result = HttpUtil.doGet(SINA_HQ_URL + reqCodes);
+        String url = "https://hq.sinajs.cn/?_=" + System.currentTimeMillis() + "/&list=" + reqCodes;
+        String result = HttpUtil.doGet(url);
+        log.info("url={}, result={}", url, JSON.toJSONString(result));
         List<String> contractList = Splitter.on(";\n").splitToList(result);
         return contractList;
     }

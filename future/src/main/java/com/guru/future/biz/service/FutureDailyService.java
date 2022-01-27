@@ -5,7 +5,7 @@ import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureCollectManager;
 import com.guru.future.biz.manager.FutureDailyManager;
-import com.guru.future.biz.manager.FutureSinaManager;
+import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.PositionCollectVO;

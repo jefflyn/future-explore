@@ -229,18 +229,20 @@ public class FutureLiveService {
     }
 
     public FutureOverviewVO getMarketOverview() {
+        FutureOverviewVO overviewVO = new FutureOverviewVO();
         BigDecimal totalAvgChange = BigDecimal.ZERO;
         Map<String, List<FutureLiveDO>> categoryLiveMap = new HashMap<>();
         List<FutureLiveDO> futureLiveDOList = futureLiveManager.getAll();
-        if (!CollectionUtils.isEmpty(futureLiveDOList)) {
-            for (FutureLiveDO liveDO : futureLiveDOList) {
-                BigDecimal change = liveDO.getChange();
-                totalAvgChange = totalAvgChange.add(change);
-                String type = liveDO.getType();
-                List<FutureLiveDO> categoryLiveList = ObjectUtils.defaultIfNull(categoryLiveMap.get(type), new ArrayList<>());
-                categoryLiveList.add(liveDO);
-                categoryLiveMap.put(type, categoryLiveList);
-            }
+        if (CollectionUtils.isEmpty(futureLiveDOList)) {
+            return overviewVO;
+        }
+        for (FutureLiveDO liveDO : futureLiveDOList) {
+            BigDecimal change = liveDO.getChange();
+            totalAvgChange = totalAvgChange.add(change);
+            String type = liveDO.getType();
+            List<FutureLiveDO> categoryLiveList = ObjectUtils.defaultIfNull(categoryLiveMap.get(type), new ArrayList<>());
+            categoryLiveList.add(liveDO);
+            categoryLiveMap.put(type, categoryLiveList);
         }
         List<FutureOverviewVO.CategorySummary> categorySummaryList = new ArrayList<>();
         for (Map.Entry<String, List<FutureLiveDO>> entry : categoryLiveMap.entrySet()) {
@@ -283,7 +285,7 @@ public class FutureLiveService {
             categorySummary.setSortNo(++sortNo);
         }
         totalAvgChange = totalAvgChange.divide(BigDecimal.valueOf(futureLiveDOList.size()), 2, RoundingMode.HALF_UP);
-        FutureOverviewVO overviewVO = new FutureOverviewVO();
+
         overviewVO.setTotalAvgChangeStr((totalAvgChange.floatValue() > 0 ? "+" : "") + totalAvgChange + PERCENTAGE_SYMBOL);
         overviewVO.setOverviewDesc(overviewDesc(totalAvgChange.floatValue()));
         overviewVO.setCategorySummaryList(categorySummaryList);

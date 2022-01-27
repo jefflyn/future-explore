@@ -1,11 +1,11 @@
 package com.guru.future.biz.manager;
 
+import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.common.entity.query.FutureDailyQuery;
 import com.guru.future.common.enums.CollectType;
 import com.guru.future.domain.FutureCollectDO;
 import com.guru.future.mapper.FutureCollectDAO;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
