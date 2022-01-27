@@ -14,4 +14,5 @@ public class TsFutureContractDO {
 
     private String futCode;
 
+    private Integer type;
 }

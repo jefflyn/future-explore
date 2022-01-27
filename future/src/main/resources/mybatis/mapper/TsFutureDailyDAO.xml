@@ -1,139 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guru.future.mapper.TsFutureDailyDAO">
-  <resultMap id="BaseResultMap" type="com.guru.future.domain.TsFutureDailyDO">
-    <result column="ts_code" jdbcType="VARCHAR" property="tsCode" />
-    <result column="trade_date" jdbcType="VARCHAR" property="tradeDate" />
-    <result column="pre_close" jdbcType="VARCHAR" property="preClose" />
-    <result column="pre_settle" jdbcType="DECIMAL" property="preSettle" />
-    <result column="open" jdbcType="DECIMAL" property="open" />
-    <result column="high" jdbcType="DECIMAL" property="high" />
-    <result column="low" jdbcType="DECIMAL" property="low" />
-    <result column="close" jdbcType="DECIMAL" property="close" />
-    <result column="settle" jdbcType="DECIMAL" property="settle" />
-    <result column="close_change" jdbcType="DECIMAL" property="closeChange" />
-    <result column="settle_change" jdbcType="DECIMAL" property="settleChange" />
-    <result column="deal_vol" jdbcType="INTEGER" property="dealVol" />
-    <result column="deal_amount" jdbcType="DECIMAL" property="dealAmount" />
-    <result column="hold_vol" jdbcType="INTEGER" property="holdVol" />
-    <result column="hold_change" jdbcType="INTEGER" property="holdChange" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-  </resultMap>
-  <insert id="insert" parameterType="com.guru.future.domain.TsFutureDailyDO">
-    insert into ts_future_daily (ts_code, trade_date, pre_close, 
-      pre_settle, `open`, high, 
-      low, `close`, settle, 
-      close_change, settle_change, deal_vol, 
-      deal_amount, hold_vol, hold_change, 
-      create_time)
-    values (#{tsCode,jdbcType=VARCHAR}, #{tradeDate,jdbcType=VARCHAR}, #{preClose,jdbcType=VARCHAR}, 
-      #{preSettle,jdbcType=DECIMAL}, #{open,jdbcType=DECIMAL}, #{high,jdbcType=DECIMAL}, 
-      #{low,jdbcType=DECIMAL}, #{close,jdbcType=DECIMAL}, #{settle,jdbcType=DECIMAL}, 
-      #{closeChange,jdbcType=DECIMAL}, #{settleChange,jdbcType=DECIMAL}, #{dealVol,jdbcType=INTEGER}, 
-      #{dealAmount,jdbcType=DECIMAL}, #{holdVol,jdbcType=INTEGER}, #{holdChange,jdbcType=INTEGER}, 
-      #{createTime,jdbcType=TIMESTAMP})
-  </insert>
-  <insert id="insertSelective" parameterType="com.guru.future.domain.TsFutureDailyDO">
-    insert into ts_future_daily
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="tsCode != null">
-        ts_code,
-      </if>
-      <if test="tradeDate != null">
-        trade_date,
-      </if>
-      <if test="preClose != null">
-        pre_close,
-      </if>
-      <if test="preSettle != null">
-        pre_settle,
-      </if>
-      <if test="open != null">
-        `open`,
-      </if>
-      <if test="high != null">
-        high,
-      </if>
-      <if test="low != null">
-        low,
-      </if>
-      <if test="close != null">
-        `close`,
-      </if>
-      <if test="settle != null">
-        settle,
-      </if>
-      <if test="closeChange != null">
-        close_change,
-      </if>
-      <if test="settleChange != null">
-        settle_change,
-      </if>
-      <if test="dealVol != null">
-        deal_vol,
-      </if>
-      <if test="dealAmount != null">
-        deal_amount,
-      </if>
-      <if test="holdVol != null">
-        hold_vol,
-      </if>
-      <if test="holdChange != null">
-        hold_change,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="tsCode != null">
-        #{tsCode,jdbcType=VARCHAR},
-      </if>
-      <if test="tradeDate != null">
-        #{tradeDate,jdbcType=VARCHAR},
-      </if>
-      <if test="preClose != null">
-        #{preClose,jdbcType=VARCHAR},
-      </if>
-      <if test="preSettle != null">
-        #{preSettle,jdbcType=DECIMAL},
-      </if>
-      <if test="open != null">
-        #{open,jdbcType=DECIMAL},
-      </if>
-      <if test="high != null">
-        #{high,jdbcType=DECIMAL},
-      </if>
-      <if test="low != null">
-        #{low,jdbcType=DECIMAL},
-      </if>
-      <if test="close != null">
-        #{close,jdbcType=DECIMAL},
-      </if>
-      <if test="settle != null">
-        #{settle,jdbcType=DECIMAL},
-      </if>
-      <if test="closeChange != null">
-        #{closeChange,jdbcType=DECIMAL},
-      </if>
-      <if test="settleChange != null">
-        #{settleChange,jdbcType=DECIMAL},
-      </if>
-      <if test="dealVol != null">
-        #{dealVol,jdbcType=INTEGER},
-      </if>
-      <if test="dealAmount != null">
-        #{dealAmount,jdbcType=DECIMAL},
-      </if>
-      <if test="holdVol != null">
-        #{holdVol,jdbcType=INTEGER},
-      </if>
-      <if test="holdChange != null">
-        #{holdChange,jdbcType=INTEGER},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-    </trim>
-  </insert>
+    <resultMap id="BaseResultMap" type="com.guru.future.domain.TsFutureDailyDO">
+        <result column="ts_code" jdbcType="VARCHAR" property="tsCode"/>
+        <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
+        <result column="pre_close" jdbcType="DECIMAL" property="preClose"/>
+        <result column="pre_settle" jdbcType="DECIMAL" property="preSettle"/>
+        <result column="open" jdbcType="DECIMAL" property="open"/>
+        <result column="high" jdbcType="DECIMAL" property="high"/>
+        <result column="low" jdbcType="DECIMAL" property="low"/>
+        <result column="close" jdbcType="DECIMAL" property="close"/>
+        <result column="settle" jdbcType="DECIMAL" property="settle"/>
+        <result column="close_change" jdbcType="DECIMAL" property="closeChange"/>
+        <result column="settle_change" jdbcType="DECIMAL" property="settleChange"/>
+        <result column="deal_vol" jdbcType="DECIMAL" property="dealVol"/>
+        <result column="deal_amount" jdbcType="DECIMAL" property="dealAmount"/>
+        <result column="hold_vol" jdbcType="DECIMAL" property="holdVol"/>
+        <result column="hold_change" jdbcType="DECIMAL" property="holdChange"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.guru.future.domain.TsFutureDailyDO">
+        insert into ts_future_daily (ts_code, trade_date, pre_close, pre_settle, `open`, high,
+                                     low, `close`, settle, close_change, settle_change, deal_vol,
+                                     deal_amount, hold_vol, hold_change, create_time)
+        values (#{tsCode,jdbcType=VARCHAR}, #{tradeDate,jdbcType=VARCHAR}, #{preClose,jdbcType=DECIMAL},
+                #{preSettle,jdbcType=DECIMAL}, #{open,jdbcType=DECIMAL}, #{high,jdbcType=DECIMAL},
+                #{low,jdbcType=DECIMAL}, #{close,jdbcType=DECIMAL}, #{settle,jdbcType=DECIMAL},
+                #{closeChange,jdbcType=DECIMAL}, #{settleChange,jdbcType=DECIMAL}, #{dealVol,jdbcType=DECIMAL},
+                #{dealAmount,jdbcType=DECIMAL}, #{holdVol,jdbcType=DECIMAL}, #{holdChange,jdbcType=DECIMAL},
+                #{createTime,jdbcType=TIMESTAMP})
+    </insert>
 </mapper>

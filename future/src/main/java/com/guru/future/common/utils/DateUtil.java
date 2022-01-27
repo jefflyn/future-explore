@@ -53,7 +53,8 @@ public class DateUtil {
 
     public static final String AFTERNOON_CLOSE_TIME = "15:00:00";
 
-    public static final String TRADE_DATE_PATTERN = "yyyy-MM-dd";
+    public static final String TRADE_DATE_PATTERN_FLAT = "yyyyMMdd";
+    public static final String TRADE_DATE_PATTERN_HYPHEN = "yyyy-MM-dd";
     public static final String HOUR_MINUTE_PATTERN = "HH:mm";
     public static final String COMMON_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final String TIME_PATTERN = "HH:mm:ss";
@@ -79,19 +80,27 @@ public class DateUtil {
     }
 
     public static String currentTradeDate() {
+        return currentTradeDate(TRADE_DATE_PATTERN_HYPHEN);
+    }
+
+    public static String currentTradeDate(String dateFormat) {
         Date date = new Date();
         if (Boolean.TRUE.equals(isHoliday(date))) {
             return getNextTradeDate(date);
         }
-        return DateFormatUtils.format(date, TRADE_DATE_PATTERN);
+        return DateFormatUtils.format(date, dateFormat);
     }
 
     public static String latestTradeDate() {
+        return latestTradeDate(TRADE_DATE_PATTERN_HYPHEN);
+    }
+
+    public static String latestTradeDate(String dateFormat) {
         Date date = new Date();
         if (Boolean.TRUE.equals(isHoliday(date))) {
             return getLastTradeDate(date);
         }
-        return DateFormatUtils.format(date, TRADE_DATE_PATTERN);
+        return DateFormatUtils.format(date, dateFormat);
     }
 
     public static String currentTime() {
@@ -104,7 +113,7 @@ public class DateUtil {
             return getLastTradeDate(new Date());
         }
         try {
-            return getLastTradeDate(DateUtils.parseDate(currentDate, TRADE_DATE_PATTERN));
+            return getLastTradeDate(DateUtils.parseDate(currentDate, TRADE_DATE_PATTERN_HYPHEN));
         } catch (Exception e) {
             log.error("parse last trade date failed, error={}", e);
             return currentDate;
@@ -112,6 +121,10 @@ public class DateUtil {
     }
 
     public static String getLastTradeDate(Date currentDate) {
+        return getLastTradeDate(currentDate, TRADE_DATE_PATTERN_HYPHEN);
+    }
+
+    public static String getLastTradeDate(Date currentDate, String dateFormat) {
         if (currentDate == null) {
             currentDate = new Date();
         }
@@ -119,10 +132,10 @@ public class DateUtil {
         for (int addDays = 0; addDays > -9; addDays--) {
             Date preDate = DateUtils.addDays(calendar.getTime(), addDays - 1);
             if (Boolean.FALSE.equals(isHoliday(preDate))) {
-                return DateFormatUtils.format(preDate, TRADE_DATE_PATTERN);
+                return DateFormatUtils.format(preDate, dateFormat);
             }
         }
-        return DateFormatUtils.format(currentDate, TRADE_DATE_PATTERN);
+        return DateFormatUtils.format(currentDate, dateFormat);
     }
 
     public static String getNextTradeDate(String currentDate) {
@@ -130,7 +143,7 @@ public class DateUtil {
             return getNextTradeDate(new Date());
         }
         try {
-            return getNextTradeDate(DateUtils.parseDate(currentDate, TRADE_DATE_PATTERN));
+            return getNextTradeDate(DateUtils.parseDate(currentDate, TRADE_DATE_PATTERN_HYPHEN));
         } catch (Exception e) {
             log.error("parse next trade date failed, error={}", e);
             return currentDate;
@@ -138,6 +151,10 @@ public class DateUtil {
     }
 
     public static String getNextTradeDate(Date currentDate) {
+        return getNextTradeDate(currentDate, TRADE_DATE_PATTERN_HYPHEN);
+    }
+
+    public static String getNextTradeDate(Date currentDate, String dateFormat) {
         if (currentDate == null) {
             currentDate = new Date();
         }
@@ -145,10 +162,10 @@ public class DateUtil {
         for (int addDays = 0; addDays < 9; addDays++) {
             Date nextDate = DateUtils.addDays(calendar.getTime(), addDays + 1);
             if (Boolean.FALSE.equals(isHoliday(nextDate))) {
-                return DateFormatUtils.format(nextDate, TRADE_DATE_PATTERN);
+                return DateFormatUtils.format(nextDate, dateFormat);
             }
         }
-        return DateFormatUtils.format(currentDate, TRADE_DATE_PATTERN);
+        return DateFormatUtils.format(currentDate, dateFormat);
     }
 
     /**

@@ -1,17 +1,15 @@
 package com.guru.future.mapper;
 
+import com.guru.future.common.entity.query.FutureBasicQuery;
 import com.guru.future.domain.TsFutureContractDO;
 
+import java.util.List;
+
 public interface TsFutureContractDAO {
-    int deleteByPrimaryKey(String tsCode);
-
     int insert(TsFutureContractDO record);
-
-    int insertSelective(TsFutureContractDO record);
 
     TsFutureContractDO selectByPrimaryKey(String tsCode);
 
-    int updateByPrimaryKeySelective(TsFutureContractDO record);
+    List<TsFutureContractDO> selectByQuery(FutureBasicQuery futureBasicQuery);
 
-    int updateByPrimaryKey(TsFutureContractDO record);
 }

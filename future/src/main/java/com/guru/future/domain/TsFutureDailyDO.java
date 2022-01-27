@@ -11,7 +11,7 @@ public class TsFutureDailyDO {
 
     private String tradeDate;
 
-    private String preClose;
+    private BigDecimal preClose;
 
     private BigDecimal preSettle;
 
@@ -29,13 +29,13 @@ public class TsFutureDailyDO {
 
     private BigDecimal settleChange;
 
-    private Integer dealVol;
+    private BigDecimal dealVol;
 
     private BigDecimal dealAmount;
 
-    private Integer holdVol;
+    private BigDecimal holdVol;
 
-    private Integer holdChange;
+    private BigDecimal holdChange;
 
     private Date createTime;
 

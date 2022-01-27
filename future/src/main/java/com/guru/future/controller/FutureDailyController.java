@@ -2,6 +2,7 @@ package com.guru.future.controller;
 
 import com.google.common.base.Splitter;
 import com.guru.future.biz.service.FutureDailyService;
+import com.guru.future.biz.service.TsFutureDailyService;
 import com.guru.future.common.entity.vo.PositionCollectVO;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,6 +23,15 @@ import java.util.List;
 public class FutureDailyController {
     @Resource
     private FutureDailyService futureDailyService;
+
+    @Resource
+    private TsFutureDailyService tsFutureDailyService;
+
+    @GetMapping(value = "/future/daily/add")
+    public String addTsDaily(@RequestParam(value = "tsCodes", required = false) String tsCodes) {
+        tsFutureDailyService.batchAddDaily(tsCodes, "", "");
+        return "success";
+    }
 
     @GetMapping(value = "/future/daily/update")
     public String updateDaily() {
