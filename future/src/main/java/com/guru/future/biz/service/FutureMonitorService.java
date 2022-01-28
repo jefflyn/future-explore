@@ -61,7 +61,7 @@ public class FutureMonitorService {
         }
     }
 
-    @Async()
+    @Async
     @Transactional
     public void addPositionLog(FutureLiveDO futureLiveDO) {
         int position = -1;

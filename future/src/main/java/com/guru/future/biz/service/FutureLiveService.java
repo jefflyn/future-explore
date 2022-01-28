@@ -60,7 +60,7 @@ public class FutureLiveService {
         log.info("delete all live data, codes={}", codes);
     }
 
-    @Async()
+    @Async
     public void reloadLiveCache(List<ContractRealtimeDTO> contractRealtimeDTOList, Map<String, FutureBasicDO> basicMap) {
         List<FutureLiveVO> futureLiveVOList = new ArrayList<>();
         if (CollectionUtils.isEmpty(contractRealtimeDTOList)) {

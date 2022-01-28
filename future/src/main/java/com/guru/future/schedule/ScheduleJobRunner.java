@@ -7,9 +7,8 @@ import javax.annotation.Resource;
 
 @Component
 public class ScheduleJobRunner implements CommandLineRunner {
-
     @Resource
-    public CronScheduleJobs scheduleJobs;
+    public CronScheduleTrigger scheduleJobs;
 
     @Override
     public void run(String... args) throws Exception {

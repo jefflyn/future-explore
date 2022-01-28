@@ -34,7 +34,8 @@ public class FutureDailyConverter {
         Date time = new Date();
         while (iterator.hasNext()) {
             JSONArray itemArr = (JSONArray) iterator.next();
-            if (Boolean.TRUE.equals(ObjectUtil.checkNullValue(itemArr.get(4), itemArr.get(5), itemArr.get(7)))) {
+            if (Boolean.TRUE.equals(ObjectUtil.checkNullValue(itemArr.get(4), itemArr.get(5),
+                    itemArr.get(6), itemArr.get(7), itemArr.get(8)))) {
                 continue;
             }
             TsFutureDailyDO tsFutureDailyDO = new TsFutureDailyDO();

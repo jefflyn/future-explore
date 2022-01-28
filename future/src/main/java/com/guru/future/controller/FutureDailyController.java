@@ -28,8 +28,10 @@ public class FutureDailyController {
     private TsFutureDailyService tsFutureDailyService;
 
     @GetMapping(value = "/future/daily/add")
-    public String addTsDaily(@RequestParam(value = "tsCodes", required = false) String tsCodes) {
-        tsFutureDailyService.batchAddDaily(tsCodes, "", "");
+    public String addTsDaily(@RequestParam(value = "tsCodes", required = false) String tsCodes,
+                             @RequestParam(value = "start", required = false, defaultValue = "") String start,
+                             @RequestParam(value = "end", required = false, defaultValue = "") String end) {
+        tsFutureDailyService.batchAddDaily(tsCodes, start, end);
         return "success";
     }
 

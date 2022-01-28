@@ -22,7 +22,7 @@ public class TsFutureDailyManager {
             try {
                 tsFutureDailyDAO.insert(tsFutureDailyDO);
             } catch (Exception e) {
-                log.info("insert row error:", e);
+                log.info("insert row error, please retry! tsCode={}, tradeDate={}", tsFutureDailyDO.getTsCode(), tsFutureDailyDO.getTradeDate());
             }
         }
         return true;

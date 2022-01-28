@@ -227,7 +227,7 @@ public class FutureGapService {
         }
     }
 
-    @Async()
+    @Async
     public void sendOpenGapMail(String title, List<ContractOpenGapDTO> openGapDTOList) throws Exception {
         Collections.sort(openGapDTOList);
         Collections.reverse(openGapDTOList);

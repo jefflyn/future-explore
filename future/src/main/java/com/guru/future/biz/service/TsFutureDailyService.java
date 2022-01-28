@@ -9,6 +9,7 @@ import com.guru.future.common.enums.ContractType;
 import com.guru.future.domain.TsFutureDailyDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,16 +37,22 @@ public class TsFutureDailyService {
         } else {
             tsCodes = tsFutureBasicManager.getTsCodeByType(ContractType.CONTINUE.getCode());
         }
+        log.info("batchAddDaily total={}, tsCodes={}", tsCodes.size(), tsCodes);
         for (String tsCode : tsCodes) {
-            try {
-                String result = tsFutureManager.getDaily(tsCode, startDate, endDate);
-                List<TsFutureDailyDO> futureDailyDOList = FutureDailyConverter.toTsFutureDailyDO(result);
-                tsFutureDailyManager.batchAddFutureBasic(futureDailyDOList);
-            } catch (Exception e) {
-                log.info("insert {} ts daily error: ", tsCode, e);
-            }
+            asyncAddFutureBasic(tsCode, startDate, endDate);
         }
         return true;
     }
 
+    @Async
+    public void asyncAddFutureBasic(String tsCode, String startDate, String endDate) {
+        log.info("tsCode={}, start={}, end={} asyncAddFutureBasic start", tsCode, startDate, endDate);
+        try {
+            String result = tsFutureManager.getDaily(tsCode, startDate, endDate);
+            List<TsFutureDailyDO> futureDailyDOList = FutureDailyConverter.toTsFutureDailyDO(result);
+            tsFutureDailyManager.batchAddFutureBasic(futureDailyDOList);
+        } catch (Exception e) {
+            log.info("get {} ts daily error: ", tsCode, e);
+        }
+    }
 }

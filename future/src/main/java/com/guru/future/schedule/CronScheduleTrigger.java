@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 @Component
-public class CronScheduleJobs {
+public class CronScheduleTrigger {
     @Resource
     private SchedulerFactoryBean schedulerFactoryBean;
 
