@@ -20,6 +20,11 @@
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
     </resultMap>
 
+    <sql id="Base_Column_List">
+        ts_code, trade_date, pre_close, pre_settle, `open`, high, low, `close`,
+        settle, close_change, settle_change, deal_vol, deal_amount, hold_vol
+    </sql>
+
     <insert id="insert" parameterType="com.guru.future.domain.TsFutureDailyDO">
         insert into ts_future_daily (ts_code, trade_date, pre_close, pre_settle, `open`, high,
                                      low, `close`, settle, close_change, settle_change, deal_vol,
@@ -31,4 +36,24 @@
                 #{dealAmount,jdbcType=DECIMAL}, #{holdVol,jdbcType=DECIMAL}, #{holdChange,jdbcType=DECIMAL},
                 #{createTime,jdbcType=TIMESTAMP})
     </insert>
+
+    <select id="selectByQuery" resultType="com.guru.future.domain.TsFutureDailyDO">
+        select
+        <include refid="Base_Column_List"/>
+        from ts_future_daily
+        <where>
+            <if test="code != null">
+                and ts_code = #{code,jdbcType=VARCHAR}
+            </if>
+            <if test="tradeDate != null">
+                and trade_date = #{tradeDate,jdbcType=VARCHAR}
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and trade_date <![CDATA[>=]]> #{startDate,jdbcType=VARCHAR}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and trade_date <![CDATA[<=]]> #{endDate,jdbcType=VARCHAR}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -18,4 +18,7 @@ public class FutureDailyQuery {
 
     private List<String> codes;
 
+    private String startDate;
+
+    private String endDate;
 }

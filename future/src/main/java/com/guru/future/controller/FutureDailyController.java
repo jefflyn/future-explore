@@ -4,6 +4,7 @@ import com.google.common.base.Splitter;
 import com.guru.future.biz.service.FutureDailyService;
 import com.guru.future.biz.service.TsFutureDailyService;
 import com.guru.future.common.entity.vo.PositionCollectVO;
+import com.guru.future.common.utils.DateUtil;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +30,11 @@ public class FutureDailyController {
 
     @GetMapping(value = "/future/daily/add")
     public String addTsDaily(@RequestParam(value = "tsCodes", required = false) String tsCodes,
-                             @RequestParam(value = "start", required = false, defaultValue = "") String start,
-                             @RequestParam(value = "end", required = false, defaultValue = "") String end) {
-        tsFutureDailyService.batchAddDaily(tsCodes, start, end);
+                             @RequestParam(value = "start", required = false) String start,
+                             @RequestParam(value = "end", required = false) String end) {
+        String startDate = start == null ? DateUtil.getLastTradeDate(null, DateUtil.TRADE_DATE_PATTERN_FLAT) : start;
+        String endDate = end == null ? DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT) : end;
+        tsFutureDailyService.batchAddDaily(tsCodes, startDate, endDate);
         return "success";
     }
 

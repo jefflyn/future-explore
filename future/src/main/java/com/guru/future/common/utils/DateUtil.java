@@ -98,7 +98,7 @@ public class DateUtil {
     public static String latestTradeDate(String dateFormat) {
         Date date = new Date();
         if (Boolean.TRUE.equals(isHoliday(date))) {
-            return getLastTradeDate(date);
+            return getLastTradeDate(date, dateFormat);
         }
         return DateFormatUtils.format(date, dateFormat);
     }

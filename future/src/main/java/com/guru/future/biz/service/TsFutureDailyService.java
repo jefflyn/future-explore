@@ -1,6 +1,7 @@
 package com.guru.future.biz.service;
 
 import com.google.common.base.Splitter;
+import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.TsFutureBasicManager;
 import com.guru.future.biz.manager.TsFutureDailyManager;
 import com.guru.future.biz.manager.remote.TsFutureManager;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author j
@@ -21,6 +23,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class TsFutureDailyService {
+    @Resource
+    private FutureBasicManager futureBasicManager;
+
     @Resource
     private TsFutureManager tsFutureManager;
 
@@ -36,6 +41,8 @@ public class TsFutureDailyService {
             tsCodes = Splitter.on(",").splitToList(tsCodeStr);
         } else {
             tsCodes = tsFutureBasicManager.getTsCodeByType(ContractType.CONTINUE.getCode());
+            List<String> mainCodes = futureBasicManager.getAll().stream().map(e -> e.getCode() + "." + e.getExchange()).collect(Collectors.toList());
+            tsCodes.addAll(mainCodes);
         }
         log.info("batchAddDaily total={}, tsCodes={}", tsCodes.size(), tsCodes);
         for (String tsCode : tsCodes) {

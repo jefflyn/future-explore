@@ -43,6 +43,10 @@ public class FutureBasicManager {
         return futureBasicDOList.stream().map(FutureBasicDO::getCode).collect(Collectors.toList());
     }
 
+    /**
+     * deleted = 0
+     * @return
+     */
     public List<FutureBasicDO> getAll() {
         return futureBasicsDAO.selectByQuery(null);
     }

@@ -1,5 +1,6 @@
 package com.guru.future.biz.manager;
 
+import com.guru.future.common.entity.query.FutureDailyQuery;
 import com.guru.future.domain.TsFutureDailyDO;
 import com.guru.future.mapper.TsFutureDailyDAO;
 import lombok.extern.slf4j.Slf4j;
@@ -26,5 +27,13 @@ public class TsFutureDailyManager {
             }
         }
         return true;
+    }
+
+    public List<TsFutureDailyDO> getByTsCode(String tsCode, String startDate, String endDate) {
+        FutureDailyQuery futureDailyQuery = new FutureDailyQuery();
+        futureDailyQuery.setCode(tsCode);
+        futureDailyQuery.setStartDate(startDate);
+        futureDailyQuery.setEndDate(endDate);
+        return tsFutureDailyDAO.selectByQuery(futureDailyQuery);
     }
 }
