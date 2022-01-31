@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 /**
@@ -38,9 +39,18 @@ public class TsFutureDailyService {
     public Boolean batchAddDaily(String tsCodeStr, String startDate, String endDate) {
         List<String> tsCodes;
         if (Strings.isNotBlank(tsCodeStr)) {
-            tsCodes = Splitter.on(",").splitToList(tsCodeStr);
+            if ("C".equals(tsCodeStr.toUpperCase(Locale.ROOT))) {
+                tsCodes = tsFutureBasicManager.getTsCodeByType(ContractType.CONTINUE.getCode());
+            } else if ("M".equals(tsCodeStr.toUpperCase(Locale.ROOT))) {
+                tsCodes = tsFutureBasicManager.getTsCodeByType(ContractType.MAIN.getCode());
+            } else if ("R".equals(tsCodeStr.toUpperCase(Locale.ROOT))) {
+                tsCodes = futureBasicManager.getAll().stream().map(e -> e.getCode() + "." + e.getExchange()).collect(Collectors.toList());
+            } else {
+                tsCodes = Splitter.on(",").splitToList(tsCodeStr);
+            }
         } else {
             tsCodes = tsFutureBasicManager.getTsCodeByType(ContractType.CONTINUE.getCode());
+            tsCodes.addAll(tsFutureBasicManager.getTsCodeByType(ContractType.MAIN.getCode()));
             List<String> mainCodes = futureBasicManager.getAll().stream().map(e -> e.getCode() + "." + e.getExchange()).collect(Collectors.toList());
             tsCodes.addAll(mainCodes);
         }
