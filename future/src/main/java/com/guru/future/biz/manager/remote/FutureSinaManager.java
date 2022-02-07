@@ -36,7 +36,7 @@ public class FutureSinaManager {
 //        String result = HttpUtil.doGet(SINA_HQ_URL + reqCodes);
         String url = "https://hq.sinajs.cn/?_=" + System.currentTimeMillis() + "/&list=" + reqCodes;
         String result = HttpUtil.doGet(url);
-        log.info("url={}, result={}", url, JSON.toJSONString(result));
+//        log.info("url={}, result={}", url, JSON.toJSONString(result));
         List<String> contractList = Splitter.on(";\n").splitToList(result);
         return contractList;
     }

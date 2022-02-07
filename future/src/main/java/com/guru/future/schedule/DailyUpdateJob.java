@@ -31,7 +31,7 @@ public class DailyUpdateJob {
     }
 
     @Async
-    @Scheduled(cron = "0 30 12,16,17 * * MON-SAT")
+    @Scheduled(cron = "0 30 16,17 * * MON-SAT")
     public void updateTsDaily() {
         String startDate = DateUtil.getLastTradeDate(null, DateUtil.TRADE_DATE_PATTERN_FLAT);
         String endDate = DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT);

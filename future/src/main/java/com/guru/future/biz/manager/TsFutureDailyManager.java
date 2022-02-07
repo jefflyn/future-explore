@@ -18,7 +18,7 @@ public class TsFutureDailyManager {
     @Resource
     private TsFutureDailyDAO tsFutureDailyDAO;
 
-    public Boolean batchAddFutureBasic(List<TsFutureDailyDO> tsFutureDailyDOList) {
+    public Boolean batchAddFutureDaily(List<TsFutureDailyDO> tsFutureDailyDOList) {
         for (TsFutureDailyDO tsFutureDailyDO : tsFutureDailyDOList) {
             try {
                 tsFutureDailyDAO.insert(tsFutureDailyDO);

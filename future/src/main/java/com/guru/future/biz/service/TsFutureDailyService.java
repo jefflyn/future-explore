@@ -56,18 +56,18 @@ public class TsFutureDailyService {
         }
         log.info("batchAddDaily total={}, tsCodes={}", tsCodes.size(), tsCodes);
         for (String tsCode : tsCodes) {
-            asyncAddFutureBasic(tsCode, startDate, endDate);
+            asyncAddFutureDaily(tsCode, startDate, endDate);
         }
         return true;
     }
 
     @Async
-    public void asyncAddFutureBasic(String tsCode, String startDate, String endDate) {
-        log.info("tsCode={}, start={}, end={} asyncAddFutureBasic start", tsCode, startDate, endDate);
+    public void asyncAddFutureDaily(String tsCode, String startDate, String endDate) {
+        log.info("tsCode={}, start={}, end={} asyncAddFutureDaily start", tsCode, startDate, endDate);
         try {
             String result = tsFutureManager.getDaily(tsCode, startDate, endDate);
             List<TsFutureDailyDO> futureDailyDOList = FutureDailyConverter.toTsFutureDailyDO(result);
-            tsFutureDailyManager.batchAddFutureBasic(futureDailyDOList);
+            tsFutureDailyManager.batchAddFutureDaily(futureDailyDOList);
         } catch (Exception e) {
             log.info("get {} ts daily error: ", tsCode, e);
         }
