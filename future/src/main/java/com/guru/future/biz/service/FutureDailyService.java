@@ -48,9 +48,9 @@ public class FutureDailyService {
     public void addTradeDaily() {
         List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getAllRealtimeFromSina();
         this.upsertTradeDaily(contractRealtimeDTOList);
+        log.info("addTradeDaily done!");
     }
 
-    @Async
     public void upsertTradeDaily(List<ContractRealtimeDTO> contractRealtimeDTOList) {
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
         String tradeDate = DateUtil.currentTradeDate();

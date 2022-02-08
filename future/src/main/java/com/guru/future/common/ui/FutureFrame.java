@@ -74,13 +74,13 @@ public class FutureFrame {
         for (int i = 0; i < LiveDataCache.getChangeHighTop10().size(); i++) {
             FutureLiveVO highTop = LiveDataCache.getChangeHighTop10().get(i);
             JLabel label = new JLabel();
-            label.setText(highTop.toString() + " 多");
+            label.setText(highTop.toString());
             changeHighTopModel.add(i, label);
         }
         for (int i = 0; i < LiveDataCache.getChangeLowTop10().size(); i++) {
             FutureLiveVO lowTop = LiveDataCache.getChangeLowTop10().get(i);
             JLabel label = new JLabel();
-            label.setText(lowTop.toString() + " 空");
+            label.setText(lowTop.toString());
             changeLowTopModel.add(i, label);
         }
     }
@@ -101,7 +101,7 @@ public class FutureFrame {
             if (frame == null) {
                 frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 530, 390);
+                frame.setBounds(0, 1000, 530, 400);
                 frame.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e) {
@@ -127,7 +127,7 @@ public class FutureFrame {
 
     private JPanel createPanel() {
         JPanel panel = new JPanel(false);
-        panel.setPreferredSize(new Dimension(520, 360));
+        panel.setPreferredSize(new Dimension(520, 380));
         return panel;
     }
 
@@ -160,19 +160,19 @@ public class FutureFrame {
             JList<JLabel> priceLogList = new JList<>(priceModel);
             priceLogList.setCellRenderer(new MyListCellRenderer());
             pricePane = new JScrollPane(priceLogList);
-            pricePane.setPreferredSize(new Dimension(520, 130));
+            pricePane.setPreferredSize(new Dimension(520, 140));
             logPanel.add(pricePane, 0);
 
             JList<JLabel> highTopList = new JList<>(highTopModel);
             highTopList.setCellRenderer(new MyListCellRenderer());
             highTopPane = new JScrollPane(highTopList);
-            highTopPane.setPreferredSize(new Dimension(520, 85));
+            highTopPane.setPreferredSize(new Dimension(520, 90));
             logPanel.add(highTopPane, 1);
 
             JList<JLabel> lowTopList = new JList<>(lowTopModel);
             lowTopList.setCellRenderer(new MyListCellRenderer());
             lowTopPane = new JScrollPane(lowTopList);
-            lowTopPane.setPreferredSize(new Dimension(520, 85));
+            lowTopPane.setPreferredSize(new Dimension(520, 90));
             logPanel.add(lowTopPane, 2);
         } else {
             pricePane = (JScrollPane) logPanel.getComponent(0);
@@ -202,19 +202,19 @@ public class FutureFrame {
             JTextArea overviewTxt = new JTextArea(overview);
             overviewTxt.setEditable(false);
             overviewPane = new JScrollPane(overviewTxt);
-            overviewPane.setPreferredSize(new Dimension(520, 130));
+            overviewPane.setPreferredSize(new Dimension(520, 140));
             viewPanel.add(overviewPane, 0);
 
             JList<JLabel> changeHighTopList = new JList<>(changeHighTopModel);
             changeHighTopList.setCellRenderer(new MyListCellRenderer());
             changeHighTopPane = new JScrollPane(changeHighTopList);
-            changeHighTopPane.setPreferredSize(new Dimension(520, 85));
+            changeHighTopPane.setPreferredSize(new Dimension(520, 90));
             viewPanel.add(changeHighTopPane, 1);
 
             JList<JLabel> changeLowTopList = new JList<>(changeLowTopModel);
             changeLowTopList.setCellRenderer(new MyListCellRenderer());
             changeLowTopPane = new JScrollPane(changeLowTopList);
-            changeLowTopPane.setPreferredSize(new Dimension(520, 85));
+            changeLowTopPane.setPreferredSize(new Dimension(520, 90));
             viewPanel.add(changeLowTopPane, 2);
         } else {
             overviewPane = (JScrollPane) viewPanel.getComponent(0);

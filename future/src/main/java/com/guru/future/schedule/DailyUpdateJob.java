@@ -24,14 +24,12 @@ public class DailyUpdateJob {
     @Resource
     private TsFutureDailyService tsFutureDailyService;
 
-    @Async
     @Scheduled(cron = "8 8 15,03 * * MON-SAT")
     public void updateTradeDaily() {
         futureDailyService.addTradeDaily();
     }
 
-    @Async
-    @Scheduled(cron = "0 10,30 16,17 * * MON-SAT")
+    @Scheduled(cron = "0 10,30 17 * * MON-SAT")
     public void updateTsDaily() {
         String startDate = DateUtil.getLastTradeDate(null, DateUtil.TRADE_DATE_PATTERN_FLAT);
         String endDate = DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT);

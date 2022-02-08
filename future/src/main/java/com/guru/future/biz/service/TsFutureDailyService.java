@@ -54,10 +54,10 @@ public class TsFutureDailyService {
             List<String> mainCodes = futureBasicManager.getAll().stream().map(e -> e.getCode() + "." + e.getExchange()).collect(Collectors.toList());
             tsCodes.addAll(mainCodes);
         }
-        log.info("batchAddDaily total={}, tsCodes={}", tsCodes.size(), tsCodes);
         for (String tsCode : tsCodes) {
             asyncAddFutureDaily(tsCode, startDate, endDate);
         }
+        log.info("batchAddDaily done! total={}, tsCodes={}", tsCodes.size(), tsCodes);
         return true;
     }
 
@@ -69,7 +69,7 @@ public class TsFutureDailyService {
             List<TsFutureDailyDO> futureDailyDOList = FutureDailyConverter.toTsFutureDailyDO(result);
             tsFutureDailyManager.batchAddFutureDaily(futureDailyDOList);
         } catch (Exception e) {
-            log.info("get {} ts daily error: ", tsCode, e);
+            log.info("get {} ts daily error: ", tsCode, e.getMessage());
         }
     }
 }
