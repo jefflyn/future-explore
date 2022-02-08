@@ -19,9 +19,18 @@ public class DailyCollectJob {
     @Resource
     private FutureCollectService dailyCollectService;
 
-    @Async
-    @Scheduled(cron = "6 0,5,10,15,20,25,30,35,40,45,50,55,59 9,10,11,13,14 * * MON-FRI")
-    public void dailyCollect() {
+    @Scheduled(cron = "3 0,5,10,15,20,25,30,35,40,45,50,55 9,10,14 * * MON-FRI")
+    public void dailyCollect1() {
+        dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
+    }
+
+    @Scheduled(cron = "3 0,5,10,15,20,25,30 11 * * MON-FRI")
+    public void dailyCollect2() {
+        dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
+    }
+
+    @Scheduled(cron = "3 30,35,40,45,50,55 13 * * MON-FRI")
+    public void dailyCollect3() {
         dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
     }
 

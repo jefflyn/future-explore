@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JViewport;
 import javax.swing.ListCellRenderer;
 import java.awt.Color;
 import java.awt.Component;
@@ -73,13 +74,13 @@ public class FutureFrame {
         for (int i = 0; i < LiveDataCache.getChangeHighTop10().size(); i++) {
             FutureLiveVO highTop = LiveDataCache.getChangeHighTop10().get(i);
             JLabel label = new JLabel();
-            label.setText(highTop.toString() + " 做多");
+            label.setText(highTop.toString() + " 多");
             changeHighTopModel.add(i, label);
         }
         for (int i = 0; i < LiveDataCache.getChangeLowTop10().size(); i++) {
             FutureLiveVO lowTop = LiveDataCache.getChangeLowTop10().get(i);
             JLabel label = new JLabel();
-            label.setText(lowTop.toString());
+            label.setText(lowTop.toString() + " 空");
             changeLowTopModel.add(i, label);
         }
     }
@@ -131,54 +132,104 @@ public class FutureFrame {
     }
 
     /**
-     * 刷新面板数据
+     * 刷新内容窗格数据
      */
     private void refreshContentPane() {
-        JList<JLabel> list = new JList<>(priceModel);
-        list.setCellRenderer(new MyListCellRenderer());
-        JScrollPane pricePane = new JScrollPane(list);
-        pricePane.setPreferredSize(new Dimension(520, 130));
-
-        JList<JLabel> highTopList = new JList<>(highTopModel);
-        highTopList.setCellRenderer(new MyListCellRenderer());
-        JScrollPane highTopPane = new JScrollPane(highTopList);
-        highTopPane.setPreferredSize(new Dimension(520, 85));
-
-        JList<JLabel> lowTopList = new JList<>(lowTopModel);
-        lowTopList.setCellRenderer(new MyListCellRenderer());
-        JScrollPane lowTopPane = new JScrollPane(lowTopList);
-        lowTopPane.setPreferredSize(new Dimension(520, 85));
-
         Container c = frame.getContentPane();
+        // tag窗体内容面板
         JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);
+        // log、position tab panel
         JPanel logPanel = (JPanel) tabbedPane.getComponent(0);
-        logPanel.removeAll();
-
-        // overview tab
-        JTextArea overviewTxt = new JTextArea(overview);
-        overviewTxt.setEditable(false);
-        JScrollPane overviewPane = new JScrollPane(overviewTxt);
-        overviewPane.setPreferredSize(new Dimension(520, 130));
-
-        JList<JLabel> changeHighTopList = new JList<>(changeHighTopModel);
-        changeHighTopList.setCellRenderer(new MyListCellRenderer());
-        JScrollPane changeHighTopPane = new JScrollPane(changeHighTopList);
-        changeHighTopPane.setPreferredSize(new Dimension(520, 85));
-
-        JList<JLabel> changeLowTopList = new JList<>(changeLowTopModel);
-        changeLowTopList.setCellRenderer(new MyListCellRenderer());
-        JScrollPane changeLowTopPane = new JScrollPane(changeLowTopList);
-        changeLowTopPane.setPreferredSize(new Dimension(520, 85));
-
+        refreshLogTagPanel(logPanel);
+        // overview tab panel
         JPanel viewPanel = (JPanel) tabbedPane.getComponent(1);
-        viewPanel.removeAll();
-        logPanel.add(pricePane, 0);
-        logPanel.add(highTopPane, 1);
-        logPanel.add(lowTopPane, 2);
+        refreshOverviewTagPanel(viewPanel);
+    }
 
-        viewPanel.add(overviewPane, 0);
-        viewPanel.add(changeHighTopPane, 1);
-        viewPanel.add(changeLowTopPane, 2);
+    /**
+     * log & position 面板刷新
+     *
+     * @param logPanel
+     */
+    private void refreshLogTagPanel(JPanel logPanel) {
+        JScrollPane pricePane;
+        JScrollPane highTopPane;
+        JScrollPane lowTopPane;
+        int componentCount = logPanel.getComponentCount();
+        if (componentCount == 0) {
+            JList<JLabel> priceLogList = new JList<>(priceModel);
+            priceLogList.setCellRenderer(new MyListCellRenderer());
+            pricePane = new JScrollPane(priceLogList);
+            pricePane.setPreferredSize(new Dimension(520, 130));
+            logPanel.add(pricePane, 0);
+
+            JList<JLabel> highTopList = new JList<>(highTopModel);
+            highTopList.setCellRenderer(new MyListCellRenderer());
+            highTopPane = new JScrollPane(highTopList);
+            highTopPane.setPreferredSize(new Dimension(520, 85));
+            logPanel.add(highTopPane, 1);
+
+            JList<JLabel> lowTopList = new JList<>(lowTopModel);
+            lowTopList.setCellRenderer(new MyListCellRenderer());
+            lowTopPane = new JScrollPane(lowTopList);
+            lowTopPane.setPreferredSize(new Dimension(520, 85));
+            logPanel.add(lowTopPane, 2);
+        } else {
+            pricePane = (JScrollPane) logPanel.getComponent(0);
+            JList<JLabel> priceLogList = (JList<JLabel>) ((JViewport) pricePane.getComponent(0)).getComponent(0);
+            priceLogList.setModel(priceModel);
+
+            highTopPane = (JScrollPane) logPanel.getComponent(1);
+            JList<JLabel> highTopList = (JList<JLabel>) ((JViewport) highTopPane.getComponent(0)).getComponent(0);
+            highTopList.setModel(highTopModel);
+
+            lowTopPane = (JScrollPane) logPanel.getComponent(2);
+            JList<JLabel> lowTopList = (JList<JLabel>) ((JViewport) lowTopPane.getComponent(0)).getComponent(0);
+            lowTopList.setModel(lowTopModel);
+        }
+    }
+
+    /**
+     * @param viewPanel 概况面板刷新
+     */
+    private void refreshOverviewTagPanel(JPanel viewPanel) {
+        // 概况、领涨、领跌 ScrollPane
+        JScrollPane overviewPane;
+        JScrollPane changeHighTopPane;
+        JScrollPane changeLowTopPane;
+        int componentCount = viewPanel.getComponentCount();
+        if (componentCount == 0) {
+            JTextArea overviewTxt = new JTextArea(overview);
+            overviewTxt.setEditable(false);
+            overviewPane = new JScrollPane(overviewTxt);
+            overviewPane.setPreferredSize(new Dimension(520, 130));
+            viewPanel.add(overviewPane, 0);
+
+            JList<JLabel> changeHighTopList = new JList<>(changeHighTopModel);
+            changeHighTopList.setCellRenderer(new MyListCellRenderer());
+            changeHighTopPane = new JScrollPane(changeHighTopList);
+            changeHighTopPane.setPreferredSize(new Dimension(520, 85));
+            viewPanel.add(changeHighTopPane, 1);
+
+            JList<JLabel> changeLowTopList = new JList<>(changeLowTopModel);
+            changeLowTopList.setCellRenderer(new MyListCellRenderer());
+            changeLowTopPane = new JScrollPane(changeLowTopList);
+            changeLowTopPane.setPreferredSize(new Dimension(520, 85));
+            viewPanel.add(changeLowTopPane, 2);
+        } else {
+            overviewPane = (JScrollPane) viewPanel.getComponent(0);
+            JViewport viewport = (JViewport) overviewPane.getComponent(0);
+            JTextArea overviewTxtArea = (JTextArea) viewport.getComponent(0);
+            overviewTxtArea.setText(overview);
+
+            changeHighTopPane = (JScrollPane) viewPanel.getComponent(1);
+            JList<JLabel> changeHighTopList = (JList<JLabel>) ((JViewport) changeHighTopPane.getComponent(0)).getComponent(0);
+            changeHighTopList.setModel(changeHighTopModel);
+
+            changeLowTopPane = (JScrollPane) viewPanel.getComponent(2);
+            JList<JLabel> changeLowTopList = (JList<JLabel>) ((JViewport) changeLowTopPane.getComponent(0)).getComponent(0);
+            changeLowTopList.setModel(changeLowTopModel);
+        }
     }
 
     public static class MyListCellRenderer extends JLabel implements ListCellRenderer<Object> {
