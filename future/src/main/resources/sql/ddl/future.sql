@@ -137,6 +137,29 @@ create index idx_future_log_trade_date
 create index uidx_future_log
     on future_log (code, type, factor, suggest, position);
 
+create table future_wave
+(
+    code text null,
+    start text null,
+    end text null,
+    a double null,
+    b double null,
+    c double null,
+    d double null
+);
+
+create table future_wave_detail
+(
+    code text null,
+    begin text null,
+    end text null,
+    status text null,
+    begin_price double null,
+    end_price double null,
+    `change` double null,
+    days bigint null
+);
+
 create table open_gap
 (
     trade_date varchar(10) not null comment 'trade date',
@@ -168,7 +191,8 @@ create table ts_future_contract
     symbol varchar(8) not null comment '交易标识',
     exchange varchar(8) not null comment '交易所代码 CFFEX-中金所 DCE-大商所 CZCE-郑商所 SHFE-上期所 INE-上海国际能源交易中心',
     name varchar(16) null comment '中文简称',
-    fut_code varchar(8) null comment '合约产品代码'
+    fut_code varchar(8) null comment '合约产品代码',
+    type tinyint not null comment '合约类型（1=连续 2=主力 3=常规）'
 )
     comment '合约列表';
 
@@ -176,8 +200,8 @@ create table ts_future_daily
 (
     ts_code varchar(16) not null comment 'TS合约代码',
     trade_date varchar(10) not null comment '交易日期',
-    pre_close varchar(10) null comment '昨收盘价',
-    pre_settle decimal(10,2) not null comment '昨结算价',
+    pre_close decimal(10,2) null comment '昨收盘价',
+    pre_settle decimal(10,2) null comment '昨结算价',
     open decimal(10,2) not null comment '开盘价',
     high decimal(10,2) not null comment '最高价',
     low decimal(10,2) not null comment '最低价',
@@ -185,10 +209,10 @@ create table ts_future_daily
     settle decimal(10,2) not null comment '结算价',
     close_change decimal(10,2) not null comment '昨收盘价涨跌幅',
     settle_change decimal(10,2) not null comment '结算价涨跌幅',
-    deal_vol int null comment '成交量(手)',
+    deal_vol decimal(10,1) null comment '成交量(手)',
     deal_amount decimal(10,2) null comment '成交金额(万元)',
-    hold_vol int null comment '持仓量(手)',
-    hold_change int null comment '持仓量变化',
+    hold_vol decimal(10,1) null comment '持仓量(手)',
+    hold_change decimal(10,1) null comment '持仓量变化',
     create_time datetime not null comment '创建时间',
     constraint idx_ts_future_daily_code_date
         unique (ts_code, trade_date)

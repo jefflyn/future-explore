@@ -22,8 +22,8 @@ import static com.guru.future.common.utils.DateUtil.TRADE_DATE_PATTERN_HYPHEN;
 public class TsFutureManager {
     private final static String TS_URL = "http://api.tushare.pro";
 
-    private final static String TOKEN = "852fb7e0feac4bf63d6e93385344af3a91fa2b3466f3bb6955575a3b";
-
+//    private final static String TOKEN = "852fb7e0feac4bf63d6e93385344af3a91fa2b3466f3bb6955575a3b";
+    private final static String TOKEN = "3af111f9e9899366fdcedbc34cbd2491eeff7ffec6064ed0c234e2ef";
     /**
      * 合约信息
      *
