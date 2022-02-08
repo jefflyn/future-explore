@@ -25,7 +25,7 @@ import java.util.Map;
  * @author j
  */
 public class HttpUtil {
-    public static String doGet(String url, Map<String, String> param) {
+    public static String doGet(String url, Map<String, String> param, Map<String, String> header) {
         // 创建Httpclient对象
         CloseableHttpClient httpclient = HttpClients.createDefault();
 
@@ -40,10 +40,13 @@ public class HttpUtil {
                 }
             }
             URI uri = builder.build();
-
             // 创建http GET请求
             HttpGet httpGet = new HttpGet(uri);
-
+            if (header != null) {
+                for (String key : header.keySet()) {
+                    httpGet.setHeader(key, header.get(key));
+                }
+            }
             // 执行请求
             response = httpclient.execute(httpGet);
             // 判断返回状态是否为200
@@ -63,6 +66,10 @@ public class HttpUtil {
             }
         }
         return resultString;
+    }
+
+    public static String doGet(String url, Map<String, String> param) {
+        return doGet(url, param, null);
     }
 
     public static String doGet(String url) {

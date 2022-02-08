@@ -1,6 +1,5 @@
 package com.guru.future.biz.manager.remote;
 
-import com.alibaba.fastjson.JSON;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -15,7 +14,9 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author j
@@ -23,6 +24,7 @@ import java.util.List;
 @Component
 @Slf4j
 public class FutureSinaManager {
+    // http://w.sinajs.cn/?list=
     private final static String SINA_HQ_URL = "https://hq.sinajs.cn/list=";
 
     @Resource
@@ -33,9 +35,10 @@ public class FutureSinaManager {
         for (String code : codeList) {
             reqCodes.append(SinaHqUtil.convert2HqCode(code)).append(",");
         }
-//        String result = HttpUtil.doGet(SINA_HQ_URL + reqCodes);
-        String url = "https://hq.sinajs.cn/?_=" + System.currentTimeMillis() + "/&list=" + reqCodes;
-        String result = HttpUtil.doGet(url);
+        String url = SINA_HQ_URL + reqCodes;
+        Map<String, String> header = new HashMap<>();
+        header.put("Referer", "https://finance.sina.com.cn");
+        String result = HttpUtil.doGet(url, null, header);
 //        log.info("url={}, result={}", url, JSON.toJSONString(result));
         List<String> contractList = Splitter.on(";\n").splitToList(result);
         return contractList;

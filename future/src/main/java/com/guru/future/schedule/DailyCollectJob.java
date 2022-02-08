@@ -20,9 +20,9 @@ public class DailyCollectJob {
     private FutureCollectService dailyCollectService;
 
     @Async
-//    @Scheduled(cron = "6 0,5,10,15,20,25,30,35,40,45,50,55,59 9,10,11,13,14 * * MON-FRI")
+    @Scheduled(cron = "6 0,5,10,15,20,25,30,35,40,45,50,55,59 9,10,11,13,14 * * MON-FRI")
     public void dailyCollect() {
-//        dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
+        dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
     }
 
 }
