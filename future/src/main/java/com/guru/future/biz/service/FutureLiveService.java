@@ -166,8 +166,8 @@ public class FutureLiveService {
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist high, refresh basic data", contractRealtimeDTO.getCode());
         }
-        BigDecimal waveB = futureBasicDO.getB();
-        BigDecimal waveC = futureBasicDO.getC();
+        BigDecimal waveB = ObjectUtils.defaultIfNull(futureBasicDO.getB(), BigDecimal.ZERO);
+        BigDecimal waveC = ObjectUtils.defaultIfNull(futureBasicDO.getC(), BigDecimal.ZERO);
         // up wave
         if (waveC.floatValue() >= waveB.floatValue()) {
             if (contractRealtimeDTO.getPrice().floatValue() > waveC.floatValue()
