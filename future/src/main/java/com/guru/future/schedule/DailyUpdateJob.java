@@ -31,7 +31,7 @@ public class DailyUpdateJob {
 
     @Scheduled(cron = "0 15 17 * * MON-SAT")
     public void updateTsDaily() {
-        String startDate = DateUtil.getLastTradeDate(null, DateUtil.TRADE_DATE_PATTERN_FLAT);
+        String startDate = DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT);
         String endDate = DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT);
         tsFutureDailyService.batchAddDaily(null, startDate, endDate);
     }

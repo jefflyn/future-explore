@@ -22,6 +22,7 @@ public class FutureBasicDO {
     private BigDecimal a;
     private BigDecimal b;
     private BigDecimal c;
+    private BigDecimal d;
 
     private Integer amount;
 

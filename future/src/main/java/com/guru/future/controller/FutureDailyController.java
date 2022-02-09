@@ -32,7 +32,7 @@ public class FutureDailyController {
     public String addTsDaily(@RequestParam(value = "tsCodes", required = false) String tsCodes,
                              @RequestParam(value = "start", required = false) String start,
                              @RequestParam(value = "end", required = false) String end) {
-        String startDate = start == null ? DateUtil.getLastTradeDate(null, DateUtil.TRADE_DATE_PATTERN_FLAT) : start;
+        String startDate = start == null ? DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT) : start;
         String endDate = end == null ? DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT) : end;
         tsFutureDailyService.batchAddDaily(tsCodes, startDate, endDate);
         return "success";

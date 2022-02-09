@@ -12,6 +12,7 @@
         <result column="a" jdbcType="DECIMAL" property="a"/>
         <result column="b" jdbcType="DECIMAL" property="b"/>
         <result column="c" jdbcType="DECIMAL" property="c"/>
+        <result column="d" jdbcType="DECIMAL" property="d"/>
         <result column="amount" jdbcType="INTEGER" property="amount"/>
         <result column="unit" jdbcType="VARCHAR" property="unit"/>
         <result column="night" jdbcType="TINYINT" property="night"/>
@@ -24,7 +25,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        symbol, `name`, `type`, code, low, high, `a`,`b`,`c`,amount, unit, night, exchange, is_target, deleted, update_time, remark
+        symbol, `name`, `type`, code, low, high, `a`,`b`,`c`,`d`,amount, unit, night, exchange, is_target, deleted, update_time, remark
     </sql>
 
     <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -83,6 +84,9 @@
             </if>
             <if test="c != null">
                 c = #{c,jdbcType=DECIMAL},
+            </if>
+            <if test="d != null">
+                d = #{d,jdbcType=DECIMAL},
             </if>
             <if test="amount != null">
                 amount = #{amount,jdbcType=INTEGER},
