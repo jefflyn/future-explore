@@ -76,7 +76,8 @@ public class FutureLiveService {
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
             FutureLiveVO futureLiveVO = new FutureLiveVO();
             BeanUtils.copyProperties(futureLiveDO, futureLiveVO);
-            futureLiveVO.setWave(FutureUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), futureLiveVO.getPrice()));
+            futureLiveVO.setWave(FutureUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), basicDO.getD(),
+                    futureLiveVO.getPrice()));
             futureLiveVOList.add(futureLiveVO);
         }
         int size = futureLiveVOList.size();
@@ -338,7 +339,7 @@ public class FutureLiveService {
         content.append("<br/>");
         content.append(lowTopContent());
         content.append("</body></html>");
-        mailManager.sendHtmlMail("市场概况", content.toString());
+//        mailManager.sendHtmlMail("市场概况", content.toString());
     }
 
     private String highTopContent() {

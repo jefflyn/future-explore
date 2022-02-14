@@ -6,6 +6,8 @@ import org.apache.logging.log4j.util.Strings;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author j
@@ -48,36 +50,48 @@ public class FutureUtil {
     }
 
     public static String generateWave(BigDecimal a, BigDecimal b, BigDecimal c, BigDecimal d, BigDecimal price) {
-        StringBuilder waveStr = new StringBuilder();
+        List<String> waveList = new ArrayList<>();
+//        StringBuilder waveStr = new StringBuilder();
         if (a == null || price == null) {
             return Strings.EMPTY;
         }
         BigDecimal waveA;
         if (b != null) {
             waveA = b.subtract(a).multiply(BigDecimal.valueOf(100)).divide(a, 2, RoundingMode.HALF_UP);
-            waveStr.append(getDirectionTag(waveA)).append(waveA).append(PERCENTAGE_SYMBOL);
+//            waveStr.append(getDirectionTag(waveA)).append(waveA).append(PERCENTAGE_SYMBOL);
+            waveList.add(waveA + PERCENTAGE_SYMBOL);
         } else {
             waveA = price.subtract(a).multiply(BigDecimal.valueOf(100)).divide(price, 2, RoundingMode.HALF_UP);
-            waveStr.append(getDirectionTag(waveA)).append(waveA).append(PERCENTAGE_SYMBOL);
-            return waveStr.toString();
+//            waveStr.append(getDirectionTag(waveA)).append(waveA).append(PERCENTAGE_SYMBOL);
+            waveList.add(waveA + PERCENTAGE_SYMBOL);
+            return waveList.toString();
         }
         BigDecimal waveB;
         if (c != null) {
             waveB = c.subtract(b).multiply(BigDecimal.valueOf(100)).divide(b, 2, RoundingMode.HALF_UP);
-            waveStr.append(getDirectionTag(waveB)).append(waveB).append(PERCENTAGE_SYMBOL);
+//            waveStr.append(getDirectionTag(waveB)).append(waveB).append(PERCENTAGE_SYMBOL);
+            waveList.add(waveB + PERCENTAGE_SYMBOL);
         } else {
             waveB = price.subtract(b).multiply(BigDecimal.valueOf(100)).divide(b, 2, RoundingMode.HALF_UP);
-            waveStr.append(getDirectionTag(waveB)).append(waveB).append(PERCENTAGE_SYMBOL);
-            return waveStr.toString();
+//            waveStr.append(getDirectionTag(waveB)).append(waveB).append(PERCENTAGE_SYMBOL);
+            waveList.add(waveB + PERCENTAGE_SYMBOL);
+            return waveList.toString();
         }
         BigDecimal waveC;
         if (d != null) {
             waveC = d.subtract(c).multiply(BigDecimal.valueOf(100)).divide(c, 2, RoundingMode.HALF_UP);
+            BigDecimal waveD = price.subtract(d).multiply(BigDecimal.valueOf(100)).divide(d, 2, RoundingMode.HALF_UP);
+            waveList.add(waveC + PERCENTAGE_SYMBOL);
+            waveList.add(waveD + PERCENTAGE_SYMBOL);
         } else {
             waveC = price.subtract(c).multiply(BigDecimal.valueOf(100)).divide(c, 2, RoundingMode.HALF_UP);
+            waveList.add(waveC + PERCENTAGE_SYMBOL);
         }
-        waveStr.append(getDirectionTag(waveC)).append(waveC).append(PERCENTAGE_SYMBOL);
-        return waveStr.toString();
+//        waveStr.append(getDirectionTag(waveC)).append(waveC).append(PERCENTAGE_SYMBOL);
+        if (waveList.size() > 3) {
+            return waveList.subList(waveList.size() - 3, waveList.size()).toString();
+        }
+        return waveList.toString();
     }
 
     public static String generateWave(BigDecimal a, BigDecimal b, BigDecimal c, BigDecimal price) {

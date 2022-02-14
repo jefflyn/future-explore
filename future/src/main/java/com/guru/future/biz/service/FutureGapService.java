@@ -220,7 +220,7 @@ public class FutureGapService {
         title.append(openHighStr).append(" VS ").append(openLowStr);
 
         if (!CollectionUtils.isEmpty(openGapDTOList)) {
-            sendOpenGapMail(title.toString(), openGapDTOList);
+//            sendOpenGapMail(title.toString(), openGapDTOList);
             openGapManager.batchAddOpenGapLog(ContractOpenGapConverter.convert2OpenGapDOList(openGapDTOList));
         } else {
             log.info(">>> no specified open gap found!!!");

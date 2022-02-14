@@ -4,6 +4,7 @@ import com.google.common.base.Strings;
 import com.guru.future.common.cache.LiveDataCache;
 import com.guru.future.common.entity.vo.FutureLiveVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
@@ -33,7 +34,8 @@ public class FutureFrame {
     private static String overview;
 
     private JFrame frame;
-    private DefaultListModel<JLabel> priceModel = new DefaultListModel<>();
+    private DefaultListModel<JLabel> changeLogModel = new DefaultListModel<>();
+    private DefaultListModel<JLabel> positionLogModel = new DefaultListModel<>();
     private DefaultListModel<JLabel> highTopModel = new DefaultListModel<>();
     private DefaultListModel<JLabel> lowTopModel = new DefaultListModel<>();
     private DefaultListModel<JLabel> changeHighTopModel = new DefaultListModel<>();
@@ -85,23 +87,31 @@ public class FutureFrame {
         }
     }
 
+    private void setLogDataModel(DefaultListModel<JLabel> logDataModel, String content) {
+        JLabel label = new JLabel();
+        label.setText(content);
+        if (positionLogModel.size() > 30) {
+            Object lastOne = positionLogModel.lastElement();
+            positionLogModel.removeElement(lastOne);
+        }
+        positionLogModel.add(0, label);
+    }
+
     public void createMsgFrame(String content) {
         try {
             lock.lock();
-            if (!Strings.isNullOrEmpty(content)) {
-                JLabel label = new JLabel();
-                label.setText(content);
-                if (priceModel.size() > 30) {
-                    Object lastOne = priceModel.lastElement();
-                    priceModel.removeElement(lastOne);
+            if (StringUtils.isNoneBlank(content)) {
+                if (content.contains("上涨") || content.contains("下跌")) {
+                    setLogDataModel(changeLogModel, content);
+                } else {
+                    setLogDataModel(positionLogModel, content);
                 }
-                priceModel.add(0, label);
             }
             buildTopModel();
             if (frame == null) {
                 frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 530, 400);
+                frame.setBounds(0, 1000, 530, 420);
                 frame.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e) {
@@ -109,7 +119,8 @@ public class FutureFrame {
                     }
                 });
                 JTabbedPane tabbedPane = new JTabbedPane();
-                tabbedPane.addTab("trade log", createPanel());
+                tabbedPane.addTab("position", createPanel());
+                tabbedPane.addTab("change", createPanel());
                 tabbedPane.addTab("overview", createPanel());
                 frame.add(tabbedPane);
                 refreshContentPane();
@@ -127,7 +138,7 @@ public class FutureFrame {
 
     private JPanel createPanel() {
         JPanel panel = new JPanel(false);
-        panel.setPreferredSize(new Dimension(520, 380));
+        panel.setPreferredSize(new Dimension(520, 400));
         return panel;
     }
 
@@ -139,54 +150,73 @@ public class FutureFrame {
         // tag窗体内容面板
         JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);
         // log、position tab panel
-        JPanel logPanel = (JPanel) tabbedPane.getComponent(0);
-        refreshLogTagPanel(logPanel);
+        JPanel positionPanel = (JPanel) tabbedPane.getComponent(0);
+        refreshPositionLogPanel(positionPanel);
+        // change tab panel
+        JPanel changePanel = (JPanel) tabbedPane.getComponent(1);
+        refreshChangeLogPanel(changePanel);
         // overview tab panel
-        JPanel viewPanel = (JPanel) tabbedPane.getComponent(1);
+        JPanel viewPanel = (JPanel) tabbedPane.getComponent(2);
         refreshOverviewTagPanel(viewPanel);
     }
 
     /**
-     * log & position 面板刷新
+     * position 面板刷新
      *
-     * @param logPanel
+     * @param posLogPanel
      */
-    private void refreshLogTagPanel(JPanel logPanel) {
+    private void refreshPositionLogPanel(JPanel posLogPanel) {
         JScrollPane pricePane;
         JScrollPane highTopPane;
         JScrollPane lowTopPane;
-        int componentCount = logPanel.getComponentCount();
+        int componentCount = posLogPanel.getComponentCount();
+        JList<JLabel> priceLogList = new JList<>(positionLogModel);
+        priceLogList.setCellRenderer(new MyListCellRenderer());
+        pricePane = new JScrollPane(priceLogList);
+        pricePane.setPreferredSize(new Dimension(520, 140));
         if (componentCount == 0) {
-            JList<JLabel> priceLogList = new JList<>(priceModel);
-            priceLogList.setCellRenderer(new MyListCellRenderer());
-            pricePane = new JScrollPane(priceLogList);
-            pricePane.setPreferredSize(new Dimension(520, 140));
-            logPanel.add(pricePane, 0);
+            posLogPanel.add(pricePane, 0);
 
             JList<JLabel> highTopList = new JList<>(highTopModel);
             highTopList.setCellRenderer(new MyListCellRenderer());
             highTopPane = new JScrollPane(highTopList);
             highTopPane.setPreferredSize(new Dimension(520, 90));
-            logPanel.add(highTopPane, 1);
+            posLogPanel.add(highTopPane, 1);
 
             JList<JLabel> lowTopList = new JList<>(lowTopModel);
             lowTopList.setCellRenderer(new MyListCellRenderer());
             lowTopPane = new JScrollPane(lowTopList);
             lowTopPane.setPreferredSize(new Dimension(520, 90));
-            logPanel.add(lowTopPane, 2);
+            posLogPanel.add(lowTopPane, 2);
         } else {
-            pricePane = (JScrollPane) logPanel.getComponent(0);
-            JList<JLabel> priceLogList = (JList<JLabel>) ((JViewport) pricePane.getComponent(0)).getComponent(0);
-            priceLogList.setModel(priceModel);
+            posLogPanel.remove(0);
+            posLogPanel.add(pricePane, 0);
+//            pricePane = (JScrollPane) posLogPaneposl.getComponent(0);
+//            JList<JLabel> priceLogList = (JList<JLabel>) ((JViewport) pricePane.getComponent(0)).getComponent(0);
+//            priceLogList.setModel(positionLogModel);
 
-            highTopPane = (JScrollPane) logPanel.getComponent(1);
+            highTopPane = (JScrollPane) posLogPanel.getComponent(1);
             JList<JLabel> highTopList = (JList<JLabel>) ((JViewport) highTopPane.getComponent(0)).getComponent(0);
             highTopList.setModel(highTopModel);
 
-            lowTopPane = (JScrollPane) logPanel.getComponent(2);
+            lowTopPane = (JScrollPane) posLogPanel.getComponent(2);
             JList<JLabel> lowTopList = (JList<JLabel>) ((JViewport) lowTopPane.getComponent(0)).getComponent(0);
             lowTopList.setModel(lowTopModel);
         }
+    }
+
+    /**
+     * price change log
+     *
+     * @param changeLogPanel
+     */
+    private void refreshChangeLogPanel(JPanel changeLogPanel) {
+        JList<JLabel> priceLogList = new JList<>(changeLogModel);
+        priceLogList.setCellRenderer(new MyListCellRenderer());
+        JScrollPane changePane = new JScrollPane(priceLogList);
+        changePane.setPreferredSize(new Dimension(520, 400));
+        changeLogPanel.removeAll();
+        changeLogPanel.add(changePane, 0);
     }
 
     /**
