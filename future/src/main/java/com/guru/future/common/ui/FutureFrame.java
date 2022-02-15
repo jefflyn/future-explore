@@ -90,11 +90,11 @@ public class FutureFrame {
     private void setLogDataModel(DefaultListModel<JLabel> logDataModel, String content) {
         JLabel label = new JLabel();
         label.setText(content);
-        if (positionLogModel.size() > 30) {
-            Object lastOne = positionLogModel.lastElement();
-            positionLogModel.removeElement(lastOne);
+        if (logDataModel.size() > 30) {
+            Object lastOne = logDataModel.lastElement();
+            logDataModel.removeElement(lastOne);
         }
-        positionLogModel.add(0, label);
+        logDataModel.add(0, label);
     }
 
     public void createMsgFrame(String content) {
@@ -111,7 +111,7 @@ public class FutureFrame {
             if (frame == null) {
                 frame = new JFrame();
                 frame.setLayout(new FlowLayout());
-                frame.setBounds(0, 1000, 530, 420);
+                frame.setBounds(0, 1000, 530, 430);
                 frame.addWindowListener(new WindowAdapter() {
                     @Override
                     public void windowClosing(WindowEvent e) {
@@ -173,7 +173,7 @@ public class FutureFrame {
         JList<JLabel> priceLogList = new JList<>(positionLogModel);
         priceLogList.setCellRenderer(new MyListCellRenderer());
         pricePane = new JScrollPane(priceLogList);
-        pricePane.setPreferredSize(new Dimension(520, 140));
+        pricePane.setPreferredSize(new Dimension(520, 160));
         if (componentCount == 0) {
             posLogPanel.add(pricePane, 0);
 
@@ -214,7 +214,7 @@ public class FutureFrame {
         JList<JLabel> priceLogList = new JList<>(changeLogModel);
         priceLogList.setCellRenderer(new MyListCellRenderer());
         JScrollPane changePane = new JScrollPane(priceLogList);
-        changePane.setPreferredSize(new Dimension(520, 400));
+        changePane.setPreferredSize(new Dimension(520, 360));
         changeLogPanel.removeAll();
         changeLogPanel.add(changePane, 0);
     }
@@ -232,7 +232,7 @@ public class FutureFrame {
             JTextArea overviewTxt = new JTextArea(overview);
             overviewTxt.setEditable(false);
             overviewPane = new JScrollPane(overviewTxt);
-            overviewPane.setPreferredSize(new Dimension(520, 140));
+            overviewPane.setPreferredSize(new Dimension(520, 160));
             viewPanel.add(overviewPane, 0);
 
             JList<JLabel> changeHighTopList = new JList<>(changeHighTopModel);
