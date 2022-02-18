@@ -29,7 +29,7 @@ public class DailyUpdateJob {
         futureDailyService.addTradeDaily();
     }
 
-    @Scheduled(cron = "0 15 17 * * MON-SAT")
+    @Scheduled(cron = "0 15 17,18 * * MON-SAT")
     public void updateTsDaily() {
         String startDate = DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT);
         String endDate = DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT);

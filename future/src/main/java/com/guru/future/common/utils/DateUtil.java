@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class DateUtil {
-    private static final boolean TRADE_TIME_TEST = true;
+    private static final boolean TRADE_TIME_TEST = false;
     private static final long SECOND_SCALE = 1000L;
     private static final long MINUTE_SCALE = 60L * SECOND_SCALE;
     private static final long HOUR_SCALE = 60L * MINUTE_SCALE;

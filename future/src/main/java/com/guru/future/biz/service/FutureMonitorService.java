@@ -38,7 +38,7 @@ public class FutureMonitorService {
     private static Map<String, Map<BigDecimal, LongAdder>> positionCount = new HashMap<>();
 
     static {
-        monitorParams.add(Pair.with(30, 0.5F));
+        monitorParams.add(Pair.with(30, 0.33F));
         monitorParams.add(Pair.with(60, 0.66F));
         monitorParams.add(Pair.with(120, 1F));
     }

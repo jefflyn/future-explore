@@ -1,3 +1,4 @@
+-- we don't know how to generate root <with-no-name> (class Root) :(
 create table future_basic
 (
     symbol varchar(4) not null comment '商品代号'
@@ -7,14 +8,16 @@ create table future_basic
     code varchar(8) not null comment '合约代码',
     low decimal(10,2) not null comment '主连历史最低',
     high decimal(10,2) not null comment '主连历史最高',
-    a decimal(10,2) null comment '本合约A（合约变更需修改）',
-    b decimal(10,2) null comment '本合约B（合约变更需修改）',
-    c decimal(10,2) null comment '本合约C（合约变更需修改）',
+    a decimal(10,2) null comment '本合约A',
+    b decimal(10,2) null comment '本合约B',
+    c decimal(10,2) null comment '本合约C',
+    d decimal(10,2) null comment '本合约D',
     amount int not null comment '合同每单位数量',
     unit varchar(4) not null comment '单位',
     night tinyint not null comment '是否夜盘（0=否 1=是）',
     exchange varchar(16) not null comment '所属交易所',
     is_target tinyint default 1 not null comment '0=否 1=是',
+    relative varchar(128) null comment '关联code',
     deleted tinyint default 0 not null,
     remark varchar(64) null comment 'remark',
     update_time timestamp not null on update CURRENT_TIMESTAMP comment '更新时间'
@@ -145,7 +148,11 @@ create table future_wave
     a double null,
     b double null,
     c double null,
-    d double null
+    d double null,
+    ap double null,
+    bp double null,
+    cp double null,
+    dp double null
 );
 
 create table future_wave_detail
@@ -159,6 +166,23 @@ create table future_wave_detail
     `change` double null,
     days bigint null
 );
+
+create table gap_log
+(
+    code varchar(16) null comment 'code',
+    start_date varchar(10) null comment '产生缺口日期',
+    end_date varchar(10) not null comment '缺口结束日期',
+    gap_type varchar(10) not null comment '类型',
+    start_price decimal(10,2) not null comment '缺口开始价格',
+    end_price decimal(10,2) not null comment '缺口结束价格',
+    gap_rate decimal(10,2) not null comment '缺口大小%',
+    is_fill tinyint default 0 not null comment '是否已回补（0=未回补，1=已回补）',
+    fill_date varchar(10) null comment '回补日期',
+    update_time time not null comment '更新时间',
+    constraint idx_gap_log_code_date
+        unique (code, start_date)
+)
+    comment '缺口记录';
 
 create table open_gap
 (
@@ -192,7 +216,8 @@ create table ts_future_contract
     exchange varchar(8) not null comment '交易所代码 CFFEX-中金所 DCE-大商所 CZCE-郑商所 SHFE-上期所 INE-上海国际能源交易中心',
     name varchar(16) null comment '中文简称',
     fut_code varchar(8) null comment '合约产品代码',
-    type tinyint not null comment '合约类型（1=连续 2=主力 3=常规）'
+    type tinyint not null comment '合约类型（1=连续 2=主力 3=常规）',
+    related_code varchar(16) null comment '主力关联合约'
 )
     comment '合约列表';
 
@@ -218,4 +243,8 @@ create table ts_future_daily
         unique (ts_code, trade_date)
 )
     comment '日线数据';
+
+create definer = root@localhost function STR_SPLIT(s text, del char, i int) returns varchar(32) deterministic security invoker
+-- missing source code
+;
 
