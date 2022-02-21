@@ -35,7 +35,7 @@ public class FutureMailManager {
         }
     }
 
-    public void sendHtmlMail(String subject, String from, String to, String content) throws MessagingException {
+    private void sendHtmlMail(String subject, String from, String to, String content) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setSubject(subject);

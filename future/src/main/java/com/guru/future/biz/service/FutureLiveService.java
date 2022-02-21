@@ -339,7 +339,7 @@ public class FutureLiveService {
         content.append("<br/>");
         content.append(lowTopContent());
         content.append("</body></html>");
-//        mailManager.sendHtmlMail("市场概况", content.toString());
+        mailManager.sendHtmlMail("市场概况", content.toString());
     }
 
     private String highTopContent() {
