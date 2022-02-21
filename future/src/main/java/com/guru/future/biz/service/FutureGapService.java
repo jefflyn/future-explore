@@ -3,12 +3,13 @@ package com.guru.future.biz.service;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.FutureMailManager;
-import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.biz.manager.OpenGapManager;
+import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractOpenGapConverter;
 import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureDailyDO;
 import com.guru.future.domain.OpenGapDO;
@@ -87,7 +88,7 @@ public class FutureGapService {
             log.warn("monitorOpenGap before bid time !!!");
             times.increment();
             TimeUnit.SECONDS.sleep(1L);
-            if (times.intValue() > 4){
+            if (times.intValue() > 4) {
                 return;
             }
         }
@@ -187,13 +188,13 @@ public class FutureGapService {
             suggestFrom = suggestFrom.setScale(1, RoundingMode.HALF_UP);
             suggestTo = suggestTo.setScale(1, RoundingMode.HALF_UP);
             String suggestPrice = suggestFrom + "-" + suggestTo;
+            String waveStr = FutureUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), basicDO.getD(), currentOpen);
             ContractOpenGapDTO openGapDTO = ContractOpenGapDTO.builder()
                     .tradeDate(tradeDate).code(code).name(basicDO.getName()).category(basicDO.getType()).dayGap(isDayGap)
                     .preClose(preClose.setScale(1, RoundingMode.HALF_UP))
-                    .preHigh(preHigh).preLow(preLow).open(currentOpen).gapRate(gapRate)
+                    .preHigh(preHigh).preLow(preLow).open(currentOpen).gapRate(gapRate).wave(waveStr)
                     .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo).suggest(suggestPrice).build();
             openGapDTOList.add(openGapDTO);
-//            }
         }
 
         if (total == 0) {
@@ -247,6 +248,7 @@ public class FutureGapService {
                 "<th width=\"60px\">缺口</th>" +
                 "<th width=\"80px\">备注</th>" +
                 "<th width=\"120px\">建议</th>" +
+                "<th width=\"240px\">wave</th>" +
                 "</tr>");
         int seq = 0;
         for (ContractOpenGapDTO openGapDTO : openGapDTOList) {
@@ -261,6 +263,7 @@ public class FutureGapService {
                 stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getGapRate() + "%</td>");
                 stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getRemark() + "</td>");
                 stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getSuggest() + "</td>");
+                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getWave() + "</td>");
                 stringBuilder.append("</tr>");
             }
         }
