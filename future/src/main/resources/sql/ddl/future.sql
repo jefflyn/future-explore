@@ -1,4 +1,3 @@
--- we don't know how to generate root <with-no-name> (class Root) :(
 create table future_basic
 (
     symbol varchar(4) not null comment '商品代号'
@@ -178,7 +177,8 @@ create table gap_log
     gap_rate decimal(10,2) not null comment '缺口大小%',
     is_fill tinyint default 0 not null comment '是否已回补（0=未回补，1=已回补）',
     fill_date varchar(10) null comment '回补日期',
-    update_time time not null comment '更新时间',
+    create_time datetime null comment '插入时间',
+    update_time datetime null comment '更新时间',
     constraint idx_gap_log_code_date
         unique (code, start_date)
 )
