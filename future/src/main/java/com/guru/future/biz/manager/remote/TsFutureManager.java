@@ -73,6 +73,24 @@ public class TsFutureManager {
         return jsonResult;
     }
 
+    public String getHolding(String code, String startDate, String endDate) {
+        startDate = ObjectUtils.defaultIfNull(startDate, DateUtil.getLastTradeDate(null, TRADE_DATE_PATTERN_FLAT));
+        endDate = ObjectUtils.defaultIfNull(endDate, DateUtil.getNextTradeDate(null, TRADE_DATE_PATTERN_FLAT));
+        Map<String, Object> params = new HashMap<>();
+        params.put("symbol", code);
+        params.put("start_date", startDate);
+        params.put("end_date", endDate);
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("api_name", "fut_holding");
+        paramMap.put("token", TOKEN);
+        paramMap.put("params", params);
+
+        String jsonResult = HttpUtil.doPostJson(TS_URL, JSON.toJSONString(paramMap));
+//        log.info("url={}, result={}", TS_URL, jsonResult);
+        return jsonResult;
+    }
+
     public static void main(String[] args) {
         TsFutureManager tsFutureManager = new TsFutureManager();
         tsFutureManager.getBasic(Exchange.CZCE.getCode(), 2);

@@ -8,12 +8,12 @@ import java.util.List;
 public interface FutureDailyDAO {
     int deleteByPrimaryKey(Long id);
 
-    int insertSelective(FutureDailyDO record);
+    int insertSelective(FutureDailyDO futureDailyDO);
 
     FutureDailyDO selectByPrimaryKey(Long id);
 
     List<FutureDailyDO> selectByQuery(FutureDailyQuery query);
 
-    int updateByCodeTradeDateSelective(FutureDailyDO record);
+    int updateByCodeTradeDateSelective(FutureDailyDO futureDailyDO);
 
 }

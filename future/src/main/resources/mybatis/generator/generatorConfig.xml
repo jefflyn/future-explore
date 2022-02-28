@@ -136,16 +136,24 @@
 <!--               enableSelectByExample="false"-->
 <!--               selectByExampleQueryId="false">-->
 <!--        </table>-->
-        <table tableName="ts_future_contract"
-               domainObjectName="TsFutureContractDO" mapperName="TsFutureContractDAO"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false">
-        </table>
-        <table tableName="ts_future_daily"
-               domainObjectName="TsFutureDailyDO" mapperName="TsFutureDailyDAO"
+<!--        <table tableName="ts_future_contract"-->
+<!--               domainObjectName="TsFutureContractDO" mapperName="TsFutureContractDAO"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+<!--        </table>-->
+<!--        <table tableName="ts_future_daily"-->
+<!--               domainObjectName="TsFutureDailyDO" mapperName="TsFutureDailyDAO"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+<!--        </table>-->
+        <table tableName="ts_future_holding"
+               domainObjectName="TsFutureHoldingDO" mapperName="TsFutureHoldingDAO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"
