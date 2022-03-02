@@ -56,8 +56,8 @@ public class FutureLiveService {
     private FutureMailManager mailManager;
 
     public void refreshLiveData(List<String> codes) {
-        futureLiveManager.removeAllData(codes);
-        log.info("delete all live data, codes={}", codes);
+        futureLiveManager.removeAllData();
+        log.info("delete all live data");
     }
 
     @Async

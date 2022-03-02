@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface FutureLiveDAO {
-    int deleteAll(@Param("codes") List<String> codes);
+    int deleteAll();
 
     int insertSelective(FutureLiveDO futureLiveDO);
 
