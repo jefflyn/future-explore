@@ -50,6 +50,15 @@ public class FutureTaskDispatcher {
         log.info(">>> smell the coffee, let's get this party started!");
         futureLiveService.refreshLiveData(codeList);
         while (keepRunning) {
+            if (REFRESH) {
+                codeList = futureBasicManager.getAllCodes();
+                DateUtil.TRADE_TIME_TEST = true;
+            } else {
+                DateUtil.TRADE_TIME_TEST = false;
+            }
+            if (CollectionUtils.isEmpty(codeList)) {
+                return;
+            }
             if (!DateUtil.isTradeTime()) {
                 log.info(">>> music off, party over!");
                 times.increment();
@@ -59,12 +68,6 @@ public class FutureTaskDispatcher {
                     TimeUnit.SECONDS.sleep(1L);
                     continue;
                 }
-            }
-            if (REFRESH) {
-                codeList = futureBasicManager.getAllCodes();
-            }
-            if (CollectionUtils.isEmpty(codeList)) {
-                return;
             }
             List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getRealtimeFromSina(codeList);
             // async live data
