@@ -128,6 +128,7 @@ public class FutureMonitorService {
                 futureLogDO.setSuggest(futureLiveDO.getPrice());
                 futureLogDO.setPctChange(futureLiveDO.getChange());
                 futureLogDO.setPosition(futureLiveDO.getPosition());
+                futureLogDO.setTemp(futureLiveDO.getTemp());
                 this.msgNotice(position == 100, futureLogDO);
 //            futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
                 futureLogManager.addFutureLog(futureLogDO);
@@ -201,6 +202,7 @@ public class FutureMonitorService {
             futureLogDO.setPctChange(futureLiveDO.getChange());
             futureLogDO.setPosition(futureLiveDO.getPosition());
             futureLogDO.setRemark(logType + " " + histHighLowFlag);
+            futureLogDO.setTemp(futureLiveDO.getTemp());
             this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
             log.info("add price flash log >>> {}, {}", futureLogDO.getName(), NumberUtil.price2String(futureLogDO.getDiff()), futureLogDO.getSuggest());
@@ -245,7 +247,7 @@ public class FutureMonitorService {
                 .append("【").append(futureLogDO.getContent()).append("】")
                 .append(futureLogDO.getOption()).append(" ").append(price2String(futureLogDO.getSuggest()))
                 .append("【").append(futureLogDO.getPosition()).append("】")
-                .append(futureLogDO.getPctChange()).append("%");
+                .append(futureLogDO.getPctChange()).append("%").append(" " + futureLogDO.getTemp());
         // show msg frame
         FutureFrame futureFrame = FutureFrame.buildFutureFrame(null);
         futureFrame.createMsgFrame(DateUtil.currentTime() + " "

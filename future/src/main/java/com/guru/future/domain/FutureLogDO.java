@@ -34,4 +34,6 @@ public class FutureLogDO {
     private Date logTime;
 
     private String remark;
+
+    private String temp;
 }

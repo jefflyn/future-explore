@@ -15,6 +15,8 @@ public class FutureBasicDO {
 
     private String code;
 
+    private String relative;
+
     private BigDecimal low;
 
     private BigDecimal high;

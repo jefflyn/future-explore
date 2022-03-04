@@ -7,6 +7,7 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
         <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="relative" jdbcType="VARCHAR" property="relative"/>
         <result column="low" jdbcType="DECIMAL" property="low"/>
         <result column="high" jdbcType="DECIMAL" property="high"/>
         <result column="a" jdbcType="DECIMAL" property="a"/>

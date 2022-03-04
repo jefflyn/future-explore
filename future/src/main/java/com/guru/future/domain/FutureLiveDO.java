@@ -42,6 +42,8 @@ public class FutureLiveDO implements Comparable<FutureLiveDO>{
 
     private Date updateTime;
 
+    private String temp;
+
     public String changeFlag() {
         return code + "," + ObjectUtils.defaultIfNull(price, 0).floatValue() +
                 "," + ObjectUtils.defaultIfNull(bid1, 0).floatValue() +
