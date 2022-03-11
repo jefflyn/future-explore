@@ -230,7 +230,7 @@ public class FutureMonitorService {
         }
         futureLogDO.setSuggest(contractRealtimeDTO.getPrice());
         futureLogDO.setPctChange(FutureUtil.calcChange(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getPreSettle()));
-        futureLogDO.setPosition(FutureUtil.calcPosition(contractRealtimeDTO.getPrice(),
+        futureLogDO.setPosition(FutureUtil.calcPosition(futureLogDO.getPctChange().floatValue() > 0, contractRealtimeDTO.getPrice(),
                 contractRealtimeDTO.getHigh(), contractRealtimeDTO.getLow()));
         msgNotice(newHigh, futureLogDO);
         futureLogManager.addFutureLog(futureLogDO);

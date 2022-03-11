@@ -24,7 +24,7 @@ public class ContractRealtimeConverter {
         futureLiveDO.setOpen(contractRealtimeDTO.getOpen());
         futureLiveDO.setLow(contractRealtimeDTO.getLow());
         futureLiveDO.setHigh(contractRealtimeDTO.getHigh());
-        int position = FutureUtil.calcPosition(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getHigh(),
+        int position = FutureUtil.calcPosition(futureLiveDO.getChange().floatValue() > 0, contractRealtimeDTO.getPrice(), contractRealtimeDTO.getHigh(),
                 contractRealtimeDTO.getLow());
         futureLiveDO.setPosition(position);
         futureLiveDO.setAmp((contractRealtimeDTO.getHigh().subtract(contractRealtimeDTO.getLow()))
@@ -74,8 +74,8 @@ public class ContractRealtimeConverter {
         collectDO.setCode(contractRealtimeDTO.getCode());
         collectDO.setName(contractRealtimeDTO.getName());
         collectDO.setPrice(contractRealtimeDTO.getPrice());
-        collectDO.setPosition(FutureUtil.calcPosition(contractRealtimeDTO.getPrice(),contractRealtimeDTO.getHigh(),
-                contractRealtimeDTO.getLow()));
+        collectDO.setPosition(FutureUtil.calcPosition(contractRealtimeDTO.getPrice().floatValue() > contractRealtimeDTO.getPreSettle().floatValue(),
+                contractRealtimeDTO.getPrice(), contractRealtimeDTO.getHigh(), contractRealtimeDTO.getLow()));
         collectDO.setHigh(contractRealtimeDTO.getHigh());
         collectDO.setLow(contractRealtimeDTO.getLow());
         collectDO.setDealVol(contractRealtimeDTO.getDealVol());

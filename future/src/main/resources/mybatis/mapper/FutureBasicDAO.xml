@@ -26,7 +26,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        symbol, `name`, `type`, code, low, high, `a`,`b`,`c`,`d`,amount, unit, night, exchange, is_target, deleted, update_time, remark
+        symbol, `name`, `type`, `code`, relative, low, high, `a`,`b`,`c`,`d`,amount, unit, night, `exchange`,
+        is_target, deleted, update_time, remark
     </sql>
 
     <select id="selectByCode" parameterType="java.lang.String" resultMap="BaseResultMap">
