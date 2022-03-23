@@ -37,11 +37,11 @@ public class FutureDailyConverter {
         Date time = new Date();
         while (iterator.hasNext()) {
             JSONArray itemArr = (JSONArray) iterator.next();
-            if (Boolean.TRUE.equals(ObjectUtil.checkNullValue(itemArr.get(7), itemArr.get(8)))) {
+            if (Boolean.TRUE.equals(ObjectUtil.checkNullValue(itemArr.get(8)))) {
                 log.warn("{} 数据不全，跳过... {}", itemArr.get(0), itemArr);
                 continue;
             }
-            BigDecimal open = (BigDecimal) cn.hutool.core.util.ObjectUtil.defaultIfNull(itemArr.get(4), itemArr.get(7));
+            BigDecimal open = (BigDecimal) cn.hutool.core.util.ObjectUtil.defaultIfNull(itemArr.get(4), itemArr.get(8));
             BigDecimal high = (BigDecimal) cn.hutool.core.util.ObjectUtil.defaultIfNull(itemArr.get(5), open);
             BigDecimal low = (BigDecimal) cn.hutool.core.util.ObjectUtil.defaultIfNull(itemArr.get(6), high);
             TsFutureDailyDO tsFutureDailyDO = new TsFutureDailyDO();
@@ -52,7 +52,7 @@ public class FutureDailyConverter {
             tsFutureDailyDO.setOpen(open);
             tsFutureDailyDO.setHigh(high);
             tsFutureDailyDO.setLow(low);
-            tsFutureDailyDO.setClose((BigDecimal) itemArr.get(7));
+            tsFutureDailyDO.setClose((BigDecimal) cn.hutool.core.util.ObjectUtil.defaultIfNull(itemArr.get(7), open));
             tsFutureDailyDO.setSettle((BigDecimal) itemArr.get(8));
             tsFutureDailyDO.setCloseChange((BigDecimal) itemArr.get(9));
             tsFutureDailyDO.setSettleChange((BigDecimal) itemArr.get(10));
