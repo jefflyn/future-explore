@@ -22,6 +22,6 @@ public class MarketOverviewJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
         log.info("send market overview task start...");
-        futureLiveService.sendMarketOverviewMail();
+//        futureLiveService.sendMarketOverviewMail();
     }
 }

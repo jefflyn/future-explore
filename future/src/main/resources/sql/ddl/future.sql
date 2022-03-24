@@ -166,6 +166,16 @@ create table future_wave_detail
     days bigint null
 );
 
+create table future_week_stat
+(
+    code varchar(16) not null,
+    week varchar(10) not null,
+    `change` decimal(10,1) null,
+    pct_change decimal(10,2) null,
+    constraint future_week_stat_pk
+        unique (code, week)
+);
+
 create table gap_log
 (
     code varchar(16) null comment 'code',
@@ -208,6 +218,21 @@ create table open_gap
 create index idx_open_gap_trade_date
     on open_gap (trade_date);
 
+create table stock_daily
+(
+    ts_code text null,
+    trade_date text null,
+    close double null,
+    open double null,
+    high double null,
+    low double null,
+    pre_close double null,
+    pct_change double null,
+    vol bigint null,
+    amount double null,
+    vwap double null
+);
+
 create table ts_future_contract
 (
     ts_code varchar(16) not null comment '合约代码'
@@ -217,7 +242,7 @@ create table ts_future_contract
     name varchar(16) null comment '中文简称',
     fut_code varchar(8) null comment '合约产品代码',
     type tinyint not null comment '合约类型（1=连续 2=主力 3=常规）',
-    related_code varchar(16) null comment '主力关联合约'
+    related_code varchar(10) null comment '主力关联合约'
 )
     comment '合约列表';
 
@@ -243,6 +268,22 @@ create table ts_future_daily
         unique (ts_code, trade_date)
 )
     comment '日线数据';
+
+create table ts_future_holding
+(
+    trade_date varchar(10) not null comment '日期',
+    symbol varchar(10) not null comment '合约代码',
+    broker varchar(10) not null comment '会员简称',
+    vol int default 0 not null comment '成交量',
+    vol_chg int default 0 not null comment '成交量变化',
+    long_hld int default 0 not null comment '持买仓量',
+    long_chg int default 0 not null comment '持买仓量变化',
+    short_hld int default 0 not null comment '持卖仓量',
+    short_chg int default 0 not null comment '持卖仓量变化',
+    constraint idx_ts_future_holding_trade_date
+        unique (trade_date, symbol, broker)
+)
+    comment '持仓变化';
 
 create definer = root@localhost function STR_SPLIT(s text, del char, i int) returns varchar(32) deterministic security invoker
 -- missing source code
