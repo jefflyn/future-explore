@@ -121,12 +121,12 @@ public class FutureLiveService {
 
             String histHighLowFlag = "";
             if (futureLiveDO.getHigh().compareTo(histHigh) >= 0) {
-                histHighLowFlag = "^";
+                histHighLowFlag = "合约新高";
             } else if (futureLiveDO.getLow().compareTo(histLow) <= 0) {
-                histHighLowFlag = "_";
+                histHighLowFlag = "合约新低";
             }
             monitorService.monitorPriceFlash(futureLiveDO, histHighLowFlag);
-            monitorService.addPositionLog(futureLiveDO);
+            monitorService.addPositionLog(futureLiveDO, histHighLowFlag);
             if (histHigh.compareTo(histLow) > 0) {
                 BigDecimal lowChange = (futureLiveDO.getPrice().subtract(histLow)).multiply(BigDecimal.valueOf(100))
                         .divide(histLow, 2, RoundingMode.HALF_UP);
@@ -153,7 +153,7 @@ public class FutureLiveService {
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setLow(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
                     contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
-            updateBasicDO.setRemark("合同新低");
+            updateBasicDO.setRemark("合约新低");
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist low, refresh basic data", contractRealtimeDTO.getCode());
@@ -163,7 +163,7 @@ public class FutureLiveService {
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setHigh(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
                     contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
-            updateBasicDO.setRemark("合同新高");
+            updateBasicDO.setRemark("合约新高");
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist high, refresh basic data", contractRealtimeDTO.getCode());

@@ -63,7 +63,7 @@ public class FutureMonitorService {
 
     @Async
     @Transactional
-    public void addPositionLog(FutureLiveDO futureLiveDO) {
+    public void addPositionLog(FutureLiveDO futureLiveDO, String histHighLowFlag) {
         int position = -1;
         if (futureLiveDO.getPosition() <= 0) {
             position = 0;
@@ -117,12 +117,14 @@ public class FutureMonitorService {
                 futureLogDO.setFactor(priceAdderMap.values().stream().findFirst().orElse(new LongAdder()).intValue());
                 futureLogDO.setName(futureLiveDO.getName());
                 if (position == 0) {
-                    futureLogDO.setType("日内低点");
-                    futureLogDO.setContent("日内低点");
+                    String type = Strings.isNotBlank(histHighLowFlag) ? histHighLowFlag : "日内低点";
+                    futureLogDO.setType(type);
+                    futureLogDO.setContent(type + "!!!");
                     futureLogDO.setOption("做空");
                 } else {
-                    futureLogDO.setType("日内高点");
-                    futureLogDO.setContent("日内高点");
+                    String type = Strings.isNotBlank(histHighLowFlag) ? histHighLowFlag : "日内高点";
+                    futureLogDO.setType(type);
+                    futureLogDO.setContent(type + "!!!");
                     futureLogDO.setOption("做多");
                 }
                 futureLogDO.setSuggest(futureLiveDO.getPrice());
