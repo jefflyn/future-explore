@@ -69,7 +69,7 @@ public class TsFutureDailyService {
             List<TsFutureDailyDO> futureDailyDOList = FutureDailyConverter.toTsFutureDailyDO(result);
             tsFutureDailyManager.batchAddFutureDaily(futureDailyDOList);
         } catch (Exception e) {
-            log.info("get {} ts daily error: ", tsCode, e.getMessage());
+            log.info("get {} ts daily error: ", tsCode, e);
         }
     }
 }
