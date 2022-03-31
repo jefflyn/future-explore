@@ -153,7 +153,7 @@ public class FutureLiveService {
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setLow(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
                     contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
-            updateBasicDO.setRemark("合约新低");
+            updateBasicDO.setRemark("合约新低@" + contractRealtimeDTO.getTradeDate());
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist low, refresh basic data", contractRealtimeDTO.getCode());
@@ -163,7 +163,7 @@ public class FutureLiveService {
             updateBasicDO.setCode(contractRealtimeDTO.getCode());
             updateBasicDO.setHigh(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
                     contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
-            updateBasicDO.setRemark("合约新高");
+            updateBasicDO.setRemark("合约新高@" + contractRealtimeDTO.getTradeDate());
             futureBasicManager.updateBasic(updateBasicDO);
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist high, refresh basic data", contractRealtimeDTO.getCode());

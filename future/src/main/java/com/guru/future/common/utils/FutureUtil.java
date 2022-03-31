@@ -33,6 +33,14 @@ public class FutureUtil {
         return change;
     }
 
+    /**
+     * (p-l) / (h-l)
+     * @param isUp
+     * @param price
+     * @param high
+     * @param low
+     * @return
+     */
     public static int calcPosition(Boolean isUp, BigDecimal price, BigDecimal high, BigDecimal low) {
         BigDecimal position = BigDecimal.ZERO;
         if (high.compareTo(low) != 0) {
