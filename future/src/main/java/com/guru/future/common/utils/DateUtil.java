@@ -62,6 +62,10 @@ public class DateUtil {
     private DateUtil() {
     }
 
+    /**
+     * @param time
+     * @return HH:mm
+     */
     public static String toHourMinute(Date time) {
         return DateFormatUtils.format(time, HOUR_MINUTE_PATTERN);
     }

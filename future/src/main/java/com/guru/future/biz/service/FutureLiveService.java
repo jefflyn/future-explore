@@ -1,6 +1,5 @@
 package com.guru.future.biz.service;
 
-import com.alibaba.fastjson.JSON;
 import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureLiveManager;

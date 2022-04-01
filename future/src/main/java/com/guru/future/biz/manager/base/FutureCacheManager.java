@@ -1,12 +1,10 @@
 package com.guru.future.biz.manager.base;
 
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.concurrent.TimeUnit;
 
 @Component
