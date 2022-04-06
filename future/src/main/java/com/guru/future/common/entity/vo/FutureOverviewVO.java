@@ -13,6 +13,8 @@ public class FutureOverviewVO {
 
     private String overviewDesc;
 
+    private String histOverviewDesc;
+
     private List<CategorySummary> categorySummaryList;
 
     @Data
@@ -45,7 +47,7 @@ public class FutureOverviewVO {
 
     @Override
     public String toString() {
-        StringBuilder resultStr = new StringBuilder("市场平均涨幅: " + getTotalAvgChangeStr() + "【" + getOverviewDesc() + "】\n");
+        StringBuilder resultStr = new StringBuilder("市场平均涨幅: " + getTotalAvgChangeStr() + "【" + getOverviewDesc() + "】" + histOverviewDesc + "\n");
         if (CollectionUtils.isEmpty(getCategorySummaryList())) {
             return resultStr.toString();
         }

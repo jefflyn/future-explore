@@ -25,7 +25,8 @@ public class TsFutureManager {
 //    private final static String TOKEN = "852fb7e0feac4bf63d6e93385344af3a91fa2b3466f3bb6955575a3b";
 //    private final static String TOKEN = "3af111f9e9899366fdcedbc34cbd2491eeff7ffec6064ed0c234e2ef";
 //    private final static String TOKEN = "00d803b166f55fc30c178d74c158985136010d6bd19271b182059eef";
-    private final static String TOKEN = "9fb1e3080687551cb6f8c14442233381f84afd65df3a6472b3c91e39";
+//    private final static String TOKEN = "9fb1e3080687551cb6f8c14442233381f84afd65df3a6472b3c91e39";
+    private final static String TOKEN = "578a17c9a956cfdf85453788ffd301e9fc5eb1824a6ec507f544be56";
     /**
      * 合约信息
      *

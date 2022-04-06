@@ -30,7 +30,7 @@ public class DailyCollectJob {
     @Resource
     private RedissonClient redissonClient;
 
-    @Scheduled(cron = "3 0,5,10,15,20,25,30,35,40,45,50,55 9,10,14 * * MON-FRI")
+    @Scheduled(cron = "3 0,5,10,15,20,25,30,35,40,45,50,55 9,10,14,21,22 * * MON-FRI")
     public void dailyCollect1() {
         dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
         overviewCollect();
@@ -48,11 +48,15 @@ public class DailyCollectJob {
         overviewCollect();
     }
 
-    private void overviewCollect(){
+    private void overviewCollect() {
         FutureOverviewVO futureOverviewVO = futureLiveService.getMarketOverview();
         String key = DateUtil.currentTradeDate() + "_Overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
-        cacheList.add(MapUtil.of(DateUtil.toHourMinute(new Date()), futureOverviewVO.getTotalAvgChangeStr()));
+        String overviewDesc = futureOverviewVO.getTotalAvgChangeStr();
+        if (overviewDesc == null) {
+            return;
+        }
+        cacheList.add(MapUtil.of(DateUtil.toHourMinute(new Date()), overviewDesc));
         System.out.println("Market Overview >>>");
         for (Map<String, String> map : cacheList) {
             for (Map.Entry<String, String> entry : map.entrySet()) {

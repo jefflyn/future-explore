@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.stat.StatUtils;
+import org.redisson.api.RList;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -290,8 +292,29 @@ public class FutureLiveService {
 
         overviewVO.setTotalAvgChangeStr((totalAvgChange.floatValue() > 0 ? "+" : "") + totalAvgChange + PERCENTAGE_SYMBOL);
         overviewVO.setOverviewDesc(overviewDesc(totalAvgChange.floatValue()));
+        overviewVO.setHistOverviewDesc(getHistOverview());
         overviewVO.setCategorySummaryList(categorySummaryList);
         return overviewVO;
+    }
+
+    @Resource
+    private RedissonClient redissonClient;
+
+    private String getHistOverview() {
+        StringBuilder histOverview = new StringBuilder();
+        String key = DateUtil.currentTradeDate() + "_Overview";
+        RList<Map<String, String>> cacheList = redissonClient.getList(key);
+        if (cacheList != null) {
+            Map<String, String> overviewMap = cacheList.get(0);
+            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("21:05"), "")).append(" ");
+            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("22:00"), "")).append(" ");
+            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("09:05"), "")).append(" ");
+            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("10:00"), "")).append(" ");
+            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("11:00"), "")).append(" ");
+            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("13:35"), "")).append(" ");
+            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("14:30"), "")).append(" ");
+        }
+        return histOverview.toString();
     }
 
     private String overviewDesc(float change) {
