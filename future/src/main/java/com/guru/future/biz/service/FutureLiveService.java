@@ -1,5 +1,6 @@
 package com.guru.future.biz.service;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureLiveManager;
@@ -304,8 +305,11 @@ public class FutureLiveService {
         StringBuilder histOverview = new StringBuilder();
         String key = DateUtil.currentTradeDate() + "_Overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
-        if (cacheList != null) {
-            Map<String, String> overviewMap = cacheList.get(0);
+        if (CollectionUtil.isNotEmpty(cacheList)) {
+            Map<String, String> overviewMap = new HashMap<>();
+            for (Map<String, String> map : cacheList){
+                overviewMap.putAll(map);
+            }
             histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("21:05"), "")).append(" ");
             histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("22:00"), "")).append(" ");
             histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("09:05"), "")).append(" ");

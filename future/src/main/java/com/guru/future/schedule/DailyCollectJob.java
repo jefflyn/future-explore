@@ -15,6 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author j
@@ -50,8 +51,9 @@ public class DailyCollectJob {
 
     private void overviewCollect() {
         FutureOverviewVO futureOverviewVO = futureLiveService.getMarketOverview();
-        String key = DateUtil.currentTradeDate() + "_Overview";
+        String key = DateUtil.currentTradeDate() + "__Overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
+        cacheList.expire(1, TimeUnit.DAYS);
         String overviewDesc = futureOverviewVO.getTotalAvgChangeStr();
         if (overviewDesc == null) {
             return;

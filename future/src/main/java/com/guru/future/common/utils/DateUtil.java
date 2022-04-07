@@ -89,7 +89,7 @@ public class DateUtil {
 
     public static String currentTradeDate(String dateFormat) {
         Date date = new Date();
-        if (Boolean.TRUE.equals(isHoliday(date))) {
+        if (Boolean.TRUE.equals(isHoliday(date)) || isNight()) {
             return getNextTradeDate(date);
         }
         return DateFormatUtils.format(date, dateFormat);
