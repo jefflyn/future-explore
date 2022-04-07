@@ -303,7 +303,7 @@ public class FutureLiveService {
 
     private String getHistOverview() {
         StringBuilder histOverview = new StringBuilder();
-        String key = DateUtil.currentTradeDate() + "_Overview";
+        String key = DateUtil.currentTradeDate() + "_overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
         if (CollectionUtil.isNotEmpty(cacheList)) {
             Map<String, String> overviewMap = new HashMap<>();

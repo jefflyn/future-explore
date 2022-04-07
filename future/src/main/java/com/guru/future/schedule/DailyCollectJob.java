@@ -51,7 +51,7 @@ public class DailyCollectJob {
 
     private void overviewCollect() {
         FutureOverviewVO futureOverviewVO = futureLiveService.getMarketOverview();
-        String key = DateUtil.currentTradeDate() + "__Overview";
+        String key = DateUtil.currentTradeDate() + "_overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
         cacheList.expire(1, TimeUnit.DAYS);
         String overviewDesc = futureOverviewVO.getTotalAvgChangeStr();

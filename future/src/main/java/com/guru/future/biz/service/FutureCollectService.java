@@ -64,7 +64,7 @@ public class FutureCollectService {
         for (ContractRealtimeDTO contractRealtimeDTO : realtimeDTOList) {
             FutureCollectDO dailyCollectDO = ContractRealtimeConverter.convert2DailyCollectDO(dailyCollectManager.getCollectType(), contractRealtimeDTO);
             dailyCollectManager.addDailyCollect(dailyCollectDO);
-            log.info("data collect success! {}", contractRealtimeDTO);
+//            log.info("data collect success! {}", contractRealtimeDTO);
         }
     }
 
