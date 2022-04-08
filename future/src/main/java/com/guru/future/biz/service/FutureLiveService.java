@@ -12,6 +12,7 @@ import com.guru.future.common.entity.vo.FutureLiveVO;
 import com.guru.future.common.entity.vo.FutureOverviewVO;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.FutureUtil;
+import com.guru.future.common.utils.NullUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureLiveDO;
 import lombok.extern.slf4j.Slf4j;
@@ -310,13 +311,13 @@ public class FutureLiveService {
             for (Map<String, String> map : cacheList){
                 overviewMap.putAll(map);
             }
-            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("21:05"), "")).append(" ");
-            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("22:00"), "")).append(" ");
-            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("09:05"), "")).append(" ");
-            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("10:00"), "")).append(" ");
-            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("11:00"), "")).append(" ");
-            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("13:35"), "")).append(" ");
-            histOverview.append(ObjectUtils.defaultIfNull(overviewMap.get("14:30"), "")).append(" ");
+            histOverview.append(NullUtil.defaultValue(overviewMap.get("21:00"), overviewMap.get("21:30"))).append(" ");
+            histOverview.append(NullUtil.defaultValue(overviewMap.get("22:00"), overviewMap.get("22:30"))).append(" ");
+            histOverview.append(NullUtil.defaultValue(overviewMap.get("09:00"), overviewMap.get("09:30"))).append(" ");
+            histOverview.append(NullUtil.defaultValue(overviewMap.get("10:00"), overviewMap.get("10:30"))).append(" ");
+            histOverview.append(NullUtil.defaultValue(overviewMap.get("11:00"), overviewMap.get("11:30"))).append(" ");
+            histOverview.append(NullUtil.defaultValue(overviewMap.get("13:30"), overviewMap.get("14:00"))).append(" ");
+            histOverview.append(NullUtil.defaultValue(overviewMap.get("14:30"), overviewMap.get("15:00"))).append(" ");
         }
         return histOverview.toString();
     }
