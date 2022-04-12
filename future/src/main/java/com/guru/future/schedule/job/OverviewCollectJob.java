@@ -1,4 +1,4 @@
-package com.guru.future.schedule;
+package com.guru.future.schedule.job;
 
 import cn.hutool.core.map.MapUtil;
 import com.guru.future.biz.service.FutureCollectService;
@@ -6,11 +6,13 @@ import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.vo.FutureOverviewVO;
 import com.guru.future.common.enums.CollectType;
 import com.guru.future.common.utils.DateUtil;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.Async;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -21,35 +23,27 @@ import java.util.concurrent.TimeUnit;
  * @author j
  * @date 2021/7/29 9:17 下午
  **/
-@Configuration
-@EnableScheduling
-public class DailyCollectJob {
-    @Resource
-    private FutureCollectService dailyCollectService;
+
+@Slf4j
+public class OverviewCollectJob implements Job {
     @Resource
     private FutureLiveService futureLiveService;
+
+    @Resource
+    private FutureCollectService dailyCollectService;
+
     @Resource
     private RedissonClient redissonClient;
 
-    @Scheduled(cron = "3 0,5,10,15,20,25,30,35,40,45,50,55 9,10,14,21,22 * * MON-FRI")
-    public void dailyCollect1() {
-        dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
-        overviewCollect();
-    }
-
-    @Scheduled(cron = "3 0,5,10,15,20,25,30 11 * * MON-FRI")
-    public void dailyCollect2() {
-        dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
-        overviewCollect();
-    }
-
-    @Scheduled(cron = "3 30,35,40,45,50,55 13 * * MON-FRI")
-    public void dailyCollect3() {
-        dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
-        overviewCollect();
-    }
-
-    private void overviewCollect() {
+    @SneakyThrows
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) {
+        if (Boolean.FALSE.equals(DateUtil.isTradeTime())) {
+            log.warn("OverviewCollectJob not in trade time, end ...");
+            return;
+        }
+        dailyCollect();
+        log.info("OverviewCollectJob start ...");
         FutureOverviewVO futureOverviewVO = futureLiveService.getMarketOverview();
         String key = DateUtil.currentTradeDate() + "_overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
@@ -65,5 +59,11 @@ public class DailyCollectJob {
                 System.out.println(entry.getKey() + " : " + entry.getValue());
             }
         }
+    }
+
+    @Async("bizAsyncTaskExecutor")
+    public void dailyCollect(){
+        log.info("DailyCollectJob start ...");
+        dailyCollectService.addTradeDailyCollect(CollectType.COLLECT_TIMED);
     }
 }

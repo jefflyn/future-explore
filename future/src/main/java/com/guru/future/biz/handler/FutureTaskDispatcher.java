@@ -42,6 +42,10 @@ public class FutureTaskDispatcher {
     }
 
     public void executePulling(Boolean refresh) throws InterruptedException {
+        if (keepRunning) {
+            log.warn("realtime is on-live!");
+            return;
+        }
         PriceFlashCache.deleteAll();
         keepRunning = true;
         LongAdder times = new LongAdder();
