@@ -26,6 +26,7 @@ public class CronScheduleTrigger {
         openGapJob(scheduler);
         marketOverviewJob(scheduler);
         overviewCollectJob(scheduler);
+        realtimeJob(scheduler);
     }
 
     private void realtimeJob(Scheduler scheduler) throws SchedulerException {

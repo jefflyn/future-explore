@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.LongAdder;
 @Slf4j
 public class FutureTaskDispatcher {
     public static Boolean REFRESH = false;
-    private Boolean keepRunning = true;
+    private Boolean keepRunning = false;
 
     @Resource
     private FutureBasicManager futureBasicManager;
