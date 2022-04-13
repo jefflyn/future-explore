@@ -67,6 +67,7 @@ public class FutureTaskDispatcher {
                 log.info(">>> music off, party over!");
                 times.increment();
                 if (times.intValue() > 5) {
+                    keepRunning = false;
                     break;
                 } else {
                     TimeUnit.SECONDS.sleep(1L);

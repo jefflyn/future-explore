@@ -116,17 +116,17 @@ public class FutureMonitorService {
                 futureLogDO.setCode(futureLiveDO.getCode());
                 futureLogDO.setFactor(priceAdderMap.values().stream().findFirst().orElse(new LongAdder()).intValue());
                 futureLogDO.setName(futureLiveDO.getName());
+                String type = "日内低点";
                 if (position == 0) {
-                    String type = Strings.isNotBlank(histHighLowFlag) ? histHighLowFlag : "日内低点";
-                    futureLogDO.setType(type);
-                    futureLogDO.setContent(type + "!!!");
                     futureLogDO.setOption("做空");
                 } else {
-                    String type = Strings.isNotBlank(histHighLowFlag) ? histHighLowFlag : "日内高点";
-                    futureLogDO.setType(type);
-                    futureLogDO.setContent(type + "!!!");
+                    type = "日内高点";
                     futureLogDO.setOption("做多");
                 }
+                String content = Strings.isNotBlank(histHighLowFlag) ? histHighLowFlag : type;
+                futureLogDO.setType(type);
+                futureLogDO.setContent(content + "!!!");
+
                 futureLogDO.setSuggest(futureLiveDO.getPrice());
                 futureLogDO.setPctChange(futureLiveDO.getChange());
                 futureLogDO.setPosition(futureLiveDO.getPosition());
