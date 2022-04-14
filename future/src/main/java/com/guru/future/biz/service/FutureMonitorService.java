@@ -134,7 +134,7 @@ public class FutureMonitorService {
                 this.msgNotice(position == 100, futureLogDO);
 //            futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
                 futureLogManager.addFutureLog(futureLogDO);
-                log.info("add position log >>> {}, {}", futureLogDO.getName(), futureLogDO.getPosition(), futureLogDO.getSuggest());
+                log.info("add position log >>> {}, {}, {}", futureLogDO.getName(), futureLogDO.getPosition(), futureLogDO.getSuggest());
             }
         }
     }
@@ -149,7 +149,6 @@ public class FutureMonitorService {
         PriceFlashCache.rPush(cachedKey, price);
         int priceLen = PriceFlashCache.length(cachedKey);
         if (priceLen == 1) {
-//            log.info("[monitorPriceFlash] start! param={}, code={}", param, cachedKey);
             return;
         }
         int steps = factor / 2;
@@ -159,13 +158,13 @@ public class FutureMonitorService {
         } else {
             lastPrice = PriceFlashCache.peekFirst(cachedKey);
         }
-//        float diff = 0.0F; //Math.abs((price.subtract(lastPrice)).multiply(BigDecimal.valueOf(100)).divide(lastPrice, 2, RoundingMode.HALF_UP).floatValue());
         Pair<BigDecimal, BigDecimal> minMaxPrices = PriceFlashCache.getMinAndMaxFromList(cachedKey);
         BigDecimal minPrice = minMaxPrices.getValue0();
         BigDecimal maxPrice = minMaxPrices.getValue1();
         boolean isTrigger = false;
         String blastTip = "";
-        float diff = FutureUtil.calcChange(price, maxPrice).floatValue();
+        BigDecimal change = FutureUtil.calcChange(price, maxPrice);
+        float diff = change.floatValue();
         if (Math.abs(diff) >= triggerDiff) {
             isTrigger = true;
             lastPrice = maxPrice;
@@ -173,7 +172,8 @@ public class FutureMonitorService {
                 blastTip = "+";
             }
         } else {
-            diff = FutureUtil.calcChange(price, minPrice).floatValue();
+            change = FutureUtil.calcChange(price, minPrice);
+            diff = change.floatValue();
             if (Math.abs(diff) >= triggerDiff) {
                 isTrigger = true;
                 lastPrice = minPrice;
@@ -195,7 +195,7 @@ public class FutureMonitorService {
             futureLogDO.setTradeDate(DateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
             futureLogDO.setFactor(factor);
-            futureLogDO.setDiff(BigDecimal.valueOf(diff));
+            futureLogDO.setDiff(change);
             futureLogDO.setOption(suggestParam);
             futureLogDO.setName(futureLiveDO.getName());
             futureLogDO.setType(logType);
@@ -207,7 +207,7 @@ public class FutureMonitorService {
             futureLogDO.setTemp(futureLiveDO.getTemp());
             this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
-            log.info("add price flash log >>> {}, {}", futureLogDO.getName(), NumberUtil.price2String(futureLogDO.getDiff()), futureLogDO.getSuggest());
+            log.info("add price flash log >>> {}, {}, {}", futureLogDO.getName(), futureLogDO.getDiff(), futureLogDO.getSuggest());
 //            collectService.scheduleTradeDailyCollect(Lists.newArrayList(code), CollectType.COLLECT_SCHEDULE);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(cachedKey);

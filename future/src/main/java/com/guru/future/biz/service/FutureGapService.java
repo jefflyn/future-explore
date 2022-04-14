@@ -86,8 +86,8 @@ public class FutureGapService {
         LongAdder times = new LongAdder();
         while (DateUtil.beforeBidTime()) {
             log.warn("monitorOpenGap before bid time !!!");
-            times.increment();
             TimeUnit.SECONDS.sleep(1L);
+            times.increment();
             if (times.intValue() > 4) {
                 return;
             }
