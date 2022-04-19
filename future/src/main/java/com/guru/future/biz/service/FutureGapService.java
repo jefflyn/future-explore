@@ -102,7 +102,7 @@ public class FutureGapService {
     }
 
     public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) throws Exception {
-        log.info("open gap start!");
+        log.info("open gap start! realtime data size={}", contractRealtimeDTOList.size());
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
         String tradeDate = DateUtil.currentTradeDate();
         if (DateUtil.isNight()) {
@@ -120,10 +120,12 @@ public class FutureGapService {
             FutureBasicDO basicDO = basicMap.get(code);
             int nightTrade = basicDO.getNight();
             if (DateUtil.isNight() && nightTrade == 0) {
+                log.error("{} night trade not support");
                 continue;
             }
             FutureDailyDO lastDailyDO = preDailyMap.get(realtimeDTO.getCode());
             if (lastDailyDO == null) {
+                log.error("last daily data missed");
                 continue;
             }
 //            log.info("lastDailyDO={}", lastDailyDO);
@@ -198,6 +200,7 @@ public class FutureGapService {
         }
 
         if (total == 0) {
+            log.error("total == 0, no realtime data");
             return;
         }
 
