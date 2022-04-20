@@ -42,7 +42,7 @@ public class FutureTaskDispatcher {
     }
 
     public void executePulling(Boolean refresh) throws InterruptedException {
-        if (keepRunning) {
+        if (keepRunning && Boolean.FALSE.equals(refresh)) {
             log.warn("realtime is on-live!");
             return;
         }
