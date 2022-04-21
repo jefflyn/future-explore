@@ -2,12 +2,15 @@ package com.guru.future.biz.manager;
 
 import com.guru.future.common.entity.query.FutureDailyQuery;
 import com.guru.future.domain.FutureDailyDO;
+import com.guru.future.domain.TsFutureDailyDO;
 import com.guru.future.mapper.FutureDailyDAO;
+import com.guru.future.mapper.TsFutureDailyDAO;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -20,6 +23,8 @@ import java.util.stream.Collectors;
 public class FutureDailyManager {
     @Resource
     private FutureDailyDAO futureDailyDAO;
+    @Resource
+    private TsFutureDailyDAO tsfutureDailyDAO;
 
     @Transactional(rollbackFor = Exception.class)
     public Boolean addFutureDaily(FutureDailyDO futureDailyDO) {
@@ -47,6 +52,26 @@ public class FutureDailyManager {
         query.setTradeDate(tradeDate);
         query.setCodes(codes);
         List<FutureDailyDO> futureDailyDOList = futureDailyDAO.selectByQuery(query);
+        if (CollectionUtils.isEmpty(futureDailyDOList)) {
+            futureDailyDOList = new ArrayList<>();
+            FutureDailyQuery futureDailyQuery = new FutureDailyQuery();
+            futureDailyQuery.setStartDate(tradeDate);
+            futureDailyQuery.setEndDate(tradeDate);
+            List<TsFutureDailyDO> tsFutureDailyDOList = tsfutureDailyDAO.selectByQuery(futureDailyQuery);
+            for (TsFutureDailyDO tsFutureDailyDO : tsFutureDailyDOList) {
+                FutureDailyDO futureDailyDO = new FutureDailyDO();
+                futureDailyDO.setTradeDate(tradeDate);
+                futureDailyDO.setCode(tsFutureDailyDO.getTsCode().split(".")[0]);
+                futureDailyDO.setClose(tsFutureDailyDO.getClose());
+                futureDailyDO.setSettle(tsFutureDailyDO.getSettle());
+                futureDailyDO.setOpen(tsFutureDailyDO.getOpen());
+                futureDailyDO.setHigh(tsFutureDailyDO.getHigh());
+                futureDailyDO.setLow(tsFutureDailyDO.getLow());
+                futureDailyDO.setPreClose(tsFutureDailyDO.getPreClose());
+                futureDailyDO.setPreSettle(tsFutureDailyDO.getPreSettle());
+                futureDailyDOList.add(futureDailyDO);
+            }
+        }
         return futureDailyDOList.stream().collect(Collectors.toMap(FutureDailyDO::getCode, Function.identity()));
     }
 }

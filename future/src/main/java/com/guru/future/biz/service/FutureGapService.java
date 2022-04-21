@@ -197,7 +197,7 @@ public class FutureGapService {
         }
 
         if (total == 0) {
-            log.warn("total == 0, no realtime data");
+            log.warn("total == 0, no gap data");
             return;
         }
 
