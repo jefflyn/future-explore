@@ -43,6 +43,11 @@ public class FutureBasicManager {
         return futureBasicDOList.stream().map(FutureBasicDO::getCode).collect(Collectors.toList());
     }
 
+    public List<String> getAllTsCodes() {
+        List<FutureBasicDO> futureBasicDOList = getAll();
+        return futureBasicDOList.stream().map(e -> e.getCode() + "." + e.getExchange()).collect(Collectors.toList());
+    }
+
     /**
      * deleted = 0
      * @return

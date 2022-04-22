@@ -45,6 +45,12 @@
             <if test="code != null">
                 and ts_code = #{code,jdbcType=VARCHAR}
             </if>
+            <if test="codes != null and codes.size() > 0">
+                and ts_code in
+                <foreach collection="codes" open="(" close=")" separator="," item="item">
+                    #{item}
+                </foreach>
+            </if>
             <if test="tradeDate != null">
                 and trade_date = #{tradeDate,jdbcType=VARCHAR}
             </if>

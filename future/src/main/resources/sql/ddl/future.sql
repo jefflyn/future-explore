@@ -5,8 +5,8 @@ create table future_basic
     name varchar(16) not null comment '商品名',
     type varchar(8) not null comment '分类',
     code varchar(8) not null comment '合约代码',
-    low decimal(10,2) not null comment '主连历史最低',
-    high decimal(10,2) not null comment '主连历史最高',
+    low decimal(10,2) not null comment '合约最低',
+    high decimal(10,2) not null comment '合约最高',
     a decimal(10,2) null comment '本合约A',
     b decimal(10,2) null comment '本合约B',
     c decimal(10,2) null comment '本合约C',
@@ -17,8 +17,9 @@ create table future_basic
     exchange varchar(16) not null comment '所属交易所',
     is_target tinyint default 1 not null comment '0=否 1=是',
     relative varchar(128) null comment '关联code',
-    deleted tinyint default 0 not null,
     remark varchar(64) null comment 'remark',
+    monthly tinyint default 0 not null comment '是否每月主力',
+    deleted tinyint default 0 not null,
     update_time timestamp not null on update CURRENT_TIMESTAMP comment '更新时间'
 )
     comment '合约基本信息';
@@ -141,6 +142,7 @@ create index uidx_future_log
 
 create table future_wave
 (
+    ts_code text null,
     code text null,
     start text null,
     end text null,
@@ -151,7 +153,8 @@ create table future_wave
     ap double null,
     bp double null,
     cp double null,
-    dp double null
+    dp double null,
+    update_time datetime null
 );
 
 create table future_wave_detail
@@ -163,7 +166,8 @@ create table future_wave_detail
     begin_price double null,
     end_price double null,
     `change` double null,
-    days bigint null
+    days bigint null,
+    ts_code text null
 );
 
 create table future_week_stat
@@ -178,15 +182,18 @@ create table future_week_stat
 
 create table gap_log
 (
+    ts_code varchar(20) not null,
     code varchar(16) null comment 'code',
     start_date varchar(10) null comment '产生缺口日期',
     end_date varchar(10) not null comment '缺口结束日期',
     gap_type varchar(10) not null comment '类型',
     start_price decimal(10,2) not null comment '缺口开始价格',
+    cpos decimal(10,1) not null comment '合约位置',
     end_price decimal(10,2) not null comment '缺口结束价格',
     gap_rate decimal(10,2) not null comment '缺口大小%',
     is_fill tinyint default 0 not null comment '是否已回补（0=未回补，1=已回补）',
     fill_date varchar(10) null comment '回补日期',
+    `check` tinyint null,
     create_time datetime null comment '插入时间',
     update_time datetime null comment '更新时间',
     constraint idx_gap_log_code_date

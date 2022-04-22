@@ -31,6 +31,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
+import static com.guru.future.common.utils.DateUtil.TRADE_DATE_PATTERN_FLAT;
+
 /**
  * @author j
  */
@@ -104,8 +106,9 @@ public class FutureGapService {
     public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) throws Exception {
         log.info("open gap start! realtime data size={}", contractRealtimeDTOList.size());
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
-        String tradeDate = DateUtil.currentTradeDate();
-        Map<String, FutureDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
+        String tradeDate = DateUtil.latestTradeDate(TRADE_DATE_PATTERN_FLAT);
+        List<String> tsCodes = futureBasicManager.getAllTsCodes();
+        Map<String, FutureDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, tsCodes);
         List<ContractOpenGapDTO> openGapDTOList = new ArrayList<>();
         int total = 0;
         Map<String, Integer> openStats = new HashMap<>();

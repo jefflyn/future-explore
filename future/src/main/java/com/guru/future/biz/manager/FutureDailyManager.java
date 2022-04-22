@@ -48,29 +48,26 @@ public class FutureDailyManager {
     }
 
     public Map<String, FutureDailyDO> getFutureDailyMap(String tradeDate, List<String> codes) {
-        FutureDailyQuery query = new FutureDailyQuery();
-        query.setTradeDate(tradeDate);
-        query.setCodes(codes);
-        List<FutureDailyDO> futureDailyDOList = futureDailyDAO.selectByQuery(query);
-        if (CollectionUtils.isEmpty(futureDailyDOList)) {
-            futureDailyDOList = new ArrayList<>();
-            FutureDailyQuery futureDailyQuery = new FutureDailyQuery();
-            futureDailyQuery.setStartDate(tradeDate);
-            futureDailyQuery.setEndDate(tradeDate);
-            List<TsFutureDailyDO> tsFutureDailyDOList = tsfutureDailyDAO.selectByQuery(futureDailyQuery);
-            for (TsFutureDailyDO tsFutureDailyDO : tsFutureDailyDOList) {
-                FutureDailyDO futureDailyDO = new FutureDailyDO();
-                futureDailyDO.setTradeDate(tradeDate);
-                futureDailyDO.setCode(tsFutureDailyDO.getTsCode().split(".")[0]);
-                futureDailyDO.setClose(tsFutureDailyDO.getClose());
-                futureDailyDO.setSettle(tsFutureDailyDO.getSettle());
-                futureDailyDO.setOpen(tsFutureDailyDO.getOpen());
-                futureDailyDO.setHigh(tsFutureDailyDO.getHigh());
-                futureDailyDO.setLow(tsFutureDailyDO.getLow());
-                futureDailyDO.setPreClose(tsFutureDailyDO.getPreClose());
-                futureDailyDO.setPreSettle(tsFutureDailyDO.getPreSettle());
-                futureDailyDOList.add(futureDailyDO);
-            }
+        List<FutureDailyDO> futureDailyDOList = new ArrayList<>();
+        FutureDailyQuery futureDailyQuery = new FutureDailyQuery();
+        futureDailyQuery.setCodes(codes);
+        futureDailyQuery.setStartDate(tradeDate);
+        futureDailyQuery.setEndDate(tradeDate);
+        List<TsFutureDailyDO> tsFutureDailyDOList = tsfutureDailyDAO.selectByQuery(futureDailyQuery);
+        for (TsFutureDailyDO tsFutureDailyDO : tsFutureDailyDOList) {
+            FutureDailyDO futureDailyDO = new FutureDailyDO();
+            futureDailyDO.setTradeDate(tradeDate);
+            String tsCode = tsFutureDailyDO.getTsCode();
+            String code = tsCode.substring(0, tsCode.indexOf("."));
+            futureDailyDO.setCode(code);
+            futureDailyDO.setClose(tsFutureDailyDO.getClose());
+            futureDailyDO.setSettle(tsFutureDailyDO.getSettle());
+            futureDailyDO.setOpen(tsFutureDailyDO.getOpen());
+            futureDailyDO.setHigh(tsFutureDailyDO.getHigh());
+            futureDailyDO.setLow(tsFutureDailyDO.getLow());
+            futureDailyDO.setPreClose(tsFutureDailyDO.getPreClose());
+            futureDailyDO.setPreSettle(tsFutureDailyDO.getPreSettle());
+            futureDailyDOList.add(futureDailyDO);
         }
         return futureDailyDOList.stream().collect(Collectors.toMap(FutureDailyDO::getCode, Function.identity()));
     }
