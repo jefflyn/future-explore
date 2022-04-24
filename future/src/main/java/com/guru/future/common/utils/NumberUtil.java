@@ -25,7 +25,7 @@ public class NumberUtil {
     }
 
     /**
-     * 去掉无效的小数位
+     * 去掉无效的小数位0
      *
      * @param numberVal
      * @return
@@ -35,10 +35,16 @@ public class NumberUtil {
         String[] numberArr = numberStr.split("\\.");
         if (numberArr.length > 1) {
             String digit = numberArr[1];
-            int length = digit.length() > 2 ? 2 : digit.length();
-            if (Integer.valueOf(digit.substring(0, length)) > 0) {
-                return numberStr;
+            if (Integer.valueOf(digit) == 0) {
+                return numberArr[0];
             }
+            int length = digit.length() > 2 ? 2 : digit.length();
+            String newDigitStr = digit.substring(0, length);
+            if (Integer.valueOf(newDigitStr) > 0
+                    && newDigitStr.lastIndexOf("0") == length - 1) {
+                return numberArr[0] + "." + newDigitStr.substring(0, 1);
+            }
+            return numberArr[0] + "." + newDigitStr;
         }
         return numberArr[0];
     }
@@ -56,4 +62,5 @@ public class NumberUtil {
         }
         return NumberUtils.convertNumberToTargetClass(Float.valueOf(numberVal), Integer.class);
     }
+
 }

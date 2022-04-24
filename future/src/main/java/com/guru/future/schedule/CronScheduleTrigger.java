@@ -31,14 +31,14 @@ public class CronScheduleTrigger {
 
     private void realtimeJob(Scheduler scheduler) throws SchedulerException {
         JobDetail jobDetail = JobBuilder.newJob(RealtimeJob.class).withIdentity("RealtimeJob", "group1").build();
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0,30 9,13,21 ? * 2-6");
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("3 0,30 9,13,21 ? * 2-6");
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("RealtimeJobTrigger", "group1").withSchedule(scheduleBuilder).build();
         scheduler.scheduleJob(jobDetail, cronTrigger);
     }
 
     private void openGapJob(Scheduler scheduler) throws SchedulerException {
         JobDetail jobDetail = JobBuilder.newJob(OpenGapJob.class).withIdentity("OpenGapJob", "group1").build();
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0 9,21 ? * 2-6");
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("3 0 9,21 ? * 2-6");
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("OpenGapJobTrigger", "group1").withSchedule(scheduleBuilder).build();
         scheduler.scheduleJob(jobDetail, cronTrigger);
     }
@@ -52,7 +52,7 @@ public class CronScheduleTrigger {
 
     private void overviewCollectJob(Scheduler scheduler) throws SchedulerException {
         JobDetail jobDetail = JobBuilder.newJob(OverviewCollectJob.class).withIdentity("OverviewCollectJob", "group1").build();
-        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("0 0/5 9-22 ? * 2-6");
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule("3 0/5 9-22 ? * 2-6");
         CronTrigger cronTrigger = TriggerBuilder.newTrigger().withIdentity("OverviewCollectJobTrigger", "group1").withSchedule(scheduleBuilder).build();
         scheduler.scheduleJob(jobDetail, cronTrigger);
     }

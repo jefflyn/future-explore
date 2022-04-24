@@ -8,21 +8,24 @@
         <result column="category" jdbcType="VARCHAR" property="category"/>
         <result column="pre_close" jdbcType="DECIMAL" property="preClose"/>
         <result column="open" jdbcType="DECIMAL" property="open"/>
+        <result column="open_change" jdbcType="DECIMAL" property="openChange"/>
         <result column="gap_rate" jdbcType="DECIMAL" property="gapRate"/>
         <result column="day_gap" jdbcType="BOOLEAN" property="dayGap"/>
         <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="contract_position" jdbcType="INTEGER" property="contractPosition"/>
         <result column="buy_low" jdbcType="DECIMAL" property="buyLow"/>
         <result column="sell_high" jdbcType="DECIMAL" property="sellHigh"/>
     </resultMap>
 
     <insert id="insertBatch" parameterType="list">
         insert into open_gap
-        (trade_date, code, name, category, pre_close, pre_high, pre_low, open, gap_rate, day_gap, remark, buy_low, sell_high)
+        (trade_date, code, name, category, pre_close, pre_high, pre_low, open, open_change,
+        gap_rate, day_gap, remark, contract_position, buy_low, sell_high)
         values
         <foreach collection="list" item="obj" index="index" separator=",">
             (
             #{obj.tradeDate}, #{obj.code}, #{obj.name}, #{obj.category}, #{obj.preClose}, #{obj.preHigh}, #{obj.preLow},
-            #{obj.open}, #{obj.gapRate}, #{obj.dayGap}, #{obj.remark}, #{obj.buyLow}, #{obj.sellHigh}
+            #{obj.open}, #{obj.openChange}, #{obj.gapRate}, #{obj.dayGap}, #{obj.remark}, #{obj.contractPosition}, #{obj.buyLow}, #{obj.sellHigh}
             )
         </foreach>
     </insert>
@@ -54,6 +57,9 @@
             <if test="open != null">
                 `open`,
             </if>
+            <if test="openChange != null">
+                `open_change`,
+            </if>
             <if test="gapRate != null">
                 gap_rate,
             </if>
@@ -62,6 +68,9 @@
             </if>
             <if test="remark != null">
                 remark,
+            </if>
+            <if test="contractPosition != null">
+                contract_position,
             </if>
             <if test="buyLow != null">
                 buy_low,
@@ -95,6 +104,9 @@
             <if test="open != null">
                 #{open,jdbcType=DECIMAL},
             </if>
+            <if test="openChange != null">
+                #{openChange,jdbcType=DECIMAL},
+            </if>
             <if test="gapRate != null">
                 #{gapRate,jdbcType=DECIMAL},
             </if>
@@ -103,6 +115,9 @@
             </if>
             <if test="remark != null">
                 #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="contractPosition != null">
+                #{contractPosition,jdbcType=INTEGER},
             </if>
             <if test="buyLow != null">
                 #{buyLow,jdbcType=DECIMAL},

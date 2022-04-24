@@ -22,11 +22,15 @@ public class OpenGapDO {
 
     private BigDecimal open;
 
+    private BigDecimal openChange;
+
     private BigDecimal gapRate;
 
     private Boolean dayGap;
 
     private String remark;
+
+    private Integer contractPosition;
 
     private BigDecimal buyLow;
 

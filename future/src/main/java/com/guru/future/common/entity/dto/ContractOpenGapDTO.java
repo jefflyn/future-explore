@@ -22,13 +22,15 @@ public class ContractOpenGapDTO implements Comparable<ContractOpenGapDTO> {
 
     private BigDecimal open;
 
+    private BigDecimal openChange;
+
     private BigDecimal gapRate;
 
     private Boolean dayGap;
 
     private String remark;
 
-    private String wave;
+    private Integer contractPosition;
 
     private String suggest;
 
@@ -40,7 +42,7 @@ public class ContractOpenGapDTO implements Comparable<ContractOpenGapDTO> {
 
     @Override
     public int compareTo(ContractOpenGapDTO contractOpenGapDTO) {
-        return Float.valueOf(Math.abs(this.gapRate.floatValue()))
-                .compareTo(Float.valueOf(Math.abs(contractOpenGapDTO.gapRate.floatValue())));
+        return Float.valueOf(Math.abs(this.openChange.floatValue()))
+                .compareTo(Float.valueOf(Math.abs(contractOpenGapDTO.openChange.floatValue())));
     }
 }

@@ -10,6 +10,7 @@ import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.FutureUtil;
+import com.guru.future.common.utils.NumberUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureDailyDO;
 import com.guru.future.domain.OpenGapDO;
@@ -32,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
 import static com.guru.future.common.utils.DateUtil.TRADE_DATE_PATTERN_FLAT;
+import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
 
 /**
  * @author j
@@ -129,7 +131,7 @@ public class FutureGapService {
                 continue;
             }
 //            log.info("lastDailyDO={}", lastDailyDO);
-            BigDecimal preClose = lastDailyDO.getPreClose();
+            BigDecimal preClose = lastDailyDO.getClose();
             BigDecimal preOpen = lastDailyDO.getOpen();
             BigDecimal preHigh = lastDailyDO.getHigh();
             BigDecimal preLow = lastDailyDO.getLow();
@@ -139,20 +141,21 @@ public class FutureGapService {
                 continue;
             }
             BigDecimal priceDiff = currentOpen.subtract(preClose);
+            BigDecimal openChange = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
             total += 1;
+            boolean isUp = priceDiff.compareTo(BigDecimal.ZERO) > 0;
             if (priceDiff.compareTo(BigDecimal.ZERO) == 0) {
 //                Integer cnt = ObjectUtils.defaultIfNull(openStats.get("平开"), 0);
 //                openStats.put("平开", cnt + 1);
-            } else if (priceDiff.compareTo(BigDecimal.ZERO) > 0) {
+            } else if (isUp) {
                 Integer cnt = ObjectUtils.defaultIfNull(openStats.get("高开"), 0);
                 openStats.put(openHighTag, cnt + 1);
             } else {
                 Integer cnt = ObjectUtils.defaultIfNull(openStats.get("低开"), 0);
                 openStats.put(openLowTag, cnt + 1);
             }
-            BigDecimal gapRate = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
             //if (Math.abs(gapRate.floatValue()) >= 0.5) {
-            BigDecimal dayGap;
+            BigDecimal dayGap = BigDecimal.ZERO;
             BigDecimal suggestFrom;
             BigDecimal suggestTo;
             StringBuilder remark = new StringBuilder("");
@@ -163,14 +166,20 @@ public class FutureGapService {
                     isDayGap = true;
                     suggestFrom = preClose.multiply(BigDecimal.valueOf(0.996));
                     dayGap = (currentOpen.subtract(preHigh)).multiply(BigDecimal.valueOf(100)).divide(preHigh, 2, RoundingMode.HALF_UP);
-                    remark.append("日跳高 ").append("+").append(dayGap).append("%");
+                    remark.append("日缺口 ").append("+").append(dayGap).append("%");
                 } else {
                     suggestFrom = preClose.multiply(BigDecimal.valueOf(0.999));
+                    remark.append("高开 ").append("+").append(openChange).append("%");
                 }
-                if (Math.abs(gapRate.floatValue()) >= 0.6) {
+                if (Math.abs(openChange.floatValue()) >= 0.6) {
                     suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.9964));
                 }
-                if (Math.abs(gapRate.floatValue()) >= 1) {
+                if (Math.abs(openChange.floatValue()) >= 5) {
+                    suggestTo = BigDecimal.valueOf(999999);
+                } else if (Math.abs(openChange.floatValue()) >= 2) {
+                    BigDecimal factor = BigDecimal.ONE.add(openChange.divide(BigDecimal.valueOf(100)));
+                    suggestTo = currentOpen.multiply(factor);
+                } else if (Math.abs(openChange.floatValue()) >= 1) {
                     suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.0075));
                 } else {
                     suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.007));
@@ -181,20 +190,22 @@ public class FutureGapService {
                     isDayGap = true;
                     suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.996));
                     dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
-                    remark.append("日跳空 ").append(dayGap).append("%");
+                    remark.append("日缺口 ").append(dayGap).append("%");
                 } else {
                     suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.999));
+                    remark.append("低开 ").append(openChange).append("%");
                 }
                 suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.007));
             }
             suggestFrom = suggestFrom.setScale(1, RoundingMode.HALF_UP);
             suggestTo = suggestTo.setScale(1, RoundingMode.HALF_UP);
-            String suggestPrice = suggestFrom + "-" + suggestTo;
-            String waveStr = FutureUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), basicDO.getD(), currentOpen);
+            String suggestPrice = suggestFrom.intValue() + "多\n"
+                    + suggestTo.intValue() + "空";
+            int calcPosition = FutureUtil.calcPosition(isUp, realtimeDTO.getOpen(), basicDO.getHigh(), basicDO.getLow());
             ContractOpenGapDTO openGapDTO = ContractOpenGapDTO.builder()
                     .tradeDate(tradeDate).code(code).name(basicDO.getName()).category(basicDO.getType()).dayGap(isDayGap)
                     .preClose(preClose.setScale(1, RoundingMode.HALF_UP))
-                    .preHigh(preHigh).preLow(preLow).open(currentOpen).gapRate(gapRate).wave(waveStr)
+                    .preHigh(preHigh).preLow(preLow).open(currentOpen).openChange(openChange).gapRate(dayGap).contractPosition(calcPosition)
                     .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo).suggest(suggestPrice).build();
             openGapDTOList.add(openGapDTO);
         }
@@ -242,31 +253,40 @@ public class FutureGapService {
         stringBuilder.append(title).append("</h3>");
         stringBuilder.append("<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" style=\"border:solid 1px #E8F2F9;font-size=14px;;font-size:12px;\">");
         stringBuilder.append("<tr style=\"background-color: #428BCA; color:#ffffff\">" +
-                "<th width=\"10px\">序号</th>" +
-                "<th width=\"60px\">品种</th>" +
+                "<th width=\"20px\">序号</th>" +
+//                "<th width=\"60px\">品种</th>" +
                 "<th width=\"60px\">编码</th>" +
                 "<th width=\"80px\">名称</th>" +
                 "<th width=\"60px\">昨收</th>" +
                 "<th width=\"60px\">今开</th>" +
-                "<th width=\"60px\">缺口</th>" +
-                "<th width=\"80px\">备注</th>" +
-                "<th width=\"120px\">建议</th>" +
-                "<th width=\"240px\">wave</th>" +
+                "<th width=\"100px\">备注</th>" +
+                "<th width=\"60px\">pos</th>" +
+                "<th width=\"140px\">建议</th>" +
                 "</tr>");
         int seq = 0;
         for (ContractOpenGapDTO openGapDTO : openGapDTOList) {
-            if (Math.abs(openGapDTO.getGapRate().floatValue()) >= 0.33 || openGapDTO.getDayGap()) {
-                stringBuilder.append("</tr>");
-                stringBuilder.append("<td style=\"text-align:left\">" + (++seq) + "</td>");
-                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getCategory() + "</td>");
+            if (Math.abs(openGapDTO.getOpenChange().floatValue()) >= 0.33 || openGapDTO.getDayGap()) {
+                String priceTag = openGapDTO.getGapRate().floatValue() > 0 ?
+                        "^" + NumberUtil.price2String(openGapDTO.getPreHigh()) + "\n" + NumberUtil.price2String(openGapDTO.getPreClose()) :
+                        NumberUtil.price2String(openGapDTO.getPreClose()) + "\n" + "_" + NumberUtil.price2String(openGapDTO.getPreLow());
+                String trHtml = "<tr>";
+                if (openGapDTO.getDayGap() && openGapDTO.getGapRate().floatValue() > 0) {
+                    trHtml = "<tr style=\"color:red\">";
+                }
+                if (openGapDTO.getDayGap() && openGapDTO.getGapRate().floatValue() < 0) {
+                    trHtml = "<tr style=\"color:green\">";
+                }
+                stringBuilder.append(trHtml);
+                stringBuilder.append("<td style=\"text-align:right\">" + (++seq) + "</td>");
+//                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getCategory() + "</td>");
                 stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getCode() + "</td>");
                 stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getName() + "</td>");
-                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getPreClose() + "</td>");
-                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getOpen() + "</td>");
-                stringBuilder.append("<td style=\"text-align:right\">" + openGapDTO.getGapRate() + "%</td>");
-                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getRemark() + "</td>");
+                stringBuilder.append("<td style=\"text-align:right\">" + priceTag + "</td>");
+                stringBuilder.append("<td style=\"text-align:right\">" + NumberUtil.price2String(openGapDTO.getOpen())
+                        + "\n" + openGapDTO.getOpenChange() + PERCENTAGE_SYMBOL + "</td>");
+                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getRemark() + "</td>");
+                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getContractPosition() + "%" + "</td>");
                 stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getSuggest() + "</td>");
-                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getWave() + "</td>");
                 stringBuilder.append("</tr>");
             }
         }
