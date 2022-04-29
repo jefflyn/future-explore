@@ -63,7 +63,7 @@ public class FutureTaskDispatcher {
             if (CollectionUtils.isEmpty(codeList)) {
                 return;
             }
-            if (!DateUtil.isTradeTime()) {
+            if (!DateUtil.isTradeTime() && Boolean.FALSE.equals(REFRESH)) {
                 log.info(">>> music off, party over!");
                 times.increment();
                 if (times.intValue() > 5) {

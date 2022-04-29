@@ -26,6 +26,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +109,12 @@ public class FutureGapService {
     public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) throws Exception {
         log.info("open gap start! realtime data size={}", contractRealtimeDTOList.size());
         Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
-        String tradeDate = DateUtil.latestTradeDate(TRADE_DATE_PATTERN_FLAT);
+        String tradeDate;
+        if (DateUtil.isNight()) {
+            tradeDate = DateUtil.latestTradeDate(TRADE_DATE_PATTERN_FLAT);
+        } else {
+            tradeDate = DateUtil.getLastTradeDate(new Date(), TRADE_DATE_PATTERN_FLAT);
+        }
         List<String> tsCodes = futureBasicManager.getAllTsCodes();
         Map<String, FutureDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, tsCodes);
         List<ContractOpenGapDTO> openGapDTOList = new ArrayList<>();
@@ -117,17 +123,22 @@ public class FutureGapService {
         String openHighTag = "高开";
         String openLowTag = "低开";
         for (ContractRealtimeDTO realtimeDTO : contractRealtimeDTOList) {
-//            log.info("{}: realtimeDTO={}", realtimeDTO.getName(), realtimeDTO);
             String code = realtimeDTO.getCode();
             FutureBasicDO basicDO = basicMap.get(code);
             int nightTrade = basicDO.getNight();
-            if (DateUtil.isNight() && nightTrade == 0) {
-                log.warn("{} night trade not support", code);
-                continue;
+            if (DateUtil.isNight()) {
+                if (nightTrade == 0) {
+                    log.warn("{} night trade not support", code);
+                    continue;
+                }
+            } else {
+                if (nightTrade != 0) {
+                    continue;
+                }
             }
             FutureDailyDO lastDailyDO = preDailyMap.get(realtimeDTO.getCode());
             if (lastDailyDO == null) {
-                log.warn("last daily data missed! trade date:{}", tradeDate);
+                log.warn("{} last daily data missed! trade date:{}", realtimeDTO.getCode(), tradeDate);
                 continue;
             }
 //            log.info("lastDailyDO={}", lastDailyDO);
@@ -166,7 +177,7 @@ public class FutureGapService {
                     isDayGap = true;
                     suggestFrom = preClose.multiply(BigDecimal.valueOf(0.996));
                     dayGap = (currentOpen.subtract(preHigh)).multiply(BigDecimal.valueOf(100)).divide(preHigh, 2, RoundingMode.HALF_UP);
-                    remark.append("日缺口 ").append("+").append(dayGap).append("%");
+                    remark.append("跳空高开 ").append("+").append(dayGap).append("%");
                 } else {
                     suggestFrom = preClose.multiply(BigDecimal.valueOf(0.999));
                     remark.append("高开 ").append("+").append(openChange).append("%");
@@ -190,7 +201,7 @@ public class FutureGapService {
                     isDayGap = true;
                     suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.996));
                     dayGap = (currentOpen.subtract(preLow)).multiply(BigDecimal.valueOf(100)).divide(preLow, 2, RoundingMode.HALF_UP);
-                    remark.append("日缺口 ").append(dayGap).append("%");
+                    remark.append("跳空低开 ").append(dayGap).append("%");
                 } else {
                     suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.999));
                     remark.append("低开 ").append(openChange).append("%");

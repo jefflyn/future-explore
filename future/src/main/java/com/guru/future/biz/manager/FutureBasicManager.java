@@ -1,5 +1,6 @@
 package com.guru.future.biz.manager;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.mapper.FutureBasicDAO;
 import org.springframework.scheduling.annotation.Async;
@@ -23,12 +24,14 @@ public class FutureBasicManager {
     private Map<String, FutureBasicDO> FUTURE_BASIC_MAP = new HashMap<>();
 
     public FutureBasicDO getBasicByCode(String code) {
-        return futureBasicsDAO.selectByCode(code);
+        FutureBasicDO futureBasicDO = FUTURE_BASIC_MAP.get(code);
+        return ObjectUtil.defaultIfNull(futureBasicDO, futureBasicsDAO.selectByCode(code));
     }
 
     public Map<String, FutureBasicDO> getBasicMap() {
         return getBasicMap(false);
     }
+
     public Map<String, FutureBasicDO> getBasicMap(Boolean refresh) {
         if (FUTURE_BASIC_MAP.size() > 0 && Boolean.FALSE.equals(refresh)) {
             return FUTURE_BASIC_MAP;
@@ -50,6 +53,7 @@ public class FutureBasicManager {
 
     /**
      * deleted = 0
+     *
      * @return
      */
     public List<FutureBasicDO> getAll() {

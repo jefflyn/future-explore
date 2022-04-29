@@ -1,6 +1,7 @@
 package com.guru.future.common.utils;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 
@@ -63,6 +64,7 @@ public class FutureUtil {
         if (a == null || price == null) {
             return Strings.EMPTY;
         }
+
         BigDecimal waveA;
         if (b != null) {
             waveA = b.subtract(a).multiply(BigDecimal.valueOf(100)).divide(a, 2, RoundingMode.HALF_UP);
