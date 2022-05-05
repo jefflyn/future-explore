@@ -66,4 +66,9 @@ public class FutureLiveController {
         futureLiveService.sendMarketOverviewMail();
         return "success";
     }
+
+    @GetMapping(value = "/future/hist/overview")
+    public String reviewHistOverview(){
+        return futureLiveService.showHistOverview();
+    }
 }

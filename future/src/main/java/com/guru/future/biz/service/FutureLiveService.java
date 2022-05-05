@@ -307,26 +307,31 @@ public class FutureLiveService {
         String key = DateUtil.currentTradeDate() + "_overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
         if (CollectionUtil.isNotEmpty(cacheList)) {
-            Map<String, String> overviewMap = new HashMap<>();
-            for (Map<String, String> map : cacheList){
-                overviewMap.putAll(map);
-            }
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("21:00"), overviewMap.get("21:10"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("21:30"), overviewMap.get("21:40"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("22:00"), overviewMap.get("22:10"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("22:30"), overviewMap.get("22:40"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("09:00"), overviewMap.get("09:10"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("09:30"), overviewMap.get("09:40"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("10:00"), overviewMap.get("10:10"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("10:15"), overviewMap.get("10:25"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("11:00"), overviewMap.get("11:10"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("11:20"), overviewMap.get("11:25"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("13:30"), overviewMap.get("13:10"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("14:00"), overviewMap.get("14:10"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("14:30"), overviewMap.get("14:40"))).append(" ");
-            histOverview.append(NullUtil.defaultValue(overviewMap.get("14:50"), overviewMap.get("14:55"))).append(" ");
+            appendOverviewStr(histOverview, cacheList);
         }
         return histOverview.toString();
+    }
+
+    private void appendOverviewStr(StringBuilder histOverview, RList<Map<String, String>> cacheList) {
+        Map<String, String> overviewMap = new HashMap<>();
+        for (Map<String, String> map : cacheList) {
+//            System.out.println(map.keySet() +","+map.values());
+            overviewMap.putAll(map);
+        }
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("21:00"), overviewMap.get("21:10"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("21:30"), overviewMap.get("21:40"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("22:00"), overviewMap.get("22:10"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("22:30"), overviewMap.get("22:40"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("09:00"), overviewMap.get("09:10"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("09:30"), overviewMap.get("09:40"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("10:00"), overviewMap.get("10:10"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("10:15"), overviewMap.get("10:25"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("11:00"), overviewMap.get("11:10"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("11:20"), overviewMap.get("11:25"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("13:30"), overviewMap.get("13:10"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("14:00"), overviewMap.get("14:10"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("14:30"), overviewMap.get("14:40"))).append(" ");
+        histOverview.append(NullUtil.defaultValue(overviewMap.get("14:50"), overviewMap.get("14:55"))).append(" ");
     }
 
     private String overviewDesc(float change) {
@@ -427,5 +432,21 @@ public class FutureLiveService {
         }
         content.append("</table>");
         return content.toString();
+    }
+
+    public String showHistOverview() {
+        StringBuilder result = new StringBuilder();
+        String currentDate = DateUtil.currentTradeDate();
+        String key = currentDate + "_overview";
+        RList<Map<String, String>> cacheList = redissonClient.getList(key);
+        while (!cacheList.isEmpty()) {
+            result.append(currentDate).append(": ");
+            appendOverviewStr(result, cacheList);
+            result.append("\n");
+            currentDate = DateUtil.getLastTradeDate(currentDate);
+            key = currentDate + "_overview";
+            cacheList = redissonClient.getList(key);
+        }
+        return result.toString();
     }
 }
