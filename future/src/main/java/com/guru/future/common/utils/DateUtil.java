@@ -51,7 +51,7 @@ public class DateUtil {
      * private static final int MID_NIGHT_CLOSE_HOUR = 3;
      **/
 
-    public static final String AFTERNOON_CLOSE_TIME = "15:00:00";
+    public static final String AFTERNOON_CLOSE_TIME = "15:00:04";
 
     public static final String TRADE_DATE_PATTERN_FLAT = "yyyyMMdd";
     public static final String TRADE_DATE_PATTERN_HYPHEN = "yyyy-MM-dd";
@@ -191,7 +191,7 @@ public class DateUtil {
             return false;
         }
         String currentTime = DateFormatUtils.format(date, HOUR_MINUTE_PATTERN);
-        return currentTime.compareTo("15:00") > 0;
+        return currentTime.compareTo("15:03") > 0;
     }
 
     public static boolean beforeBidTime() {
@@ -218,12 +218,12 @@ public class DateUtil {
         String nowTime = DateFormatUtils.format(now, TIME_PATTERN);
 
         String morningOpen = "09:00:00";
-        String morningClose = "11:30:00";
+        String morningClose = "11:30:04";
 
         String afternoonOpen = "13:30:00";
 
         String nightOpen = "21:00:00";
-        String nightClose = "23:00:00";
+        String nightClose = "23:00:04";
 
         if (TRADE_TIME_TEST) {
             return true;

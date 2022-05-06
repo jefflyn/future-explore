@@ -1,6 +1,7 @@
 package com.guru.future.biz.service;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureLiveManager;
@@ -318,6 +319,8 @@ public class FutureLiveService {
 //            System.out.println(map.keySet() +","+map.values());
             overviewMap.putAll(map);
         }
+//        Collections.max();
+
         histOverview.append(NullUtil.defaultValue(overviewMap.get("21:00"), overviewMap.get("21:10"))).append(" ");
         histOverview.append(NullUtil.defaultValue(overviewMap.get("21:30"), overviewMap.get("21:40"))).append(" ");
         histOverview.append(NullUtil.defaultValue(overviewMap.get("22:00"), overviewMap.get("22:10"))).append(" ");
