@@ -112,6 +112,9 @@ public class FutureLiveService {
         reloadLiveCache(contractRealtimeDTOList, basicMap);
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureBasicDO futureBasicDO = basicMap.get(contractRealtimeDTO.getCode());
+            if(futureBasicDO == null){
+                System.out.println();
+            }
             if (DateUtil.isNight() && Boolean.FALSE.equals(futureBasicDO.hasNightTrade())) {
 //                log.info(futureBasicDO.getName() + " has not night trade, skip");
                 continue;

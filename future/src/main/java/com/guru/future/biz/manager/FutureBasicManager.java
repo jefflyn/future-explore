@@ -62,14 +62,14 @@ public class FutureBasicManager {
 
     public Boolean updateBasic(FutureBasicDO updateBasicDO) {
         if (futureBasicsDAO.updateByCodeSelective(updateBasicDO) > 0) {
-            refreshBasicCacheMap(updateBasicDO.getCode());
+            refreshBasicCacheMap();
         }
         return true;
     }
 
     @Async
-    public void refreshBasicCacheMap(String code) {
-        FutureBasicDO futureBasicDO = getBasicByCode(code);
-        FUTURE_BASIC_MAP.put(code, futureBasicDO);
+    public void refreshBasicCacheMap() {
+        List<FutureBasicDO> futureBasicDOList = futureBasicsDAO.selectByQuery(null);
+        FUTURE_BASIC_MAP = futureBasicDOList.stream().collect(Collectors.toMap(FutureBasicDO::getCode, Function.identity()));
     }
 }
