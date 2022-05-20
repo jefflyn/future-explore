@@ -1,7 +1,6 @@
 package com.guru.future.biz.service;
 
-import cn.hutool.core.collection.CollectionUtil;
-import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureLiveManager;
@@ -31,8 +30,8 @@ import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +46,30 @@ import static com.guru.future.common.utils.NumberUtil.price2String;
 @Service
 @Slf4j
 public class FutureLiveService {
+    private static final List<Pair<String, String>> NIGHT_TIMES = Arrays.asList(
+            Pair.of("21:05", ""), Pair.of("21:10", ""),
+            Pair.of("21:25", ""), Pair.of("21:30", ""),
+            Pair.of("21:45", ""), Pair.of("21:50", ""),
+            Pair.of("22:05", ""), Pair.of("22:10", ""),
+            Pair.of("22:25", ""), Pair.of("22:30", ""),
+            Pair.of("22:45", ""), Pair.of("22:50", ""));
+    private static final List<Pair<String, String>> MORN_TIMES = Arrays.asList(
+            Pair.of("09:05", ""), Pair.of("09:10", ""),
+            Pair.of("09:25", ""), Pair.of("09:25", ""),
+            Pair.of("09:45", ""), Pair.of("09:50", ""),
+            Pair.of("10:05", ""), Pair.of("10:15", ""),
+            Pair.of("10:35", ""), Pair.of("10:40", ""),
+            Pair.of("10:55", ""), Pair.of("11:00", "")
+    );
+    private static final List<Pair<String, String>> NOON_TIMES = Arrays.asList(
+            Pair.of("11:15", ""), Pair.of("11:20", ""),
+            Pair.of("13:35", ""), Pair.of("13:40", ""),
+            Pair.of("13:55", ""), Pair.of("14:00", ""),
+            Pair.of("14:15", ""), Pair.of("14:20", ""),
+            Pair.of("14:35", ""), Pair.of("14:40", ""),
+            Pair.of("14:55", ""), Pair.of("15:00", "")
+    );
+
     @Resource
     private FutureBasicManager futureBasicManager;
 
@@ -73,8 +96,7 @@ public class FutureLiveService {
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             String code = contractRealtimeDTO.getCode();
             FutureBasicDO basicDO = basicMap.get(code);
-            if (DateUtil.isNight() && Boolean.FALSE.equals(basicDO.hasNightTrade())) {
-//                log.info(basicDO.getName() + " has not night trade, skip");
+            if (Boolean.TRUE.equals(DateUtil.isNight()) && Boolean.FALSE.equals(basicDO.hasNightTrade())) {
                 continue;
             }
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
@@ -94,12 +116,7 @@ public class FutureLiveService {
         LiveDataCache.setPositionHighTop10(highTop10List);
         LiveDataCache.setPositionLowTop10(lowTop10List);
         // change
-        Collections.sort(futureLiveVOList, new Comparator<FutureLiveVO>() {
-            @Override
-            public int compare(FutureLiveVO o1, FutureLiveVO o2) {
-                return o1.getChange().compareTo(o2.getChange());
-            }
-        });
+        Collections.sort(futureLiveVOList, (o1, o2) -> o1.getChange().compareTo(o2.getChange()));
         List<FutureLiveVO> changeLowTop10List = futureLiveVOList.subList(0, topN);
         List<FutureLiveVO> changeHighTop10List = futureLiveVOList.subList(size - topN, size);
         Collections.reverse(changeHighTop10List);
@@ -112,11 +129,7 @@ public class FutureLiveService {
         reloadLiveCache(contractRealtimeDTOList, basicMap);
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureBasicDO futureBasicDO = basicMap.get(contractRealtimeDTO.getCode());
-            if(futureBasicDO == null){
-                System.out.println();
-            }
-            if (DateUtil.isNight() && Boolean.FALSE.equals(futureBasicDO.hasNightTrade())) {
-//                log.info(futureBasicDO.getName() + " has not night trade, skip");
+            if (futureBasicDO == null || (DateUtil.isNight() && Boolean.FALSE.equals(futureBasicDO.hasNightTrade()))) {
                 continue;
             }
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
@@ -175,66 +188,6 @@ public class FutureLiveService {
             FutureTaskDispatcher.setRefresh();
             log.info("{} update hist high, refresh basic data", contractRealtimeDTO.getCode());
         }
-
-        /*BigDecimal waveB = ObjectUtils.defaultIfNull(futureBasicDO.getB(), BigDecimal.ZERO);
-        BigDecimal waveC = ObjectUtils.defaultIfNull(futureBasicDO.getC(), BigDecimal.ZERO);
-        // up wave
-        if (waveC.floatValue() >= waveB.floatValue()) {
-            if (contractRealtimeDTO.getPrice().floatValue() > waveC.floatValue()
-                    || contractRealtimeDTO.getHigh().floatValue() > waveC.floatValue()) {
-                monitorService.addNewHighLowLog(contractRealtimeDTO, true);
-
-                FutureBasicDO updateBasicDO = new FutureBasicDO();
-                updateBasicDO.setCode(contractRealtimeDTO.getCode());
-                updateBasicDO.setC(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
-                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
-                updateBasicDO.setRemark("update c");
-                futureBasicManager.updateBasic(updateBasicDO);
-                log.info("update c by high = {}", JSON.toJSONString(updateBasicDO));
-            }
-            if (contractRealtimeDTO.getPrice().floatValue() < waveB.floatValue()
-                    || contractRealtimeDTO.getLow().floatValue() < waveB.floatValue()
-                    || contractRealtimeDTO.getHigh().floatValue() < waveB.floatValue()) {
-                monitorService.addNewHighLowLog(contractRealtimeDTO, false);
-
-                FutureBasicDO updateBasicDO = new FutureBasicDO();
-                updateBasicDO.setCode(contractRealtimeDTO.getCode());
-                updateBasicDO.setB(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
-                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
-                updateBasicDO.setC(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
-                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
-                updateBasicDO.setRemark("update b & c");
-                futureBasicManager.updateBasic(updateBasicDO);
-                log.info("update b by low, c by high = {}", JSON.toJSONString(updateBasicDO));
-            }
-        } else {
-            if (contractRealtimeDTO.getPrice().floatValue() < waveC.floatValue()
-                    || contractRealtimeDTO.getLow().floatValue() < waveC.floatValue()) {
-                monitorService.addNewHighLowLog(contractRealtimeDTO, false);
-                FutureBasicDO updateBasicDO = new FutureBasicDO();
-                updateBasicDO.setCode(contractRealtimeDTO.getCode());
-                updateBasicDO.setC(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
-                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
-                updateBasicDO.setRemark("update c");
-                futureBasicManager.updateBasic(updateBasicDO);
-                log.info("update c with low = {}", JSON.toJSONString(updateBasicDO));
-            }
-            if (contractRealtimeDTO.getPrice().floatValue() > waveB.floatValue()
-                    || contractRealtimeDTO.getHigh().floatValue() > waveB.floatValue()
-                    || contractRealtimeDTO.getLow().floatValue() > waveB.floatValue()) {
-                monitorService.addNewHighLowLog(contractRealtimeDTO, true);
-
-                FutureBasicDO updateBasicDO = new FutureBasicDO();
-                updateBasicDO.setCode(contractRealtimeDTO.getCode());
-                updateBasicDO.setB(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
-                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
-                updateBasicDO.setC(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
-                        contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
-                updateBasicDO.setRemark("update b & c");
-                futureBasicManager.updateBasic(updateBasicDO);
-                log.info("update b by high, c by low = {}", JSON.toJSONString(updateBasicDO));
-            }
-        }*/
         return Pair.of(histHigh, histLow);
     }
 
@@ -310,7 +263,7 @@ public class FutureLiveService {
         StringBuilder histOverview = new StringBuilder();
         String key = DateUtil.currentTradeDate() + "_overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
-        if (CollectionUtil.isNotEmpty(cacheList)) {
+        if (CollUtil.isNotEmpty(cacheList)) {
             appendOverviewStr(histOverview, cacheList);
         }
         return histOverview.toString();
@@ -319,25 +272,18 @@ public class FutureLiveService {
     private void appendOverviewStr(StringBuilder histOverview, RList<Map<String, String>> cacheList) {
         Map<String, String> overviewMap = new HashMap<>();
         for (Map<String, String> map : cacheList) {
-//            System.out.println(map.keySet() +","+map.values());
             overviewMap.putAll(map);
         }
-//        Collections.max();
+        setHistOverview(histOverview, NIGHT_TIMES, overviewMap);
+        setHistOverview(histOverview, MORN_TIMES, overviewMap);
+        setHistOverview(histOverview, NOON_TIMES, overviewMap);
+    }
 
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("21:00"), overviewMap.get("21:10"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("21:30"), overviewMap.get("21:40"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("22:00"), overviewMap.get("22:10"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("22:30"), overviewMap.get("22:40"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("09:00"), overviewMap.get("09:10"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("09:30"), overviewMap.get("09:40"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("10:00"), overviewMap.get("10:10"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("10:15"), overviewMap.get("10:25"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("11:00"), overviewMap.get("11:10"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("11:20"), overviewMap.get("11:25"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("13:30"), overviewMap.get("13:10"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("14:00"), overviewMap.get("14:10"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("14:30"), overviewMap.get("14:40"))).append(" ");
-        histOverview.append(NullUtil.defaultValue(overviewMap.get("14:50"), overviewMap.get("14:55"))).append(" ");
+    private void setHistOverview(StringBuilder histOverview, List<Pair<String, String>> timeList, Map<String, String> overviewMap) {
+        for (Pair<String, String> time : timeList) {
+            histOverview.append(NullUtil.defaultValue(overviewMap.get(time.getLeft()), overviewMap.get(time.getRight()))).append(" ");
+        }
+        histOverview.append("|");
     }
 
     private String overviewDesc(float change) {
