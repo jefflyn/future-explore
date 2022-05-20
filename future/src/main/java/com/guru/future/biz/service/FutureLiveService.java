@@ -283,7 +283,7 @@ public class FutureLiveService {
         for (Pair<String, String> time : timeList) {
             histOverview.append(NullUtil.defaultValue(overviewMap.get(time.getLeft()), overviewMap.get(time.getRight()))).append(" ");
         }
-        histOverview.append("|");
+        histOverview.append("| ");
     }
 
     private String overviewDesc(float change) {
