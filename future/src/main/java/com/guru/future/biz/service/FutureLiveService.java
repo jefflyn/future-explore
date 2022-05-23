@@ -47,27 +47,28 @@ import static com.guru.future.common.utils.NumberUtil.price2String;
 @Slf4j
 public class FutureLiveService {
     private static final List<Pair<String, String>> NIGHT_TIMES = Arrays.asList(
-            Pair.of("21:05", ""), Pair.of("21:10", ""),
-            Pair.of("21:25", ""), Pair.of("21:30", ""),
-            Pair.of("21:45", ""), Pair.of("21:50", ""),
-            Pair.of("22:05", ""), Pair.of("22:10", ""),
-            Pair.of("22:25", ""), Pair.of("22:30", ""),
-            Pair.of("22:45", ""), Pair.of("22:50", ""));
+            Pair.of("21:05", "21:10"),
+            Pair.of("21:25", "21:30"),
+            Pair.of("21:45", "21:50"),
+            Pair.of("22:05", "22:10"),
+            Pair.of("22:25", "22:30"),
+            Pair.of("22:45", "22:50")
+    );
     private static final List<Pair<String, String>> MORN_TIMES = Arrays.asList(
-            Pair.of("09:05", ""), Pair.of("09:10", ""),
-            Pair.of("09:25", ""), Pair.of("09:25", ""),
-            Pair.of("09:45", ""), Pair.of("09:50", ""),
-            Pair.of("10:05", ""), Pair.of("10:15", ""),
-            Pair.of("10:35", ""), Pair.of("10:40", ""),
-            Pair.of("10:55", ""), Pair.of("11:00", "")
+            Pair.of("09:05", "09:10"),
+            Pair.of("09:25", "09:25"),
+            Pair.of("09:45", "09:50"),
+            Pair.of("10:05", "10:15"),
+            Pair.of("10:35", "10:40"),
+            Pair.of("10:55", "11:00")
     );
     private static final List<Pair<String, String>> NOON_TIMES = Arrays.asList(
-            Pair.of("11:15", ""), Pair.of("11:20", ""),
-            Pair.of("13:35", ""), Pair.of("13:40", ""),
-            Pair.of("13:55", ""), Pair.of("14:00", ""),
-            Pair.of("14:15", ""), Pair.of("14:20", ""),
-            Pair.of("14:35", ""), Pair.of("14:40", ""),
-            Pair.of("14:55", ""), Pair.of("15:00", "")
+            Pair.of("11:15", "11:20"),
+            Pair.of("13:35", "13:40"),
+            Pair.of("13:55", "14:00"),
+            Pair.of("14:15", "14:20"),
+            Pair.of("14:35", "14:40"),
+            Pair.of("14:55", "15:00")
     );
 
     @Resource
@@ -275,7 +276,10 @@ public class FutureLiveService {
             overviewMap.putAll(map);
         }
         setHistOverview(histOverview, NIGHT_TIMES, overviewMap);
+        histOverview.append("| ");
+        histOverview.append("\n");
         setHistOverview(histOverview, MORN_TIMES, overviewMap);
+        histOverview.append("| ");
         setHistOverview(histOverview, NOON_TIMES, overviewMap);
     }
 
@@ -283,7 +287,6 @@ public class FutureLiveService {
         for (Pair<String, String> time : timeList) {
             histOverview.append(NullUtil.defaultValue(overviewMap.get(time.getLeft()), overviewMap.get(time.getRight()))).append(" ");
         }
-        histOverview.append("| ");
     }
 
     private String overviewDesc(float change) {
