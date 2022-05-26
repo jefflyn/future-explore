@@ -68,7 +68,9 @@ public class FutureLiveController {
     }
 
     @GetMapping(value = "/future/hist/overview")
-    public String reviewHistOverview(){
-        return futureLiveService.showHistOverview();
+    public String reviewHistOverview() {
+        String result = futureLiveService.showHistOverview();
+        result = result.replace("| \n", "| ");
+        return result;
     }
 }
