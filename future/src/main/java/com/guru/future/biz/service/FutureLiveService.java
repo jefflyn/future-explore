@@ -231,12 +231,12 @@ public class FutureLiveService {
             categorySummary.setCategoryName(category);
             BigDecimal categoryAvgChange = BigDecimal.valueOf(StatUtils.mean(changeArr)).setScale(2, RoundingMode.HALF_UP);
             categorySummary.setAvgChange(categoryAvgChange);
-            categorySummary.setAvgChangeStr((categoryAvgChange.floatValue() > 0 ? "+" : "") + categoryAvgChange + PERCENTAGE_SYMBOL);
+            categorySummary.setAvgChangeStr((categoryAvgChange.floatValue() >= 0 ? "+" : "") + categoryAvgChange + PERCENTAGE_SYMBOL);
             categorySummary.setBestName(best.getName());
-            categorySummary.setBestChange((best.getChange().floatValue() > 0 ? "+" : "") + best.getChange() + PERCENTAGE_SYMBOL);
+            categorySummary.setBestChange((best.getChange().floatValue() >= 0 ? "+" : "") + best.getChange() + PERCENTAGE_SYMBOL);
             categorySummary.setBestPrice(best.getPrice());
             categorySummary.setWorstName(worst.getName());
-            categorySummary.setWorstChange((worst.getChange().floatValue() > 0 ? "+" : "") + worst.getChange() + PERCENTAGE_SYMBOL);
+            categorySummary.setWorstChange((worst.getChange().floatValue() >= 0 ? "+" : "") + worst.getChange() + PERCENTAGE_SYMBOL);
             categorySummary.setWorstPrice(worst.getPrice());
             categorySummaryList.add(categorySummary);
         }
@@ -250,7 +250,7 @@ public class FutureLiveService {
         }
         totalAvgChange = totalAvgChange.divide(BigDecimal.valueOf(futureLiveDOList.size()), 2, RoundingMode.HALF_UP);
 
-        overviewVO.setTotalAvgChangeStr((totalAvgChange.floatValue() > 0 ? "+" : "") + totalAvgChange + PERCENTAGE_SYMBOL);
+        overviewVO.setTotalAvgChangeStr((totalAvgChange.floatValue() >= 0 ? "+" : "") + totalAvgChange + PERCENTAGE_SYMBOL);
         overviewVO.setOverviewDesc(overviewDesc(totalAvgChange.floatValue()));
         overviewVO.setHistOverviewDesc(getHistOverview());
         overviewVO.setCategorySummaryList(categorySummaryList);

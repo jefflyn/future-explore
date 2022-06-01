@@ -42,7 +42,7 @@ public class FutureBasicDO {
 
     private String remark;
 
-    public boolean hasNightTrade(){
+    public boolean hasNightTrade() {
         return Integer.valueOf(1).equals(night);
     }
 }
