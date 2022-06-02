@@ -1,5 +1,6 @@
 package com.guru.future.domain;
 
+import cn.hutool.core.date.DateUtil;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -44,5 +45,10 @@ public class FutureBasicDO {
 
     public boolean hasNightTrade() {
         return Integer.valueOf(1).equals(night);
+    }
+
+    public static void main(String[] args) {
+        Date dormantDate = DateUtil.offsetDay(new Date(), 14);
+        System.out.println(dormantDate);
     }
 }

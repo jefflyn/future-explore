@@ -1,6 +1,11 @@
 package com.guru.future.biz.service;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.math.MathUtil;
+import cn.hutool.core.util.NumberUtil;
+import com.google.common.collect.Collections2;
 import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureLiveManager;
@@ -17,6 +22,7 @@ import com.guru.future.domain.FutureBasicDO;
 import com.guru.future.domain.FutureLiveDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.stat.StatUtils;
 import org.redisson.api.RList;
@@ -275,6 +281,11 @@ public class FutureLiveService {
         for (Map<String, String> map : cacheList) {
             overviewMap.putAll(map);
         }
+        List<Double> changeList = overviewMap.values().stream().map(e -> NumberUtil.round(e.replace("%", ""), 2).doubleValue()).collect(Collectors.toList());
+        double[] changeArr = changeList.stream().mapToDouble(i -> i).toArray();
+        double meanChange = StatUtils.mean(changeArr);
+        BigDecimal categoryAvgChange = BigDecimal.valueOf(meanChange).setScale(2, RoundingMode.HALF_UP);
+        histOverview.append("【").append(meanChange >= 0 ? "+" : "").append(categoryAvgChange).append("】");
         setHistOverview(histOverview, NIGHT_TIMES, overviewMap);
         histOverview.append("| ");
         histOverview.append("\n");
@@ -395,7 +406,7 @@ public class FutureLiveService {
         String key = currentDate + "_overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
         while (!cacheList.isEmpty()) {
-            result.append(currentDate).append(": ");
+            result.append(currentDate).append(":");
             appendOverviewStr(result, cacheList);
             result.append("\n");
             currentDate = DateUtil.getLastTradeDate(currentDate);

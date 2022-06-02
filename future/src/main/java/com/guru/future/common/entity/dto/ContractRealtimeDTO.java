@@ -112,7 +112,8 @@ public class ContractRealtimeDTO {
 
     public static ContractRealtimeDTO convertFromHqList(List<String> list) {
         ContractRealtimeDTO contractRealtimeDTO = new ContractRealtimeDTO();
-        if (!CollectionUtils.isEmpty(list) && SinaHqUtil.HQ_LIST_SIZE.equals(list.size())) {
+        if (!CollectionUtils.isEmpty(list)) { //&& SinaHqUtil.HQ_LIST_SIZE.equals(list.size())) {
+            //        var hq_str_nf_PP2209="聚丙烯2209,101459,8910.000,8967.000,8862.000,0.000,8882.000,8884.000,8882.000,0.000,8878.000,5,62,414914.000,348914,连,聚丙烯,2022-06-02,1,,,,,,,,,8911.924,0.000,0,0.000,0,0.000,0,0.000,0,0.000,0,0.000,0,0.000,0,0.000,0"
             contractRealtimeDTO.setCode(list.get(0));
             contractRealtimeDTO.setName(list.get(1));
             contractRealtimeDTO.setUnknownNumber(Integer.valueOf(list.get(2)));

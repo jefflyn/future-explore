@@ -39,6 +39,7 @@ public class FutureSinaManager {
         Map<String, String> header = new HashMap<>();
         header.put("Referer", "https://finance.sina.com.cn");
         String result = HttpUtil.doGet(url, null, header);
+//        var hq_str_nf_PP2209="聚丙烯2209,101459,8910.000,8967.000,8862.000,0.000,8882.000,8884.000,8882.000,0.000,8878.000,5,62,414914.000,348914,连,聚丙烯,2022-06-02,1,,,,,,,,,8911.924,0.000,0,0.000,0,0.000,0,0.000,0,0.000,0,0.000,0,0.000,0,0.000,0"
 //        log.info("url={}, result={}", url, JSON.toJSONString(result));
         List<String> contractList = Splitter.on(";\n").splitToList(result);
         return contractList;
@@ -62,7 +63,8 @@ public class FutureSinaManager {
                 }
                 ContractRealtimeDTO contractRealtimeDTO = ContractRealtimeDTO.convertFromHqList(SinaHqUtil.parse2List(contract));
                 if (contractRealtimeDTO.getCode() == null) {
-                    log.warn("skip {}", contract);
+                    log.warn("data error, skip {}", contract);
+                    continue;
                 }
                 contractRealtimeDTOList.add(contractRealtimeDTO);
                 int randomNumber = RandomUtils.nextInt(1, 50000);
