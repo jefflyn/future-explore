@@ -47,9 +47,9 @@ public class HoldingService {
 
     @Async
     public void asyncAddFutureHolding(String code, String startDate, String endDate) {
-        log.info("code={}, start={}, end={} asyncAddFutureHolding start", code, startDate, endDate);
         try {
             String result = tsFutureManager.getHolding(code, startDate, endDate);
+            log.info("code={}, start={}, end={} asyncAddFutureHolding result={}", code, startDate, endDate, result);
             List<TsFutureHoldingDO> futureDailyDOList = FutureHoldingConverter.toTsFutureHoldingDO(result);
             tsFutureHoldingManager.batchAddFutureHolding(futureDailyDOList);
         } catch (Exception e) {
