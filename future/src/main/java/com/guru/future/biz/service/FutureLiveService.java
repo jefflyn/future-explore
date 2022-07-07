@@ -312,7 +312,7 @@ public class FutureLiveService {
         content.append("<html><head></head><body>");
         String head3 = "<h3 style=\"" + (overviewVO.getTotalAvgChangeStr().contains("+") ? upStyle : "\"") + ">";
         content.append(head3);
-        content.append("市场平均涨幅: " + overviewVO.getTotalAvgChangeStr() + "【" + overviewVO.getOverviewDesc() + "】").append("</h3>");
+        content.append("指数: " + overviewVO.getTotalAvgChangeStr() + "【" + overviewVO.getOverviewDesc() + "】").append("</h3>");
         content.append("<table cellspacing=\"0\" cellpadding=\"1\" border=\"1\" style=\"border:solid 1px #E8F2F9;font-size=14px;;font-size:12px;\">");
         content.append("<tr style=\"background-color: #428BCA; color:#ffffff\">" +
                 "<th width=\"10px\">序号</th>" +

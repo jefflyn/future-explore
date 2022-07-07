@@ -47,7 +47,7 @@ public class FutureOverviewVO {
 
     @Override
     public String toString() {
-        StringBuilder resultStr = new StringBuilder("市场平均涨幅: " + getTotalAvgChangeStr() + "【" + getOverviewDesc() + "】" + histOverviewDesc + "\n");
+        StringBuilder resultStr = new StringBuilder("Index: " + getTotalAvgChangeStr() + "【" + getOverviewDesc() + "】" + histOverviewDesc + "\n");
         if (CollectionUtils.isEmpty(getCategorySummaryList())) {
             return resultStr.toString();
         }
