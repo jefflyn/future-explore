@@ -26,6 +26,10 @@ public class FutureHoldingConverter {
         }
         JSONObject jsonObject = JSON.parseObject(jsonResult);
         JSONObject dataJson = (JSONObject) jsonObject.get("data");
+        if (dataJson == null) {
+            log.warn("没有查到data数据，处理完成！");
+            return tsFutureHoldingDOList;
+        }
         JSONArray fields = (JSONArray) dataJson.get("fields");
         for (int i = 0; i < HOLDING_COLS.length; i++) {
             Assert.isTrue(HOLDING_COLS[i].equals(fields.get(i)), "ts holding columns change， please check!");

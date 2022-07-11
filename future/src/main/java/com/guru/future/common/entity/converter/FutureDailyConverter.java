@@ -29,6 +29,10 @@ public class FutureDailyConverter {
         }
         JSONObject jsonObject = JSON.parseObject(jsonResult);
         JSONObject dataJson = (JSONObject) jsonObject.get("data");
+        if (dataJson == null) {
+            log.warn("没有查到data数据，处理完成！");
+            return tsFutureDailyDOList;
+        }
         JSONArray fields = (JSONArray) dataJson.get("fields");
         for (int i = 0; i < DAILY_COLS.length; i++) {
             Assert.isTrue(DAILY_COLS[i].equals(fields.get(i)), "ts daily columns change， please check!");

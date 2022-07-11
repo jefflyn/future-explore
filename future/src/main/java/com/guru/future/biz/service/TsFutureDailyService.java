@@ -63,9 +63,9 @@ public class TsFutureDailyService {
 
     @Async
     public void asyncAddFutureDaily(String tsCode, String startDate, String endDate) {
-        log.info("tsCode={}, start={}, end={} asyncAddFutureDaily start", tsCode, startDate, endDate);
         try {
             String result = tsFutureManager.getDaily(tsCode, startDate, endDate);
+            log.info("tsCode={}, start={}, end={}, asyncAddFutureDaily result={}", tsCode, startDate, endDate, result);
             List<TsFutureDailyDO> futureDailyDOList = FutureDailyConverter.toTsFutureDailyDO(result);
             tsFutureDailyManager.batchAddFutureDaily(futureDailyDOList);
         } catch (Exception e) {
