@@ -21,17 +21,7 @@ import static com.guru.future.common.utils.DateUtil.TRADE_DATE_PATTERN_HYPHEN;
 @Slf4j
 public class TsFutureManager {
     private final static String TS_URL = "http://api.tushare.pro";
-
-//    private final static String TOKEN = "852fb7e0feac4bf63d6e93385344af3a91fa2b3466f3bb6955575a3b";
-//    private final static String TOKEN = "3af111f9e9899366fdcedbc34cbd2491eeff7ffec6064ed0c234e2ef";
-//    private final static String TOKEN = "00d803b166f55fc30c178d74c158985136010d6bd19271b182059eef";
-//    private final static String TOKEN = "9fb1e3080687551cb6f8c14442233381f84afd65df3a6472b3c91e39";
-//    private final static String TOKEN = "578a17c9a956cfdf85453788ffd301e9fc5eb1824a6ec507f544be56";
-//    private final static String TOKEN = "08cdba72469ce5ef4afd2cb5946749312d874c2aaef8ed9e176fa1a6";
-//    private final static String TOKEN = "27276608f3b650d14dea2fedf5249b0fdbe5ca249c0e57ab4c2161e8";
-//    private final static String TOKEN = "7360c0f27e081aa729c1c091784e0df332db69e46fe204bd6e39387c";
-//    private final static String TOKEN = "99dec24a97c268cac40c0761443d2ceaa2ae4089949c65d61630b3fe";
-    private final static String TOKEN = "8f0b25c42eada875e13b9f8463d39b31bf25129133fa32c586c23073";
+    private final static String TOKEN = "f65316bb26b0a27ef7f876249615fcba99b5aab10e5be46cb278e53e";
     /**
      * 合约信息
      *

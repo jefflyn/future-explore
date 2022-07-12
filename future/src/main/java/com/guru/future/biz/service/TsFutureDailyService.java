@@ -1,6 +1,7 @@
 package com.guru.future.biz.service;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.TsFutureBasicManager;
 import com.guru.future.biz.manager.TsFutureDailyManager;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -54,8 +56,16 @@ public class TsFutureDailyService {
             List<String> mainCodes = futureBasicManager.getAll().stream().map(e -> e.getCode() + "." + e.getExchange()).collect(Collectors.toList());
             tsCodes.addAll(mainCodes);
         }
-        for (String tsCode : tsCodes) {
-            asyncAddFutureDaily(tsCode, startDate, endDate);
+        List<List<String>> tsCodeList = Lists.partition(tsCodes, 20);
+        for (List<String> list : tsCodeList) {
+            for (String tsCode : list) {
+                asyncAddFutureDaily(tsCode, startDate, endDate);
+            }
+            try {
+                System.out.println("wait for 1 minute...");
+                TimeUnit.MINUTES.sleep(1L);
+            } catch (Exception e) {
+            }
         }
         log.info("batchAddDaily done! total={}, tsCodes={}", tsCodes.size(), tsCodes);
         return true;

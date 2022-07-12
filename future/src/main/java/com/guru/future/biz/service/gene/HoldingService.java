@@ -1,6 +1,7 @@
 package com.guru.future.biz.service.gene;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.TsFutureHoldingManager;
 import com.guru.future.biz.manager.remote.TsFutureManager;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -38,8 +40,16 @@ public class HoldingService {
         } else {
             codes = futureBasicManager.getAll().stream().map(FutureBasicDO::getCode).collect(Collectors.toList());
         }
-        for (String code : codes) {
-            asyncAddFutureHolding(code, startDate, endDate);
+        List<List<String>> codeList = Lists.partition(codes, 20);
+        for (List<String> list : codeList) {
+            for (String code : list) {
+                asyncAddFutureHolding(code, startDate, endDate);
+            }
+            try {
+                System.out.println("wait for 1 minute...");
+                TimeUnit.MINUTES.sleep(1L);
+            } catch (Exception e) {
+            }
         }
         log.info("batchAddHolding done! total={}, codes={}", codes.size(), codes);
         return true;
