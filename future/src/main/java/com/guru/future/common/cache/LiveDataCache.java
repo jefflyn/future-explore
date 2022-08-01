@@ -21,6 +21,8 @@ public class LiveDataCache {
     private static List<FutureLiveVO> changeHighTop10 = new ArrayList<>(10);
     private static List<FutureLiveVO> changeLowTop10 = new ArrayList<>(10);
 
+    public static String scInfo = "";
+
     private LiveDataCache() {
     }
 

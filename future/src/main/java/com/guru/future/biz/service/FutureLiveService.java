@@ -106,6 +106,11 @@ public class FutureLiveService {
             futureLiveVO.setWave(FutureUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), basicDO.getD(),
                     futureLiveVO.getPrice()));
             futureLiveVOList.add(futureLiveVO);
+            if (code.startsWith("SC")) {
+                LiveDataCache.scInfo = code + "【" + futureLiveDO.getLow() + "-" + futureLiveDO.getHigh() + "】"
+                        + futureLiveVO.getPrice() + "【" + futureLiveDO.getPosition() + "】"
+                        + futureLiveDO.getChange() + PERCENTAGE_SYMBOL;
+            }
         }
         int size = futureLiveVOList.size();
         int topN = size > 10 ? 10 : size;

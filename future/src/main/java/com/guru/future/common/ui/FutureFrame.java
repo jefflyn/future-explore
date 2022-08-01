@@ -147,7 +147,7 @@ public class FutureFrame {
      * 刷新内容窗格数据
      */
     private void refreshContentPane() {
-        frame.setTitle(DateUtil.currentTime());
+        frame.setTitle(DateUtil.currentTime() + " " + LiveDataCache.scInfo);
         Container c = frame.getContentPane();
         // tag窗体内容面板
         JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);
