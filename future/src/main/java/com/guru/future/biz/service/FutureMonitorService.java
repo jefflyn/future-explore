@@ -207,7 +207,7 @@ public class FutureMonitorService {
             futureLogDO.setTemp(futureLiveDO.getTemp());
             this.msgNotice(isUp, futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
-            log.info("add price flash log >>> {}, {}, {}", futureLogDO.getName(), futureLogDO.getDiff(), futureLogDO.getSuggest());
+            log.info("add price flash log >>> {}, {}, {}, {}", logType, futureLogDO.getName(), futureLogDO.getDiff(), futureLogDO.getSuggest());
 //            collectService.scheduleTradeDailyCollect(Lists.newArrayList(code), CollectType.COLLECT_SCHEDULE);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(cachedKey);

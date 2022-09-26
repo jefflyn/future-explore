@@ -1,7 +1,6 @@
 package com.guru.future.common.entity.dto;
 
 import com.guru.future.common.utils.NumberUtil;
-import com.guru.future.common.utils.SinaHqUtil;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
 
