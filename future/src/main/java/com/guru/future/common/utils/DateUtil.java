@@ -1,6 +1,5 @@
 package com.guru.future.common.utils;
 
-
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -133,7 +132,7 @@ public class DateUtil {
             currentDate = new Date();
         }
         Calendar calendar = DateUtils.toCalendar(currentDate);
-        for (int addDays = 0; addDays > -9; addDays--) {
+        for (int addDays = 0; addDays > -10; addDays--) {
             Date preDate = DateUtils.addDays(calendar.getTime(), addDays - 1);
             if (Boolean.FALSE.equals(isHoliday(preDate))) {
                 return DateFormatUtils.format(preDate, dateFormat);
