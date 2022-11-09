@@ -5,7 +5,7 @@ import com.guru.future.domain.TsFutureDailyDO;
 
 import java.util.List;
 
-public interface TsFutureDailyDAO {
+public interface TsDailyDAO {
     int insert(TsFutureDailyDO record);
 
     List<TsFutureDailyDO> selectByQuery(FutureDailyQuery futureDailyQuery);

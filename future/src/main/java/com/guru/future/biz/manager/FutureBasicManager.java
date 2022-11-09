@@ -2,7 +2,7 @@ package com.guru.future.biz.manager;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.guru.future.domain.FutureBasicDO;
-import com.guru.future.mapper.FutureBasicDAO;
+import com.guru.future.mapper.BasicDAO;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Component
 public class FutureBasicManager {
     @Resource
-    private FutureBasicDAO futureBasicsDAO;
+    private BasicDAO futureBasicsDAO;
 
     private Map<String, FutureBasicDO> FUTURE_BASIC_MAP = new HashMap<>();
 

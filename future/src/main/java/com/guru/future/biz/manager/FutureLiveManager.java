@@ -1,7 +1,7 @@
 package com.guru.future.biz.manager;
 
 import com.guru.future.domain.FutureLiveDO;
-import com.guru.future.mapper.FutureLiveDAO;
+import com.guru.future.mapper.LiveDAO;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
@@ -14,14 +14,14 @@ import java.util.List;
 @Component
 public class FutureLiveManager {
     @Resource
-    private FutureLiveDAO futureLiveDAO;
+    private LiveDAO liveDAO;
 
     public FutureLiveDO getLiveDOByCode(String code) {
-        return futureLiveDAO.selectByPrimaryKey(code);
+        return liveDAO.selectByPrimaryKey(code);
     }
 
     public List<FutureLiveDO> getAll() {
-        return futureLiveDAO.selectAll();
+        return liveDAO.selectAll();
     }
 
     public Boolean upsertFutureLive(FutureLiveDO futureLiveDO) {
@@ -31,16 +31,16 @@ public class FutureLiveManager {
         FutureLiveDO existedLiveDO = getLiveDOByCode(futureLiveDO.getCode());
         if (existedLiveDO != null) {
             if (!futureLiveDO.changeFlag().equals(existedLiveDO.changeFlag())) {
-                return futureLiveDAO.updateByPrimaryKeySelective(futureLiveDO) > 0;
+                return liveDAO.updateByPrimaryKeySelective(futureLiveDO) > 0;
             }
             return false;
         } else {
-            return futureLiveDAO.insertSelective(futureLiveDO) > 0;
+            return liveDAO.insertSelective(futureLiveDO) > 0;
         }
     }
 
     public Boolean removeAllData() {
-        return futureLiveDAO.deleteAll() > 0;
+        return liveDAO.deleteAll() > 0;
     }
 
 }

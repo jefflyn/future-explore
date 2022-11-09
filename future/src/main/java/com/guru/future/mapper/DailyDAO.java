@@ -5,7 +5,7 @@ import com.guru.future.domain.FutureDailyDO;
 
 import java.util.List;
 
-public interface FutureDailyDAO {
+public interface DailyDAO {
     int deleteByPrimaryKey(Long id);
 
     int insertSelective(FutureDailyDO futureDailyDO);

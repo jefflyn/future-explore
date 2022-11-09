@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.guru.future.mapper.TsFutureDailyDAO">
+<mapper namespace="com.guru.future.mapper.TsDailyDAO">
     <resultMap id="BaseResultMap" type="com.guru.future.domain.TsFutureDailyDO">
         <result column="ts_code" jdbcType="VARCHAR" property="tsCode"/>
         <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>

@@ -152,8 +152,16 @@
 <!--               enableSelectByExample="false"-->
 <!--               selectByExampleQueryId="false">-->
 <!--        </table>-->
-        <table tableName="ts_holding"
-               domainObjectName="TsFutureHoldingDO" mapperName="TsFutureHoldingDAO"
+<!--        <table tableName="ts_holding"-->
+<!--               domainObjectName="TsFutureHoldingDO" mapperName="TsFutureHoldingDAO"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+<!--        </table>-->
+        <table tableName="contract"
+               domainObjectName="ContractDO" mapperName="ContractDAO"
                enableCountByExample="false"
                enableUpdateByExample="false"
                enableDeleteByExample="false"

@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
-public interface FutureCollectDAO {
+public interface CollectDAO {
 
     FutureCollectDO selectLastByCode(@Param("code") String code);
 

@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.guru.future.common.utils.DateUtil.TRADE_DATE_PATTERN_FLAT;
-import static com.guru.future.common.utils.DateUtil.TRADE_DATE_PATTERN_HYPHEN;
 
 /**
  * @author j

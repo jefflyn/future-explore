@@ -2,7 +2,7 @@ package com.guru.future.biz.manager;
 
 import com.guru.future.common.entity.query.FutureBasicQuery;
 import com.guru.future.domain.TsFutureContractDO;
-import com.guru.future.mapper.TsFutureContractDAO;
+import com.guru.future.mapper.TsContractDAO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -15,28 +15,28 @@ import java.util.stream.Collectors;
 @Component
 public class TsFutureBasicManager {
     @Resource
-    private TsFutureContractDAO tsFutureContractDAO;
+    private TsContractDAO tsContractDAO;
 
     public Boolean batchAddFutureBasic(List<TsFutureContractDO> tsFutureContractDOList) {
         for (TsFutureContractDO tsFutureContractDO : tsFutureContractDOList) {
-            tsFutureContractDAO.insert(tsFutureContractDO);
+            tsContractDAO.insert(tsFutureContractDO);
         }
         return true;
     }
 
     public TsFutureContractDO getByTsCode(String tsCode) {
-        return tsFutureContractDAO.selectByPrimaryKey(tsCode);
+        return tsContractDAO.selectByPrimaryKey(tsCode);
     }
 
     public List<TsFutureContractDO> getTsCodeByType(List<String> tsCodes) {
         FutureBasicQuery query = new FutureBasicQuery();
         query.setCodes(tsCodes);
-        return tsFutureContractDAO.selectByQuery(query);
+        return tsContractDAO.selectByQuery(query);
     }
 
     public List<String> getTsCodeByType(Integer contractType) {
         FutureBasicQuery query = new FutureBasicQuery();
         query.setType(String.valueOf(contractType));
-        return tsFutureContractDAO.selectByQuery(query).stream().map(TsFutureContractDO::getTsCode).collect(Collectors.toList());
+        return tsContractDAO.selectByQuery(query).stream().map(TsFutureContractDO::getTsCode).collect(Collectors.toList());
     }
 }

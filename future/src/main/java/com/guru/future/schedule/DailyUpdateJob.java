@@ -5,7 +5,6 @@ import com.guru.future.biz.service.TsFutureDailyService;
 import com.guru.future.biz.service.gene.HoldingService;
 import com.guru.future.common.utils.DateUtil;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 

@@ -5,7 +5,7 @@ import com.guru.future.domain.FutureBasicDO;
 
 import java.util.List;
 
-public interface FutureBasicDAO {
+public interface BasicDAO {
     FutureBasicDO selectByCode(String code);
 
     int updateByCodeSelective(FutureBasicDO futureBasicDO);

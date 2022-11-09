@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--suppress ALL -->
-<mapper namespace="com.guru.future.mapper.FutureBasicDAO">
+<mapper namespace="com.guru.future.mapper.BasicDAO">
     <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureBasicDO">
         <id column="symbol" jdbcType="VARCHAR" property="symbol"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>

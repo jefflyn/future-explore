@@ -5,7 +5,7 @@ import com.guru.future.domain.TsFutureContractDO;
 
 import java.util.List;
 
-public interface TsFutureContractDAO {
+public interface TsContractDAO {
     int insert(TsFutureContractDO record);
 
     TsFutureContractDO selectByPrimaryKey(String tsCode);

@@ -2,7 +2,7 @@ package com.guru.future.biz.manager;
 
 import com.guru.future.common.entity.query.FutureDailyQuery;
 import com.guru.future.domain.TsFutureDailyDO;
-import com.guru.future.mapper.TsFutureDailyDAO;
+import com.guru.future.mapper.TsDailyDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +16,12 @@ import java.util.List;
 @Slf4j
 public class TsFutureDailyManager {
     @Resource
-    private TsFutureDailyDAO tsFutureDailyDAO;
+    private TsDailyDAO tsDailyDAO;
 
     public Boolean batchAddFutureDaily(List<TsFutureDailyDO> tsFutureDailyDOList) {
         for (TsFutureDailyDO tsFutureDailyDO : tsFutureDailyDOList) {
             try {
-                tsFutureDailyDAO.insert(tsFutureDailyDO);
+                tsDailyDAO.insert(tsFutureDailyDO);
             } catch (Exception e) {
                 log.info("insert row error, please retry! tsCode={}, tradeDate={}", tsFutureDailyDO.getTsCode(), tsFutureDailyDO.getTradeDate());
             }
@@ -34,6 +34,6 @@ public class TsFutureDailyManager {
         futureDailyQuery.setCode(tsCode);
         futureDailyQuery.setStartDate(startDate);
         futureDailyQuery.setEndDate(endDate);
-        return tsFutureDailyDAO.selectByQuery(futureDailyQuery);
+        return tsDailyDAO.selectByQuery(futureDailyQuery);
     }
 }
