@@ -13,7 +13,7 @@
     <result column="short_chg" jdbcType="INTEGER" property="shortChg" />
   </resultMap>
   <insert id="insert" parameterType="com.guru.future.domain.TsFutureHoldingDO">
-    insert into ts_future_holding (trade_date, symbol, broker, 
+    insert into ts_holding (trade_date, symbol, broker,
       vol, vol_chg, long_hld, 
       long_chg, short_hld, short_chg
       )
@@ -23,7 +23,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="com.guru.future.domain.TsFutureHoldingDO">
-    insert into ts_future_holding
+    insert into ts_holding
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="tradeDate != null">
         trade_date,

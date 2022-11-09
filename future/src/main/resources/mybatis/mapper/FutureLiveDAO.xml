@@ -30,23 +30,23 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from future_live
+        from live
         where code = #{code,jdbcType=VARCHAR}
     </select>
 
     <select id="selectAll" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from future_live
+        from live
         limit 100
     </select>
 
     <delete id="deleteAll">
-        delete from future_live
+        delete from live
     </delete>
 
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLiveDO">
-        insert into future_live
+        insert into live
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tradeDate != null">
                 `trade_date`,
@@ -155,7 +155,7 @@
         </trim>
     </insert>
     <update id="updateByPrimaryKeySelective" parameterType="com.guru.future.domain.FutureLiveDO">
-        update future_live
+        update live
         <set>
             <if test="type != null">
                 `type` = #{type,jdbcType=VARCHAR},

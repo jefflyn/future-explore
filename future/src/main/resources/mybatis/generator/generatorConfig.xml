@@ -86,7 +86,7 @@
         </javaClientGenerator>
 
         <!-- 数据表进行生成操作 schema:相当于库名; tableName:表名; domainObjectName:对应的DO -->
-        <!--        <table tableName="future_live"-->
+        <!--        <table tableName="live"-->
         <!--               domainObjectName="FutureLiveDO" mapperName="FutureLiveDAO"-->
         <!--               enableCountByExample="false"-->
         <!--               enableUpdateByExample="false"-->
@@ -94,7 +94,7 @@
         <!--               enableSelectByExample="false"-->
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
-        <!--        <table tableName="future_basic"-->
+        <!--        <table tableName="basic"-->
         <!--               domainObjectName="FutureBasicDO" mapperName="FutureBasicDAO"-->
         <!--               enableCountByExample="false"-->
         <!--               enableUpdateByExample="false"-->
@@ -102,7 +102,7 @@
         <!--               enableSelectByExample="false"-->
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
-        <!--        <table tableName="future_daily"-->
+        <!--        <table tableName="trade_daily"-->
         <!--               domainObjectName="FutureDailyDO" mapperName="FutureDailyDAO"-->
         <!--               enableCountByExample="false"-->
         <!--               enableUpdateByExample="false"-->
@@ -119,7 +119,7 @@
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
 
-        <!--        <table tableName="future_log"-->
+        <!--        <table tableName="trade_log"-->
         <!--               domainObjectName="FutureLogDO" mapperName="FutureLogDAO"-->
         <!--               enableCountByExample="false"-->
         <!--               enableUpdateByExample="false"-->
@@ -128,7 +128,7 @@
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
 
-<!--        <table tableName="future_collect"-->
+<!--        <table tableName="collect"-->
 <!--               domainObjectName="FutureCollectDO" mapperName="FutureCollectDAO"-->
 <!--               enableCountByExample="false"-->
 <!--               enableUpdateByExample="false"-->
@@ -136,7 +136,7 @@
 <!--               enableSelectByExample="false"-->
 <!--               selectByExampleQueryId="false">-->
 <!--        </table>-->
-<!--        <table tableName="ts_future_contract"-->
+<!--        <table tableName="ts_contract"-->
 <!--               domainObjectName="TsFutureContractDO" mapperName="TsFutureContractDAO"-->
 <!--               enableCountByExample="false"-->
 <!--               enableUpdateByExample="false"-->
@@ -144,7 +144,7 @@
 <!--               enableSelectByExample="false"-->
 <!--               selectByExampleQueryId="false">-->
 <!--        </table>-->
-<!--        <table tableName="ts_future_daily"-->
+<!--        <table tableName="ts_trade_daily"-->
 <!--               domainObjectName="TsFutureDailyDO" mapperName="TsFutureDailyDAO"-->
 <!--               enableCountByExample="false"-->
 <!--               enableUpdateByExample="false"-->
@@ -152,7 +152,7 @@
 <!--               enableSelectByExample="false"-->
 <!--               selectByExampleQueryId="false">-->
 <!--        </table>-->
-        <table tableName="ts_future_holding"
+        <table tableName="ts_holding"
                domainObjectName="TsFutureHoldingDO" mapperName="TsFutureHoldingDAO"
                enableCountByExample="false"
                enableUpdateByExample="false"

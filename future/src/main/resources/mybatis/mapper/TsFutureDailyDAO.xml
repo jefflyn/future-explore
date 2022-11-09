@@ -26,7 +26,7 @@
     </sql>
 
     <insert id="insert" parameterType="com.guru.future.domain.TsFutureDailyDO">
-        insert into ts_future_daily (ts_code, trade_date, pre_close, pre_settle, `open`, high,
+        insert into ts_trade_daily (ts_code, trade_date, pre_close, pre_settle, `open`, high,
                                      low, `close`, settle, close_change, settle_change, deal_vol,
                                      deal_amount, hold_vol, hold_change, create_time)
         values (#{tsCode,jdbcType=VARCHAR}, #{tradeDate,jdbcType=VARCHAR}, #{preClose,jdbcType=DECIMAL},
@@ -40,7 +40,7 @@
     <select id="selectByQuery" resultType="com.guru.future.domain.TsFutureDailyDO">
         select
         <include refid="Base_Column_List"/>
-        from ts_future_daily
+        from ts_trade_daily
         <where>
             <if test="code != null">
                 and ts_code = #{code,jdbcType=VARCHAR}

@@ -47,7 +47,7 @@ public class OverviewCollectJob implements Job {
         FutureOverviewVO futureOverviewVO = futureLiveService.getMarketOverview();
         String key = DateUtil.currentTradeDate() + "_overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
-        cacheList.expire(30, TimeUnit.DAYS);
+        cacheList.expire(60, TimeUnit.DAYS);
         String overviewDesc = futureOverviewVO.getTotalAvgChangeStr();
         if (overviewDesc == null) {
             return;

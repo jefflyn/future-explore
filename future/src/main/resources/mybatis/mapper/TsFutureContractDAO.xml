@@ -17,12 +17,12 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from ts_future_contract
+        from ts_contract
         where ts_code = #{tsCode,jdbcType=VARCHAR}
     </select>
 
     <insert id="insert" parameterType="com.guru.future.domain.TsFutureContractDO">
-        insert into ts_future_contract (ts_code, symbol, exchange, `name`, fut_code, type)
+        insert into ts_contract (ts_code, symbol, exchange, `name`, fut_code, type)
         values (#{tsCode,jdbcType=VARCHAR}, #{symbol,jdbcType=VARCHAR}, #{exchange,jdbcType=VARCHAR},
                 #{name,jdbcType=VARCHAR}, #{futCode,jdbcType=VARCHAR}, #{type, jdbcType=INTEGER})
     </insert>
@@ -30,7 +30,7 @@
     <select id="selectByQuery" resultType="com.guru.future.domain.TsFutureContractDO">
         select
         <include refid="Base_Column_List"/>
-        from ts_future_contract
+        from ts_contract
         <where>
             <if test="symbol != null">
                 and symbol = #{symbol}

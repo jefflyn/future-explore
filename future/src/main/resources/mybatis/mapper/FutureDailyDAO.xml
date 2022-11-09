@@ -35,14 +35,14 @@
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from future_daily
+        from trade_daily
         where id = #{id,jdbcType=BIGINT}
     </select>
 
     <select id="selectByQuery" resultType="com.guru.future.domain.FutureDailyDO">
         select
         <include refid="Base_Column_List"/>
-        from future_daily
+        from trade_daily
         <where>
             <if test="symbol != null">
                 and symbol = #{symbol}
@@ -64,12 +64,12 @@
 
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
         delete
-        from future_daily
+        from trade_daily
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureDailyDO">
-        insert into future_daily
+        insert into trade_daily
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
@@ -209,7 +209,7 @@
     </insert>
 
     <update id="updateByCodeTradeDateSelective" parameterType="com.guru.future.domain.FutureDailyDO">
-        update future_daily
+        update trade_daily
         <set>
             <if test="close != null">
                 `close` = #{close,jdbcType=DECIMAL},

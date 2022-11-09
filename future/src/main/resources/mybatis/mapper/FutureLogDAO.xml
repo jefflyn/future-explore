@@ -24,7 +24,7 @@
     </sql>
 
     <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLogDO">
-        insert into future_log
+        insert into trade_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
                 id,
@@ -110,14 +110,14 @@
     </insert>
 
     <delete id="delete" parameterType="com.guru.future.domain.FutureLogDO">
-        delete from future_log
+        delete from trade_log
         where code=#{code,jdbcType=VARCHAR} and trade_date=#{tradeDate,jdbcType=VARCHAR}
         and type=#{type,jdbcType=VARCHAR}
     </delete>
 
     <select id="selectCodesByTradeDate" parameterType="string" resultType="string">
         select distinct code
-        from future_log
+        from trade_log
         where trade_date = #{tradeDate,jdbcType=VARCHAR}
     </select>
 </mapper>
