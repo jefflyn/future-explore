@@ -25,8 +25,6 @@ public class ContractDO {
 
     private Integer selected;
 
-    private String remark;
-
     private Date createTime;
 
     private Date updateTime;

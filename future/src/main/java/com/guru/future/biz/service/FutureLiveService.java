@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.stat.StatUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.BeanUtils;
@@ -38,6 +39,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
+import static com.guru.future.common.utils.FutureUtil.calcPosition;
 import static com.guru.future.common.utils.NumberUtil.price2String;
 
 /**
@@ -257,7 +259,7 @@ public class FutureLiveService {
 
         overviewVO.setTotalAvgChangeStr((totalAvgChange.floatValue() >= 0 ? "+" : "") + totalAvgChange + PERCENTAGE_SYMBOL);
         overviewVO.setOverviewDesc(overviewDesc(totalAvgChange.floatValue()));
-        overviewVO.setHistOverviewDesc(getHistOverview());
+        overviewVO.setHistOverviewDesc(getHistOverview(totalAvgChange));
         overviewVO.setCategorySummaryList(categorySummaryList);
         return overviewVO;
     }
@@ -265,39 +267,60 @@ public class FutureLiveService {
     @Resource
     private RedissonClient redissonClient;
 
-    private String getHistOverview() {
-        StringBuilder histOverview = new StringBuilder();
+    private String getHistOverview(BigDecimal totalAvgChange) {
+        StringBuilder histOverviewStr = new StringBuilder();
         String key = DateUtil.currentTradeDate() + "_overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
         if (CollUtil.isNotEmpty(cacheList)) {
-            appendOverviewStr(histOverview, cacheList);
+            appendOverviewStr(histOverviewStr, totalAvgChange, cacheList);
         }
-        return histOverview.toString();
+        return histOverviewStr.toString();
     }
 
-    private void appendOverviewStr(StringBuilder histOverview, RList<Map<String, String>> cacheList) {
-        Map<String, String> overviewMap = new HashMap<>();
+    private void appendOverviewStr(StringBuilder histOverviewStr, BigDecimal totalAvgChange, RList<Map<String, String>> cacheList) {
+        Map<String, String> timeChangeMap = new HashMap<>();
+        BigDecimal highChange = BigDecimal.ZERO;
+        BigDecimal lowChange = BigDecimal.TEN;
         String closeChange = "";
         for (Map<String, String> map : cacheList) {
-            overviewMap.putAll(map);
+            timeChangeMap.putAll(map);
             closeChange = map.values().iterator().next();
+            if (Strings.isNotBlank(closeChange)) {
+                BigDecimal change = BigDecimal.valueOf(Double.valueOf(closeChange.replace("%", "")))
+                        .setScale(2, RoundingMode.HALF_UP);
+                if (change.compareTo(highChange) > 0) {
+                    highChange = change;
+                }
+                if (change.compareTo(lowChange) < 0) {
+                    lowChange = change;
+                }
+            }
         }
-//        List<Double> changeList = overviewMap.values().stream().map(e -> NumberUtil.round(e.replace("%", ""), 2).doubleValue()).collect(Collectors.toList());
-//        double[] changeArr = changeList.stream().mapToDouble(i -> i).toArray();
-//        double meanChange = StatUtils.mean(changeArr);
+        int changePos = 0;
+        if (totalAvgChange != null) {
+            changePos = calcPosition(totalAvgChange.floatValue() > 0, totalAvgChange, lowChange, highChange);
+        }
         BigDecimal categoryAvgChange = BigDecimal.valueOf(Double.valueOf(closeChange.replace("%", ""))).setScale(2, RoundingMode.HALF_UP);
-        histOverview.append("【").append(categoryAvgChange.floatValue() >= 0 ? "+" : "").append(categoryAvgChange).append("】");
-        setHistOverview(histOverview, NIGHT_TIMES, overviewMap);
-        histOverview.append("| ");
-        histOverview.append("\n");
-        setHistOverview(histOverview, MORN_TIMES, overviewMap);
-        histOverview.append("| ");
-        setHistOverview(histOverview, NOON_TIMES, overviewMap);
+        histOverviewStr.append(changePos).append("【").append(categoryAvgChange.floatValue() >= 0 ? "+" : "").append(categoryAvgChange).append("】");
+        setHistOverview(histOverviewStr, NIGHT_TIMES, timeChangeMap);
+        histOverviewStr.append("| ");
+        histOverviewStr.append("\n");
+        setHistOverview(histOverviewStr, MORN_TIMES, timeChangeMap);
+        histOverviewStr.append("| ");
+        setHistOverview(histOverviewStr, NOON_TIMES, timeChangeMap);
     }
 
+    /**
+     * hist overview
+     * @param histOverview
+     * @param timeList
+     * @param overviewMap
+     * @return low high change
+     */
     private void setHistOverview(StringBuilder histOverview, List<Pair<String, String>> timeList, Map<String, String> overviewMap) {
         for (Pair<String, String> time : timeList) {
-            histOverview.append(NullUtil.defaultValue(overviewMap.get(time.getLeft()), overviewMap.get(time.getRight()))).append(" ");
+            String timeChange = NullUtil.defaultValue(overviewMap.get(time.getLeft()), overviewMap.get(time.getRight()));
+            histOverview.append(timeChange).append(" ");
         }
     }
 
@@ -408,7 +431,7 @@ public class FutureLiveService {
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
         while (!cacheList.isEmpty()) {
             result.append(currentDate).append(":");
-            appendOverviewStr(result, cacheList);
+            appendOverviewStr(result, null, cacheList);
             result.append("\n");
             currentDate = DateUtil.getLastTradeDate(currentDate);
             key = currentDate + "_overview";
