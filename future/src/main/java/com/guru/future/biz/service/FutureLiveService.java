@@ -280,14 +280,19 @@ public class FutureLiveService {
     private void appendOverviewStr(StringBuilder histOverviewStr, BigDecimal totalAvgChange, RList<Map<String, String>> cacheList) {
         Map<String, String> timeChangeMap = new HashMap<>();
         BigDecimal highChange = BigDecimal.ZERO;
-        BigDecimal lowChange = BigDecimal.TEN;
+        BigDecimal lowChange = BigDecimal.ZERO;
         String closeChange = "";
-        for (Map<String, String> map : cacheList) {
+        for (int i = 0; i < cacheList.size(); i++) {
+            Map<String, String> map = cacheList.get(i);
             timeChangeMap.putAll(map);
             closeChange = map.values().iterator().next();
             if (Strings.isNotBlank(closeChange)) {
                 BigDecimal change = BigDecimal.valueOf(Double.valueOf(closeChange.replace("%", "")))
                         .setScale(2, RoundingMode.HALF_UP);
+                if (i == 0) {
+                    highChange = change;
+                    lowChange = change;
+                }
                 if (change.compareTo(highChange) > 0) {
                     highChange = change;
                 }
@@ -298,7 +303,7 @@ public class FutureLiveService {
         }
         int changePos = 0;
         if (totalAvgChange != null) {
-            changePos = calcPosition(totalAvgChange.floatValue() > 0, totalAvgChange, lowChange, highChange);
+            changePos = calcPosition(totalAvgChange.floatValue() > 0, totalAvgChange, highChange, lowChange);
         }
         BigDecimal categoryAvgChange = BigDecimal.valueOf(Double.valueOf(closeChange.replace("%", ""))).setScale(2, RoundingMode.HALF_UP);
         histOverviewStr.append(changePos).append("【").append(categoryAvgChange.floatValue() >= 0 ? "+" : "").append(categoryAvgChange).append("】");
@@ -312,6 +317,7 @@ public class FutureLiveService {
 
     /**
      * hist overview
+     *
      * @param histOverview
      * @param timeList
      * @param overviewMap
