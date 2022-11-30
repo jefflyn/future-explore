@@ -48,6 +48,9 @@ import static com.guru.future.common.utils.NumberUtil.price2String;
 @Service
 @Slf4j
 public class FutureLiveService {
+    @Resource
+    private RedissonClient redissonClient;
+
     private static final List<Pair<String, String>> NIGHT_TIMES = Arrays.asList(
             Pair.of("21:05", "21:10"),
             Pair.of("21:25", "21:30"),
@@ -263,9 +266,6 @@ public class FutureLiveService {
         overviewVO.setCategorySummaryList(categorySummaryList);
         return overviewVO;
     }
-
-    @Resource
-    private RedissonClient redissonClient;
 
     private String getHistOverview(BigDecimal totalAvgChange) {
         StringBuilder histOverviewStr = new StringBuilder();

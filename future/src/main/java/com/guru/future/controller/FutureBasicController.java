@@ -4,11 +4,14 @@ import com.guru.future.biz.manager.TsFutureBasicManager;
 import com.guru.future.biz.service.FutureBasicService;
 import com.guru.future.common.enums.ContractType;
 import org.apache.logging.log4j.util.Strings;
+import org.redisson.api.RMapCache;
+import org.redisson.api.RedissonClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /***
  * @author j
@@ -21,6 +24,17 @@ public class FutureBasicController {
 
     @Resource
     private TsFutureBasicManager tsFutureBasicManager;
+
+    @Resource
+    private RedissonClient redissonClient;
+
+    @GetMapping(value = "/test/cache")
+    public Long testCache() {
+        RMapCache<String, Long> idMap = redissonClient.getMapCache("test");
+        idMap.expire(30, TimeUnit.SECONDS);
+        Long id = idMap.addAndGet("incr", 1L);
+        return id;
+    }
 
     @GetMapping(value = "/contract/basic/add")
     public String addContractBasic() {
