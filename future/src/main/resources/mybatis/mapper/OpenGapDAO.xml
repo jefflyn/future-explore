@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guru.future.mapper.OpenGapDAO">
-    <resultMap id="BaseResultMap" type="com.guru.future.domain.OpenGapDO">
+    <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.OpenGapDO">
         <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
         <result column="code" jdbcType="VARCHAR" property="code"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
@@ -30,7 +30,7 @@
         </foreach>
     </insert>
 
-    <insert id="insertSelective" parameterType="com.guru.future.domain.OpenGapDO">
+    <insert id="insertSelective" parameterType="com.guru.future.common.entity.dao.OpenGapDO">
         insert into open_gap
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tradeDate != null">

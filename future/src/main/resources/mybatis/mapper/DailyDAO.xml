@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--suppress ALL -->
 <mapper namespace="com.guru.future.mapper.DailyDAO">
-    <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureDailyDO">
+    <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.FutureDailyDO">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="symbol" jdbcType="VARCHAR" property="symbol"/>
         <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
@@ -39,7 +39,7 @@
         where id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectByQuery" resultType="com.guru.future.domain.FutureDailyDO">
+    <select id="selectByQuery" resultType="com.guru.future.common.entity.dao.FutureDailyDO">
         select
         <include refid="Base_Column_List"/>
         from trade_daily
@@ -68,7 +68,7 @@
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
-    <insert id="insertSelective" parameterType="com.guru.future.domain.FutureDailyDO">
+    <insert id="insertSelective" parameterType="com.guru.future.common.entity.dao.FutureDailyDO">
         insert into trade_daily
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -208,7 +208,7 @@
         </trim>
     </insert>
 
-    <update id="updateByCodeTradeDateSelective" parameterType="com.guru.future.domain.FutureDailyDO">
+    <update id="updateByCodeTradeDateSelective" parameterType="com.guru.future.common.entity.dao.FutureDailyDO">
         update trade_daily
         <set>
             <if test="close != null">

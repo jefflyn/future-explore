@@ -2,12 +2,14 @@ package com.guru.future.biz.service.gene;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.guru.future.biz.manager.ContractManager;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.TsFutureHoldingManager;
 import com.guru.future.biz.manager.remote.TsFutureManager;
 import com.guru.future.common.entity.converter.FutureHoldingConverter;
-import com.guru.future.domain.FutureBasicDO;
-import com.guru.future.domain.TsFutureHoldingDO;
+import com.guru.future.common.entity.dao.FutureBasicDO;
+import com.guru.future.common.entity.dao.TsFutureHoldingDO;
+import com.guru.future.common.entity.domain.Contract;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.scheduling.annotation.Async;
@@ -31,6 +33,9 @@ public class HoldingService {
     private FutureBasicManager futureBasicManager;
 
     @Resource
+    private ContractManager contractManager;
+
+    @Resource
     private TsFutureHoldingManager tsFutureHoldingManager;
 
     public Boolean batchAddHolding(String codeStr, String startDate, String endDate) {
@@ -38,7 +43,7 @@ public class HoldingService {
         if (Strings.isNotBlank(codeStr)) {
             codes = Splitter.on(",").splitToList(codeStr);
         } else {
-            codes = futureBasicManager.getAll().stream().map(FutureBasicDO::getCode).collect(Collectors.toList());
+            codes = contractManager.getAllContract().stream().map(Contract::getTsCode).collect(Collectors.toList());
         }
         List<List<String>> codeList = Lists.partition(codes, 20);
         for (List<String> list : codeList) {

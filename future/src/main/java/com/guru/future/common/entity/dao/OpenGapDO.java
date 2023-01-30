@@ -1,4 +1,4 @@
-package com.guru.future.domain;
+package com.guru.future.common.entity.dao;
 
 import lombok.Data;
 

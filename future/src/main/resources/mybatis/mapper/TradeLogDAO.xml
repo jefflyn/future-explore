@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guru.future.mapper.TradeLogDAO">
-    <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureLogDO">
+    <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.FutureLogDO">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
         <result column="code" jdbcType="VARCHAR" property="code"/>
@@ -23,7 +23,7 @@
     `position`, log_time, remark
     </sql>
 
-    <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLogDO">
+    <insert id="insertSelective" parameterType="com.guru.future.common.entity.dao.FutureLogDO">
         insert into trade_log
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -109,7 +109,7 @@
         </trim>
     </insert>
 
-    <delete id="delete" parameterType="com.guru.future.domain.FutureLogDO">
+    <delete id="delete" parameterType="com.guru.future.common.entity.dao.FutureLogDO">
         delete from trade_log
         where code=#{code,jdbcType=VARCHAR} and trade_date=#{tradeDate,jdbcType=VARCHAR}
         and type=#{type,jdbcType=VARCHAR}

@@ -1,8 +1,8 @@
 package com.guru.future.biz.manager;
 
 import com.guru.future.common.entity.query.FutureDailyQuery;
-import com.guru.future.domain.FutureDailyDO;
-import com.guru.future.domain.TsFutureDailyDO;
+import com.guru.future.common.entity.dao.FutureDailyDO;
+import com.guru.future.common.entity.dao.TsFutureDailyDO;
 import com.guru.future.mapper.DailyDAO;
 import com.guru.future.mapper.TsDailyDAO;
 import org.springframework.stereotype.Component;

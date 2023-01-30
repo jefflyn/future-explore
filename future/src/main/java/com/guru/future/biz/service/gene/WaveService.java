@@ -6,7 +6,7 @@ import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.TsFutureDailyManager;
 import com.guru.future.common.entity.vo.FutureWaveVO;
-import com.guru.future.domain.TsFutureDailyDO;
+import com.guru.future.common.entity.dao.TsFutureDailyDO;
 import joinery.DataFrame;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

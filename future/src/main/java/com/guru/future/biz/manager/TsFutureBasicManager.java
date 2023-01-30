@@ -1,7 +1,7 @@
 package com.guru.future.biz.manager;
 
 import com.guru.future.common.entity.query.FutureBasicQuery;
-import com.guru.future.domain.TsFutureContractDO;
+import com.guru.future.common.entity.dao.TsFutureContractDO;
 import com.guru.future.mapper.TsContractDAO;
 import org.springframework.stereotype.Component;
 

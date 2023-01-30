@@ -5,7 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.guru.future.common.enums.ContractType;
-import com.guru.future.domain.TsFutureContractDO;
+import com.guru.future.common.entity.dao.TsFutureContractDO;
 
 import java.util.ArrayList;
 import java.util.Collections;

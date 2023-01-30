@@ -1,4 +1,4 @@
-package com.guru.future.domain;
+package com.guru.future.common.entity.dao;
 
 import lombok.Data;
 
@@ -13,7 +13,7 @@ public class ContractDO {
 
     private String tsCode;
 
-    private Integer dominant;
+    private Integer main;
 
     private BigDecimal low;
 
@@ -29,4 +29,5 @@ public class ContractDO {
 
     private Date updateTime;
 
+    private Integer deleted;
 }

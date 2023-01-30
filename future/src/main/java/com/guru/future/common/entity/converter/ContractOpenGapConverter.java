@@ -1,7 +1,7 @@
 package com.guru.future.common.entity.converter;
 
 import com.guru.future.common.entity.dto.ContractOpenGapDTO;
-import com.guru.future.domain.OpenGapDO;
+import com.guru.future.common.entity.dao.OpenGapDO;
 import org.springframework.beans.BeanUtils;
 
 import java.util.ArrayList;

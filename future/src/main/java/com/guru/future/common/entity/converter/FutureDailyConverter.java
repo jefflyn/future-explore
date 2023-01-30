@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.guru.future.common.utils.NullUtil;
-import com.guru.future.domain.TsFutureDailyDO;
+import com.guru.future.common.entity.dao.TsFutureDailyDO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 

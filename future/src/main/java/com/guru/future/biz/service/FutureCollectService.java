@@ -5,7 +5,7 @@ import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.enums.CollectType;
 import com.guru.future.common.utils.DateUtil;
-import com.guru.future.domain.FutureCollectDO;
+import com.guru.future.common.entity.dao.FutureCollectDO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;

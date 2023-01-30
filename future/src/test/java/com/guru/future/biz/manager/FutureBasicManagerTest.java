@@ -2,7 +2,7 @@ package com.guru.future.biz.manager;
 
 
 import com.guru.future.TestBase;
-import com.guru.future.domain.FutureBasicDO;
+import com.guru.future.common.entity.dao.FutureBasicDO;
 import org.testng.annotations.Test;
 
 import javax.annotation.Resource;

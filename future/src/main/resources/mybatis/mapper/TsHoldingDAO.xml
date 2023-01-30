@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guru.future.mapper.TsHoldingDAO">
-  <resultMap id="BaseResultMap" type="com.guru.future.domain.TsFutureHoldingDO">
+  <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.TsFutureHoldingDO">
     <result column="trade_date" jdbcType="VARCHAR" property="tradeDate" />
     <result column="symbol" jdbcType="VARCHAR" property="symbol" />
     <result column="broker" jdbcType="VARCHAR" property="broker" />
@@ -12,7 +12,7 @@
     <result column="short_hld" jdbcType="INTEGER" property="shortHld" />
     <result column="short_chg" jdbcType="INTEGER" property="shortChg" />
   </resultMap>
-  <insert id="insert" parameterType="com.guru.future.domain.TsFutureHoldingDO">
+  <insert id="insert" parameterType="com.guru.future.common.entity.dao.TsFutureHoldingDO">
     insert into ts_holding (trade_date, symbol, broker,
       vol, vol_chg, long_hld, 
       long_chg, short_hld, short_chg
@@ -22,7 +22,7 @@
       #{longChg,jdbcType=INTEGER}, #{shortHld,jdbcType=INTEGER}, #{shortChg,jdbcType=INTEGER}
       )
   </insert>
-  <insert id="insertSelective" parameterType="com.guru.future.domain.TsFutureHoldingDO">
+  <insert id="insertSelective" parameterType="com.guru.future.common.entity.dao.TsFutureHoldingDO">
     insert into ts_holding
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="tradeDate != null">

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--suppress ALL -->
 <mapper namespace="com.guru.future.mapper.LiveDAO">
-    <resultMap id="BaseResultMap" type="com.guru.future.domain.FutureLiveDO">
+    <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.FutureLiveDO">
         <id column="code" jdbcType="VARCHAR" property="code"/>
         <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
@@ -45,7 +45,7 @@
         delete from live
     </delete>
 
-    <insert id="insertSelective" parameterType="com.guru.future.domain.FutureLiveDO">
+    <insert id="insertSelective" parameterType="com.guru.future.common.entity.dao.FutureLiveDO">
         insert into live
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="tradeDate != null">
@@ -154,7 +154,7 @@
             </if>
         </trim>
     </insert>
-    <update id="updateByPrimaryKeySelective" parameterType="com.guru.future.domain.FutureLiveDO">
+    <update id="updateByPrimaryKeySelective" parameterType="com.guru.future.common.entity.dao.FutureLiveDO">
         update live
         <set>
             <if test="type != null">

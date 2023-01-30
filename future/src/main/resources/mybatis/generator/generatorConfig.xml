@@ -94,14 +94,14 @@
         <!--               enableSelectByExample="false"-->
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
-        <!--        <table tableName="basic"-->
-        <!--               domainObjectName="FutureBasicDO" mapperName="FutureBasicDAO"-->
-        <!--               enableCountByExample="false"-->
-        <!--               enableUpdateByExample="false"-->
-        <!--               enableDeleteByExample="false"-->
-        <!--               enableSelectByExample="false"-->
-        <!--               selectByExampleQueryId="false">-->
-        <!--        </table>-->
+                <table tableName="basic"
+                       domainObjectName="FutureBasicDO" mapperName="FutureBasicDAO"
+                       enableCountByExample="false"
+                       enableUpdateByExample="false"
+                       enableDeleteByExample="false"
+                       enableSelectByExample="false"
+                       selectByExampleQueryId="false">
+                </table>
         <!--        <table tableName="trade_daily"-->
         <!--               domainObjectName="FutureDailyDO" mapperName="FutureDailyDAO"-->
         <!--               enableCountByExample="false"-->
@@ -160,13 +160,13 @@
 <!--               enableSelectByExample="false"-->
 <!--               selectByExampleQueryId="false">-->
 <!--        </table>-->
-        <table tableName="contract"
-               domainObjectName="ContractDO" mapperName="ContractDAO"
-               enableCountByExample="false"
-               enableUpdateByExample="false"
-               enableDeleteByExample="false"
-               enableSelectByExample="false"
-               selectByExampleQueryId="false">
-        </table>
+<!--        <table tableName="contract"-->
+<!--               domainObjectName="ContractDO" mapperName="ContractDAO"-->
+<!--               enableCountByExample="false"-->
+<!--               enableUpdateByExample="false"-->
+<!--               enableDeleteByExample="false"-->
+<!--               enableSelectByExample="false"-->
+<!--               selectByExampleQueryId="false">-->
+<!--        </table>-->
     </context>
 </generatorConfiguration>

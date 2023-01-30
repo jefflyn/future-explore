@@ -1,6 +1,6 @@
 package com.guru.future.biz.manager;
 
-import com.guru.future.domain.TsFutureHoldingDO;
+import com.guru.future.common.entity.dao.TsFutureHoldingDO;
 import com.guru.future.mapper.TsHoldingDAO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

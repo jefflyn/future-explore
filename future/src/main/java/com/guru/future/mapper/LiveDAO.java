@@ -1,6 +1,6 @@
 package com.guru.future.mapper;
 
-import com.guru.future.domain.FutureLiveDO;
+import com.guru.future.common.entity.dao.FutureLiveDO;
 
 import java.util.List;
 

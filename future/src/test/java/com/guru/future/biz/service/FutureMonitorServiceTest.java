@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import com.guru.future.biz.manager.FutureLogManager;
 import com.guru.future.common.cache.PriceFlashCache;
-import com.guru.future.domain.FutureLiveDO;
+import com.guru.future.common.entity.dao.FutureLiveDO;
 import org.javatuples.Pair;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

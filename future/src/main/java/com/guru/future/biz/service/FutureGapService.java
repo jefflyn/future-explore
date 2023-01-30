@@ -1,19 +1,20 @@
 package com.guru.future.biz.service;
 
+import com.guru.future.biz.manager.ContractManager;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.biz.manager.OpenGapManager;
 import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractOpenGapConverter;
+import com.guru.future.common.entity.dao.FutureBasicDO;
+import com.guru.future.common.entity.dao.FutureDailyDO;
+import com.guru.future.common.entity.dao.OpenGapDO;
 import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.NumberUtil;
-import com.guru.future.domain.FutureBasicDO;
-import com.guru.future.domain.FutureDailyDO;
-import com.guru.future.domain.OpenGapDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.cache.annotation.Cacheable;
@@ -52,6 +53,8 @@ public class FutureGapService {
     private FutureMailManager futureMailManager;
     @Resource
     private OpenGapManager openGapManager;
+    @Resource
+    private ContractManager contractManager;
 
     @Cacheable(cacheManager = "hour1CacheManager", value = "marketOverview", key = "#currentDate", unless = "#result==null")
     public String getMarketOverview(String currentDate) {
@@ -115,7 +118,7 @@ public class FutureGapService {
         } else {
             tradeDate = DateUtil.getLastTradeDate(new Date(), TRADE_DATE_PATTERN_FLAT);
         }
-        List<String> tsCodes = futureBasicManager.getAllTsCodes();
+        List<String> tsCodes = contractManager.getContractCodes();
         Map<String, FutureDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, tsCodes);
         List<ContractOpenGapDTO> openGapDTOList = new ArrayList<>();
         int total = 0;
@@ -212,7 +215,7 @@ public class FutureGapService {
             suggestTo = suggestTo.setScale(1, RoundingMode.HALF_UP);
             String suggestPrice = suggestFrom.intValue() + "多\n"
                     + suggestTo.intValue() + "空";
-            int calcPosition = FutureUtil.calcPosition(isUp, realtimeDTO.getOpen(), basicDO.getHigh(), basicDO.getLow());
+            int calcPosition = FutureUtil.calcPosition(isUp, realtimeDTO.getOpen(), BigDecimal.ZERO, BigDecimal.ZERO);
             ContractOpenGapDTO openGapDTO = ContractOpenGapDTO.builder()
                     .tradeDate(tradeDate).code(code).name(basicDO.getName()).category(basicDO.getType()).dayGap(isDayGap)
                     .preClose(preClose.setScale(1, RoundingMode.HALF_UP))

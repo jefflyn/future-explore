@@ -1,6 +1,6 @@
 package com.guru.future.mapper;
 
-import com.guru.future.domain.FutureLogDO;
+import com.guru.future.common.entity.dao.FutureLogDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

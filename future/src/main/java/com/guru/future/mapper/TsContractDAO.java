@@ -1,7 +1,7 @@
 package com.guru.future.mapper;
 
 import com.guru.future.common.entity.query.FutureBasicQuery;
-import com.guru.future.domain.TsFutureContractDO;
+import com.guru.future.common.entity.dao.TsFutureContractDO;
 
 import java.util.List;
 

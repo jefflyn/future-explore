@@ -1,6 +1,6 @@
 package com.guru.future.biz.manager;
 
-import com.guru.future.domain.FutureLiveDO;
+import com.guru.future.common.entity.dao.FutureLiveDO;
 import com.guru.future.mapper.LiveDAO;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
 package com.guru.future.biz.manager;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.guru.future.domain.FutureBasicDO;
+import com.guru.future.common.entity.dao.FutureBasicDO;
 import com.guru.future.mapper.BasicDAO;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -23,9 +23,9 @@ public class FutureBasicManager {
 
     private Map<String, FutureBasicDO> FUTURE_BASIC_MAP = new HashMap<>();
 
-    public FutureBasicDO getBasicByCode(String code) {
-        FutureBasicDO futureBasicDO = FUTURE_BASIC_MAP.get(code);
-        return ObjectUtil.defaultIfNull(futureBasicDO, futureBasicsDAO.selectByCode(code));
+    public FutureBasicDO getBasicBySymbol(String symbol) {
+        FutureBasicDO futureBasicDO = FUTURE_BASIC_MAP.get(symbol);
+        return ObjectUtil.defaultIfNull(futureBasicDO, futureBasicsDAO.selectBySymbol(symbol));
     }
 
     public Map<String, FutureBasicDO> getBasicMap() {
@@ -37,18 +37,13 @@ public class FutureBasicManager {
             return FUTURE_BASIC_MAP;
         }
         List<FutureBasicDO> futureBasicDOList = futureBasicsDAO.selectByQuery(null);
-        FUTURE_BASIC_MAP = futureBasicDOList.stream().collect(Collectors.toMap(FutureBasicDO::getCode, Function.identity()));
+        FUTURE_BASIC_MAP = futureBasicDOList.stream().collect(Collectors.toMap(FutureBasicDO::getSymbol, Function.identity()));
         return FUTURE_BASIC_MAP;
     }
 
     public List<String> getAllCodes() {
         List<FutureBasicDO> futureBasicDOList = getAll();
-        return futureBasicDOList.stream().map(FutureBasicDO::getCode).collect(Collectors.toList());
-    }
-
-    public List<String> getAllTsCodes() {
-        List<FutureBasicDO> futureBasicDOList = getAll();
-        return futureBasicDOList.stream().map(e -> e.getCode() + "." + e.getExchange()).collect(Collectors.toList());
+        return futureBasicDOList.stream().map(FutureBasicDO::getSymbol).collect(Collectors.toList());
     }
 
     /**
@@ -70,6 +65,6 @@ public class FutureBasicManager {
     @Async
     public void refreshBasicCacheMap() {
         List<FutureBasicDO> futureBasicDOList = futureBasicsDAO.selectByQuery(null);
-        FUTURE_BASIC_MAP = futureBasicDOList.stream().collect(Collectors.toMap(FutureBasicDO::getCode, Function.identity()));
+        FUTURE_BASIC_MAP = futureBasicDOList.stream().collect(Collectors.toMap(FutureBasicDO::getSymbol, Function.identity()));
     }
 }

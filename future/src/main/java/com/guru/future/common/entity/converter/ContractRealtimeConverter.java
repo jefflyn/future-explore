@@ -3,9 +3,9 @@ package com.guru.future.common.entity.converter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.enums.CollectType;
 import com.guru.future.common.utils.FutureUtil;
-import com.guru.future.domain.FutureCollectDO;
-import com.guru.future.domain.FutureDailyDO;
-import com.guru.future.domain.FutureLiveDO;
+import com.guru.future.common.entity.dao.FutureCollectDO;
+import com.guru.future.common.entity.dao.FutureDailyDO;
+import com.guru.future.common.entity.dao.FutureLiveDO;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

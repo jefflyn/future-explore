@@ -2,13 +2,15 @@ package com.guru.future.biz.service;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
+import com.guru.future.biz.manager.ContractManager;
 import com.guru.future.biz.manager.FutureBasicManager;
 import com.guru.future.biz.manager.TsFutureBasicManager;
 import com.guru.future.biz.manager.TsFutureDailyManager;
 import com.guru.future.biz.manager.remote.TsFutureManager;
 import com.guru.future.common.entity.converter.FutureDailyConverter;
+import com.guru.future.common.entity.dao.TsFutureDailyDO;
+import com.guru.future.common.entity.domain.Contract;
 import com.guru.future.common.enums.ContractType;
-import com.guru.future.domain.TsFutureDailyDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.scheduling.annotation.Async;
@@ -30,6 +32,9 @@ public class TsFutureDailyService {
     private FutureBasicManager futureBasicManager;
 
     @Resource
+    private ContractManager contractManager;
+
+    @Resource
     private TsFutureManager tsFutureManager;
 
     @Resource
@@ -46,14 +51,14 @@ public class TsFutureDailyService {
             } else if ("M".equals(tsCodeStr.toUpperCase(Locale.ROOT))) {
                 tsCodes = tsFutureBasicManager.getTsCodeByType(ContractType.MAIN.getCode());
             } else if ("R".equals(tsCodeStr.toUpperCase(Locale.ROOT))) {
-                tsCodes = futureBasicManager.getAll().stream().map(e -> e.getCode() + "." + e.getExchange()).collect(Collectors.toList());
+                tsCodes = contractManager.getAllContract().stream().map(Contract::getCode).collect(Collectors.toList());
             } else {
                 tsCodes = Splitter.on(",").splitToList(tsCodeStr);
             }
         } else {
             tsCodes = tsFutureBasicManager.getTsCodeByType(ContractType.CONTINUE.getCode());
             tsCodes.addAll(tsFutureBasicManager.getTsCodeByType(ContractType.MAIN.getCode()));
-            List<String> mainCodes = futureBasicManager.getAll().stream().map(e -> e.getCode() + "." + e.getExchange()).collect(Collectors.toList());
+            List<String> mainCodes = contractManager.getAllContract().stream().map(Contract::getTsCode).collect(Collectors.toList());
             tsCodes.addAll(mainCodes);
         }
         List<List<String>> tsCodeList = Lists.partition(tsCodes, 20);

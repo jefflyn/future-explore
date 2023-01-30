@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.guru.future.mapper.TsDailyDAO">
-    <resultMap id="BaseResultMap" type="com.guru.future.domain.TsFutureDailyDO">
+    <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.TsFutureDailyDO">
         <result column="ts_code" jdbcType="VARCHAR" property="tsCode"/>
         <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
         <result column="pre_close" jdbcType="DECIMAL" property="preClose"/>
@@ -25,7 +25,7 @@
         settle, close_change, settle_change, deal_vol, deal_amount, hold_vol
     </sql>
 
-    <insert id="insert" parameterType="com.guru.future.domain.TsFutureDailyDO">
+    <insert id="insert" parameterType="com.guru.future.common.entity.dao.TsFutureDailyDO">
         insert into ts_trade_daily (ts_code, trade_date, pre_close, pre_settle, `open`, high,
                                      low, `close`, settle, close_change, settle_change, deal_vol,
                                      deal_amount, hold_vol, hold_change, create_time)
@@ -37,7 +37,7 @@
                 #{createTime,jdbcType=TIMESTAMP})
     </insert>
 
-    <select id="selectByQuery" resultType="com.guru.future.domain.TsFutureDailyDO">
+    <select id="selectByQuery" resultType="com.guru.future.common.entity.dao.TsFutureDailyDO">
         select
         <include refid="Base_Column_List"/>
         from ts_trade_daily

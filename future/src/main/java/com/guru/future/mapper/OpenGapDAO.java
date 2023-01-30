@@ -1,6 +1,6 @@
 package com.guru.future.mapper;
 
-import com.guru.future.domain.OpenGapDO;
+import com.guru.future.common.entity.dao.OpenGapDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

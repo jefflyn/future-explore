@@ -1,7 +1,7 @@
 package com.guru.future.mapper;
 
 import com.guru.future.common.entity.query.FutureDailyQuery;
-import com.guru.future.domain.FutureCollectDO;
+import com.guru.future.common.entity.dao.FutureCollectDO;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

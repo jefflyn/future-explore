@@ -1,6 +1,6 @@
 package com.guru.future.biz.manager;
 
-import com.guru.future.domain.OpenGapDO;
+import com.guru.future.common.entity.dao.OpenGapDO;
 import com.guru.future.mapper.OpenGapDAO;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

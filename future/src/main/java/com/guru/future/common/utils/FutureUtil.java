@@ -1,6 +1,7 @@
 package com.guru.future.common.utils;
 
 
+import cn.hutool.core.util.NumberUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 
@@ -19,6 +20,17 @@ public class FutureUtil {
     private FutureUtil() {
     }
 
+    public static String code2Symbol(String code) {
+        if (Strings.isNotBlank(code) && code.length() > 1) {
+            if (NumberUtil.isNumber(code.substring(1, 2))) {
+                return code.substring(0, 1);
+            } else {
+                return code.substring(0, 2);
+            }
+        }
+        return code;
+    }
+
     public static String getDirectionTag(BigDecimal rate) {
         if (BigDecimal.ZERO.compareTo(rate) < 0) {
             return "/";
@@ -35,6 +47,7 @@ public class FutureUtil {
 
     /**
      * (p-l) / (h-l)
+     *
      * @param isUp
      * @param price
      * @param high
@@ -144,6 +157,10 @@ public class FutureUtil {
             waveStr.append(getDirectionTag(waveB)).append(waveB).append(PERCENTAGE_SYMBOL);
         }
         return waveStr.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(code2Symbol("SA10"));
     }
 
 }

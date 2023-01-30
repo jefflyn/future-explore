@@ -1,7 +1,7 @@
 package com.guru.future.biz.manager;
 
 import com.guru.future.common.utils.DateUtil;
-import com.guru.future.domain.FutureLogDO;
+import com.guru.future.common.entity.dao.FutureLogDO;
 import com.guru.future.mapper.TradeLogDAO;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
