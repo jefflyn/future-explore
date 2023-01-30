@@ -3,7 +3,7 @@ package com.guru.future.biz.manager.remote;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.ContractManager;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.HttpUtil;
 import com.guru.future.common.utils.SinaHqUtil;
@@ -28,7 +28,7 @@ public class FutureSinaManager {
     private final static String SINA_HQ_URL = "https://hq.sinajs.cn/list=";
 
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private ContractManager contractManager;
 
     public List<String> fetchContractInfo(List<String> codeList) {
         StringBuilder reqCodes = new StringBuilder();
@@ -46,7 +46,7 @@ public class FutureSinaManager {
     }
 
     public List<ContractRealtimeDTO> getAllRealtimeFromSina() {
-        List<String> codeList = futureBasicManager.getAllCodes();
+        List<String> codeList = contractManager.getContractCodes();
         if (CollectionUtils.isEmpty(codeList)) {
             return Lists.newArrayList();
         }

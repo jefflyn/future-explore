@@ -3,7 +3,7 @@ package com.guru.future.biz.service.gene;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.google.common.collect.Lists;
-import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.BasicManager;
 import com.guru.future.biz.manager.TsFutureDailyManager;
 import com.guru.future.common.entity.vo.FutureWaveVO;
 import com.guru.future.common.entity.dao.TsFutureDailyDO;
@@ -37,7 +37,7 @@ public class WaveService {
     private final static List<String> DAILY_COLUMNS = Lists.newArrayList(COLUMN_CODE, COLUMN_DATE, COLUMN_OPEN, COLUMN_HIGH, COLUMN_LOW, COLUMN_CLOSE);
 
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private BasicManager basicManager;
 
     @Resource
     private TsFutureDailyManager tsFutureDailyManager;

@@ -1,7 +1,7 @@
 package com.guru.future.controller;
 
 import com.guru.future.biz.handler.FutureTaskDispatcher;
-import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.ContractManager;
 import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
@@ -26,7 +26,7 @@ public class FutureLiveController {
     private FutureSinaManager futureSinaManager;
 
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private ContractManager contractManager;
 
     @Resource
     private FutureLiveService futureLiveService;
@@ -44,7 +44,7 @@ public class FutureLiveController {
 
     @GetMapping(value = "/future/live")
     public String live() {
-        List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getRealtimeFromSina(futureBasicManager.getAllCodes());
+        List<ContractRealtimeDTO> contractRealtimeDTOList = futureSinaManager.getRealtimeFromSina(contractManager.getContractCodes());
         // async live data
         futureLiveService.refreshLiveData(contractRealtimeDTOList, true);
         return "success";

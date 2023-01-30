@@ -7,16 +7,22 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="type" jdbcType="VARCHAR" property="type"/>
         <result column="relative" jdbcType="VARCHAR" property="relative"/>
-        <result column="amount" jdbcType="INTEGER" property="amount"/>
-        <result column="unit" jdbcType="VARCHAR" property="unit"/>
-        <result column="night" jdbcType="TINYINT" property="night"/>
-        <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
-        <result column="is_target" jdbcType="TINYINT" property="isTarget"/>
-        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="profit" jdbcType="INTEGER" property="profit" />
+        <result column="night" jdbcType="TINYINT" property="night" />
+        <result column="exchange" jdbcType="VARCHAR" property="exchange" />
+        <result column="amount" jdbcType="INTEGER" property="amount" />
+        <result column="unit" jdbcType="VARCHAR" property="unit" />
+        <result column="relative" jdbcType="VARCHAR" property="relative" />
+        <result column="remark" jdbcType="VARCHAR" property="remark" />
+        <result column="deleted" jdbcType="TINYINT" property="deleted" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
 
     </resultMap>
+
+    <sql id="Base_Column_List">
+        symbol, `name`, `type`, profit, night, exchange, amount, unit, `relative`, remark,
+    deleted, update_time
+    </sql>
 
     <select id="selectBySymbol" parameterType="java.lang.String" resultMap="BaseResultMap">
         select

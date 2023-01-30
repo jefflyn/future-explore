@@ -1,7 +1,7 @@
 package com.guru.future.biz.service;
 
 import com.guru.future.biz.manager.ContractManager;
-import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.BasicManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.biz.manager.OpenGapManager;
@@ -44,7 +44,7 @@ import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
 @Slf4j
 public class FutureGapService {
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private BasicManager basicManager;
     @Resource
     private FutureDailyManager futureDailyManager;
     @Resource
@@ -111,7 +111,7 @@ public class FutureGapService {
 
     public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) throws Exception {
         log.info("open gap start! realtime data size={}", contractRealtimeDTOList.size());
-        Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
+        Map<String, FutureBasicDO> basicMap = basicManager.getBasicMap();
         String tradeDate;
         if (DateUtil.isNight()) {
             tradeDate = DateUtil.latestTradeDate(TRADE_DATE_PATTERN_FLAT);

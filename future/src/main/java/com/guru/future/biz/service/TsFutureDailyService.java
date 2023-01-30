@@ -3,7 +3,7 @@ package com.guru.future.biz.service;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.ContractManager;
-import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.BasicManager;
 import com.guru.future.biz.manager.TsFutureBasicManager;
 import com.guru.future.biz.manager.TsFutureDailyManager;
 import com.guru.future.biz.manager.remote.TsFutureManager;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TsFutureDailyService {
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private BasicManager basicManager;
 
     @Resource
     private ContractManager contractManager;

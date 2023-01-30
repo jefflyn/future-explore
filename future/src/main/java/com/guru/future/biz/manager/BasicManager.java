@@ -3,7 +3,6 @@ package com.guru.future.biz.manager;
 import cn.hutool.core.util.ObjectUtil;
 import com.guru.future.common.entity.dao.FutureBasicDO;
 import com.guru.future.mapper.BasicDAO;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -17,7 +16,7 @@ import java.util.stream.Collectors;
  * @author j
  */
 @Component
-public class FutureBasicManager {
+public class BasicManager {
     @Resource
     private BasicDAO futureBasicsDAO;
 
@@ -41,11 +40,6 @@ public class FutureBasicManager {
         return FUTURE_BASIC_MAP;
     }
 
-    public List<String> getAllCodes() {
-        List<FutureBasicDO> futureBasicDOList = getAll();
-        return futureBasicDOList.stream().map(FutureBasicDO::getSymbol).collect(Collectors.toList());
-    }
-
     /**
      * deleted = 0
      *
@@ -55,16 +49,4 @@ public class FutureBasicManager {
         return futureBasicsDAO.selectByQuery(null);
     }
 
-    public Boolean updateBasic(FutureBasicDO updateBasicDO) {
-        if (futureBasicsDAO.updateByCodeSelective(updateBasicDO) > 0) {
-            refreshBasicCacheMap();
-        }
-        return true;
-    }
-
-    @Async
-    public void refreshBasicCacheMap() {
-        List<FutureBasicDO> futureBasicDOList = futureBasicsDAO.selectByQuery(null);
-        FUTURE_BASIC_MAP = futureBasicDOList.stream().collect(Collectors.toMap(FutureBasicDO::getSymbol, Function.identity()));
-    }
 }

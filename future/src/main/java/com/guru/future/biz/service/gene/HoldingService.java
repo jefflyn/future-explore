@@ -3,11 +3,10 @@ package com.guru.future.biz.service.gene;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.guru.future.biz.manager.ContractManager;
-import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.BasicManager;
 import com.guru.future.biz.manager.TsFutureHoldingManager;
 import com.guru.future.biz.manager.remote.TsFutureManager;
 import com.guru.future.common.entity.converter.FutureHoldingConverter;
-import com.guru.future.common.entity.dao.FutureBasicDO;
 import com.guru.future.common.entity.dao.TsFutureHoldingDO;
 import com.guru.future.common.entity.domain.Contract;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +29,7 @@ public class HoldingService {
     private TsFutureManager tsFutureManager;
 
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private BasicManager basicManager;
 
     @Resource
     private ContractManager contractManager;

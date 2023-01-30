@@ -1,8 +1,7 @@
 package com.guru.future.biz.service;
 
 import cn.hutool.core.collection.CollUtil;
-import com.guru.future.biz.handler.FutureTaskDispatcher;
-import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.BasicManager;
 import com.guru.future.biz.manager.FutureLiveManager;
 import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.common.cache.LiveDataCache;
@@ -15,7 +14,6 @@ import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.NullUtil;
 import com.guru.future.common.entity.dao.FutureBasicDO;
 import com.guru.future.common.entity.dao.FutureLiveDO;
-import com.guru.future.common.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -78,7 +76,7 @@ public class FutureLiveService {
     );
 
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private BasicManager basicManager;
 
     @Resource
     private FutureLiveManager futureLiveManager;
@@ -137,7 +135,7 @@ public class FutureLiveService {
     }
 
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList, Boolean refresh) {
-        Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap(refresh);
+        Map<String, FutureBasicDO> basicMap = basicManager.getBasicMap(refresh);
         reloadLiveCache(contractRealtimeDTOList, basicMap);
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             FutureBasicDO futureBasicDO = basicMap.get(contractRealtimeDTO.getCode());

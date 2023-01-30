@@ -1,6 +1,6 @@
 package com.guru.future.biz.handler;
 
-import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.ContractManager;
 import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.cache.PriceFlashCache;
@@ -27,7 +27,7 @@ public class FutureTaskDispatcher {
     private Boolean keepRunning = false;
 
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private ContractManager contractManager;
     @Resource
     private FutureSinaManager futureSinaManager;
     @Resource
@@ -50,12 +50,12 @@ public class FutureTaskDispatcher {
         keepRunning = true;
         LongAdder times = new LongAdder();
         REFRESH = refresh == null ? false : refresh;
-        List<String> codeList = futureBasicManager.getAllCodes();
+        List<String> codeList = contractManager.getContractCodes();
         log.info(">>> smell the coffee, let's get this party started!");
         futureLiveService.refreshLiveData();
         while (keepRunning) {
             if (REFRESH) {
-                codeList = futureBasicManager.getAllCodes();
+                codeList = contractManager.getContractCodes();
                 DateUtil.TRADE_TIME_TEST = true;
             } else {
                 DateUtil.TRADE_TIME_TEST = false;

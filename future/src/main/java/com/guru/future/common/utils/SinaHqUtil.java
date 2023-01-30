@@ -33,6 +33,9 @@ public class SinaHqUtil {
         if (!CollectionUtils.isEmpty(components) && components.size() > 1) {
             String part1 = components.get(0);
             String part2 = components.get(1);
+            if (Strings.isNullOrEmpty(part2)) {
+                return result;
+            }
             String code = part1.substring(part1.lastIndexOf("_") + 1);
             part2 = StringUtils.replace(part2, "\"", "").replace(";", "");
             List<String> part2Contents = Splitter.on(",").splitToList(part2);

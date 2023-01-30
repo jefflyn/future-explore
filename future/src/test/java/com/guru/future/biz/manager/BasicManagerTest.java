@@ -8,19 +8,18 @@ import org.testng.annotations.Test;
 import javax.annotation.Resource;
 import java.util.List;
 
-public class FutureBasicManagerTest extends TestBase {
+public class BasicManagerTest extends TestBase {
 
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private BasicManager basicManager;
 
     @Test
     public void testGetAllCodes() {
-        System.out.println(futureBasicManager.getAllCodes());
     }
 
     @Test
     public void testGetAll() {
-        List<FutureBasicDO> result = futureBasicManager.getAll();
+        List<FutureBasicDO> result = basicManager.getAll();
         System.out.println(result);
     }
 }

@@ -2,7 +2,7 @@ package com.guru.future.biz.service;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.guru.future.biz.manager.FutureBasicManager;
+import com.guru.future.biz.manager.BasicManager;
 import com.guru.future.biz.manager.FutureCollectManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.remote.FutureSinaManager;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FutureDailyService {
     @Resource
-    private FutureBasicManager futureBasicManager;
+    private BasicManager basicManager;
     @Resource
     private FutureDailyManager futureDailyManager;
     @Resource
@@ -52,7 +52,7 @@ public class FutureDailyService {
     }
 
     public void upsertTradeDaily(List<ContractRealtimeDTO> contractRealtimeDTOList) {
-        Map<String, FutureBasicDO> basicMap = futureBasicManager.getBasicMap();
+        Map<String, FutureBasicDO> basicMap = basicManager.getBasicMap();
         String tradeDate = DateUtil.currentTradeDate();
         Map<String, FutureDailyDO> lastDailyMap = futureDailyManager.getFutureDailyMap(DateUtil.getLastTradeDate(tradeDate), new ArrayList<>(basicMap.keySet()));
         Map<String, FutureDailyDO> existedDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
