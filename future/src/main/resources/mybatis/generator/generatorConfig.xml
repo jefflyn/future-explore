@@ -94,24 +94,24 @@
         <!--               enableSelectByExample="false"-->
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
-                <table tableName="basic"
-                       domainObjectName="FutureBasicDO" mapperName="FutureBasicDAO"
+<!--                <table tableName="basic"-->
+<!--                       domainObjectName="FutureBasicDO" mapperName="FutureBasicDAO"-->
+<!--                       enableCountByExample="false"-->
+<!--                       enableUpdateByExample="false"-->
+<!--                       enableDeleteByExample="false"-->
+<!--                       enableSelectByExample="false"-->
+<!--                       selectByExampleQueryId="false">-->
+<!--                </table>-->
+                <table tableName="trade_daily"
+                       domainObjectName="DailyDO" mapperName="DailyMapper"
                        enableCountByExample="false"
                        enableUpdateByExample="false"
                        enableDeleteByExample="false"
                        enableSelectByExample="false"
                        selectByExampleQueryId="false">
                 </table>
-        <!--        <table tableName="trade_daily"-->
-        <!--               domainObjectName="FutureDailyDO" mapperName="FutureDailyDAO"-->
-        <!--               enableCountByExample="false"-->
-        <!--               enableUpdateByExample="false"-->
-        <!--               enableDeleteByExample="false"-->
-        <!--               enableSelectByExample="false"-->
-        <!--               selectByExampleQueryId="false">-->
-        <!--        </table>-->
         <!--        <table tableName="open_gap"-->
-        <!--               domainObjectName="OpenGapDO" mapperName="OpenGapDAO"-->
+        <!--               domainObjectName="OpenGapDO" mapperName="OpenGapMapper"-->
         <!--               enableCountByExample="false"-->
         <!--               enableUpdateByExample="false"-->
         <!--               enableDeleteByExample="false"-->
@@ -120,7 +120,7 @@
         <!--        </table>-->
 
         <!--        <table tableName="trade_log"-->
-        <!--               domainObjectName="FutureLogDO" mapperName="FutureLogDAO"-->
+        <!--               domainObjectName="FutureLogDO" mapperName="FutureLogMapper"-->
         <!--               enableCountByExample="false"-->
         <!--               enableUpdateByExample="false"-->
         <!--               enableDeleteByExample="false"-->
@@ -129,7 +129,7 @@
         <!--        </table>-->
 
 <!--        <table tableName="collect"-->
-<!--               domainObjectName="FutureCollectDO" mapperName="FutureCollectDAO"-->
+<!--               domainObjectName="FutureCollectDO" mapperName="FutureCollectMapper"-->
 <!--               enableCountByExample="false"-->
 <!--               enableUpdateByExample="false"-->
 <!--               enableDeleteByExample="false"-->
@@ -137,7 +137,7 @@
 <!--               selectByExampleQueryId="false">-->
 <!--        </table>-->
 <!--        <table tableName="ts_contract"-->
-<!--               domainObjectName="TsFutureContractDO" mapperName="TsFutureContractDAO"-->
+<!--               domainObjectName="TsFutureContractDO" mapperName="TsFutureContractMapper"-->
 <!--               enableCountByExample="false"-->
 <!--               enableUpdateByExample="false"-->
 <!--               enableDeleteByExample="false"-->
@@ -145,7 +145,7 @@
 <!--               selectByExampleQueryId="false">-->
 <!--        </table>-->
 <!--        <table tableName="ts_trade_daily"-->
-<!--               domainObjectName="TsFutureDailyDO" mapperName="TsFutureDailyDAO"-->
+<!--               domainObjectName="TsFutureDailyDO" mapperName="TsFutureDailyMapper"-->
 <!--               enableCountByExample="false"-->
 <!--               enableUpdateByExample="false"-->
 <!--               enableDeleteByExample="false"-->
@@ -153,7 +153,7 @@
 <!--               selectByExampleQueryId="false">-->
 <!--        </table>-->
 <!--        <table tableName="ts_holding"-->
-<!--               domainObjectName="TsFutureHoldingDO" mapperName="TsFutureHoldingDAO"-->
+<!--               domainObjectName="TsFutureHoldingDO" mapperName="TsFutureHoldingMapper"-->
 <!--               enableCountByExample="false"-->
 <!--               enableUpdateByExample="false"-->
 <!--               enableDeleteByExample="false"-->
@@ -161,7 +161,7 @@
 <!--               selectByExampleQueryId="false">-->
 <!--        </table>-->
 <!--        <table tableName="contract"-->
-<!--               domainObjectName="ContractDO" mapperName="ContractDAO"-->
+<!--               domainObjectName="ContractDO" mapperName="ContractMapper"-->
 <!--               enableCountByExample="false"-->
 <!--               enableUpdateByExample="false"-->
 <!--               enableDeleteByExample="false"-->

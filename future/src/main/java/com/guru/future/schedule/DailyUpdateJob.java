@@ -27,12 +27,12 @@ public class DailyUpdateJob {
     @Resource
     private HoldingService holdingService;
 
-    @Scheduled(cron = "8 8 15,03 * * MON-SAT")
+//    @Scheduled(cron = "8 8 15,03 * * MON-SAT")
     public void updateTradeDaily() {
         futureDailyService.addTradeDaily();
     }
 
-    @Scheduled(cron = "0 30 17,18 * * MON-FRI")
+//    @Scheduled(cron = "0 30 17,18 * * MON-FRI")
     public void updateTsDaily() {
         String startDate = DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT);
         String endDate = DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT);

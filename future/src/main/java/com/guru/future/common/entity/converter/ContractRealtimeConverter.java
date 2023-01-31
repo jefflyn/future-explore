@@ -4,7 +4,7 @@ import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.enums.CollectType;
 import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.entity.dao.FutureCollectDO;
-import com.guru.future.common.entity.dao.FutureDailyDO;
+import com.guru.future.common.entity.dao.TradeDailyDO;
 import com.guru.future.common.entity.dao.FutureLiveDO;
 
 import java.math.BigDecimal;
@@ -36,8 +36,8 @@ public class ContractRealtimeConverter {
         return futureLiveDO;
     }
 
-    public static FutureDailyDO convert2DailyDO(ContractRealtimeDTO contractRealtimeDTO) {
-        FutureDailyDO dailyDO = new FutureDailyDO();
+    public static TradeDailyDO convert2DailyDO(ContractRealtimeDTO contractRealtimeDTO) {
+        TradeDailyDO dailyDO = new TradeDailyDO();
         dailyDO.setSymbol(contractRealtimeDTO.getCode().replaceAll("[^A-Za-z]", ""));
         dailyDO.setTradeDate(contractRealtimeDTO.getTradeDate());
 

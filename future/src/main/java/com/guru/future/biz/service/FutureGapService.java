@@ -8,7 +8,7 @@ import com.guru.future.biz.manager.OpenGapManager;
 import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractOpenGapConverter;
 import com.guru.future.common.entity.dao.FutureBasicDO;
-import com.guru.future.common.entity.dao.FutureDailyDO;
+import com.guru.future.common.entity.dao.TradeDailyDO;
 import com.guru.future.common.entity.dao.OpenGapDO;
 import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
@@ -119,7 +119,7 @@ public class FutureGapService {
             tradeDate = DateUtil.getLastTradeDate(new Date(), TRADE_DATE_PATTERN_FLAT);
         }
         List<String> tsCodes = contractManager.getContractCodes();
-        Map<String, FutureDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, tsCodes);
+        Map<String, TradeDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, tsCodes);
         List<ContractOpenGapDTO> openGapDTOList = new ArrayList<>();
         int total = 0;
         Map<String, Integer> openStats = new HashMap<>();
@@ -127,7 +127,7 @@ public class FutureGapService {
         String openLowTag = "低开";
         for (ContractRealtimeDTO realtimeDTO : contractRealtimeDTOList) {
             String code = realtimeDTO.getCode();
-            FutureBasicDO basicDO = basicMap.get(code);
+            FutureBasicDO basicDO = basicMap.get(FutureUtil.code2Symbol(code));
             int nightTrade = basicDO.getNight();
             if (DateUtil.isNight()) {
                 if (nightTrade == 0) {
@@ -139,7 +139,7 @@ public class FutureGapService {
                     continue;
                 }
             }
-            FutureDailyDO lastDailyDO = preDailyMap.get(realtimeDTO.getCode());
+            TradeDailyDO lastDailyDO = preDailyMap.get(realtimeDTO.getCode());
             if (lastDailyDO == null) {
                 log.warn("{} last daily data missed! trade date:{}", realtimeDTO.getCode(), tradeDate);
                 continue;

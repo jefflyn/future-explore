@@ -1,7 +1,7 @@
 package com.guru.future.biz.manager;
 
 import com.guru.future.common.entity.query.FutureDailyQuery;
-import com.guru.future.common.entity.dao.FutureDailyDO;
+import com.guru.future.common.entity.dao.TradeDailyDO;
 import com.guru.future.common.entity.dao.TsFutureDailyDO;
 import com.guru.future.mapper.DailyDAO;
 import com.guru.future.mapper.TsDailyDAO;
@@ -27,48 +27,48 @@ public class FutureDailyManager {
     private TsDailyDAO tsfutureDailyDAO;
 
     @Transactional(rollbackFor = Exception.class)
-    public Boolean addFutureDaily(FutureDailyDO futureDailyDO) {
-        return dailyDAO.insertSelective(futureDailyDO) > 0;
+    public Boolean addFutureDaily(TradeDailyDO tradeDailyDO) {
+        return dailyDAO.insertSelective(tradeDailyDO) > 0;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Boolean updateFutureDaily(FutureDailyDO futureDailyDO) {
-        return dailyDAO.updateByCodeTradeDateSelective(futureDailyDO) > 0;
+    public Boolean updateFutureDaily(TradeDailyDO tradeDailyDO) {
+        return dailyDAO.updateByCodeTradeDateSelective(tradeDailyDO) > 0;
     }
 
-    public FutureDailyDO getFutureDaily(String tradeDate, String code) {
+    public TradeDailyDO getFutureDaily(String tradeDate, String code) {
         FutureDailyQuery query = new FutureDailyQuery();
         query.setTradeDate(tradeDate);
         query.setCode(code);
-        List<FutureDailyDO> futureDailyDOList = dailyDAO.selectByQuery(query);
-        if (CollectionUtils.isEmpty(futureDailyDOList)) {
+        List<TradeDailyDO> tradeDailyDOList = dailyDAO.selectByQuery(query);
+        if (CollectionUtils.isEmpty(tradeDailyDOList)) {
             return null;
         }
-        return futureDailyDOList.get(0);
+        return tradeDailyDOList.get(0);
     }
 
-    public Map<String, FutureDailyDO> getFutureDailyMap(String tradeDate, List<String> codes) {
-        List<FutureDailyDO> futureDailyDOList = new ArrayList<>();
+    public Map<String, TradeDailyDO> getFutureDailyMap(String tradeDate, List<String> codes) {
+        List<TradeDailyDO> tradeDailyDOList = new ArrayList<>();
         FutureDailyQuery futureDailyQuery = new FutureDailyQuery();
         futureDailyQuery.setCodes(codes);
         futureDailyQuery.setStartDate(tradeDate);
         futureDailyQuery.setEndDate(tradeDate);
         List<TsFutureDailyDO> tsFutureDailyDOList = tsfutureDailyDAO.selectByQuery(futureDailyQuery);
         for (TsFutureDailyDO tsFutureDailyDO : tsFutureDailyDOList) {
-            FutureDailyDO futureDailyDO = new FutureDailyDO();
-            futureDailyDO.setTradeDate(tradeDate);
+            TradeDailyDO tradeDailyDO = new TradeDailyDO();
+            tradeDailyDO.setTradeDate(tradeDate);
             String tsCode = tsFutureDailyDO.getTsCode();
             String code = tsCode.substring(0, tsCode.indexOf("."));
-            futureDailyDO.setCode(code);
-            futureDailyDO.setClose(tsFutureDailyDO.getClose());
-            futureDailyDO.setSettle(tsFutureDailyDO.getSettle());
-            futureDailyDO.setOpen(tsFutureDailyDO.getOpen());
-            futureDailyDO.setHigh(tsFutureDailyDO.getHigh());
-            futureDailyDO.setLow(tsFutureDailyDO.getLow());
-            futureDailyDO.setPreClose(tsFutureDailyDO.getPreClose());
-            futureDailyDO.setPreSettle(tsFutureDailyDO.getPreSettle());
-            futureDailyDOList.add(futureDailyDO);
+            tradeDailyDO.setCode(code);
+            tradeDailyDO.setClose(tsFutureDailyDO.getClose());
+            tradeDailyDO.setSettle(tsFutureDailyDO.getSettle());
+            tradeDailyDO.setOpen(tsFutureDailyDO.getOpen());
+            tradeDailyDO.setHigh(tsFutureDailyDO.getHigh());
+            tradeDailyDO.setLow(tsFutureDailyDO.getLow());
+            tradeDailyDO.setPreClose(tsFutureDailyDO.getPreClose());
+            tradeDailyDO.setPreSettle(tsFutureDailyDO.getPreSettle());
+            tradeDailyDOList.add(tradeDailyDO);
         }
-        return futureDailyDOList.stream().collect(Collectors.toMap(FutureDailyDO::getCode, Function.identity()));
+        return tradeDailyDOList.stream().collect(Collectors.toMap(TradeDailyDO::getCode, Function.identity()));
     }
 }

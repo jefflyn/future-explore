@@ -2,12 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--suppress ALL -->
 <mapper namespace="com.guru.future.mapper.DailyDAO">
-    <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.FutureDailyDO">
+    <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.TradeDailyDO">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="symbol" jdbcType="VARCHAR" property="symbol"/>
         <result column="trade_date" jdbcType="VARCHAR" property="tradeDate"/>
         <result column="code" jdbcType="VARCHAR" property="code"/>
-        <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="close" jdbcType="DECIMAL" property="close"/>
         <result column="close_change" jdbcType="DECIMAL" property="closeChange"/>
         <result column="settle" jdbcType="DECIMAL" property="settle"/>
@@ -15,21 +14,16 @@
         <result column="open" jdbcType="DECIMAL" property="open"/>
         <result column="high" jdbcType="DECIMAL" property="high"/>
         <result column="low" jdbcType="DECIMAL" property="low"/>
-        <result column="hl_diff" jdbcType="DECIMAL" property="hlDiff"/>
-        <result column="amplitude" jdbcType="DECIMAL" property="amplitude"/>
         <result column="pre_close" jdbcType="DECIMAL" property="preClose"/>
         <result column="pre_settle" jdbcType="DECIMAL" property="preSettle"/>
         <result column="deal_vol" jdbcType="INTEGER" property="dealVol"/>
         <result column="hold_vol" jdbcType="INTEGER" property="holdVol"/>
-        <result column="exchange" jdbcType="VARCHAR" property="exchange"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
-        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
-        <result column="remark" jdbcType="VARCHAR" property="remark"/>
     </resultMap>
+
     <sql id="Base_Column_List">
-        id, symbol, trade_date, code, `name`, `close`, close_change, settle, settle_change,
-    `open`, high, low, hl_diff, amplitude, pre_close, pre_settle, deal_vol, hold_vol, 
-    exchange, create_time, update_time, remark
+        id, symbol, trade_date, code, `close`, close_change, settle, settle_change,
+    `open`, high, low, pre_close, pre_settle, deal_vol, hold_vol, create_time
     </sql>
 
     <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -39,7 +33,7 @@
         where id = #{id,jdbcType=BIGINT}
     </select>
 
-    <select id="selectByQuery" resultType="com.guru.future.common.entity.dao.FutureDailyDO">
+    <select id="selectByQuery" resultType="com.guru.future.common.entity.dao.TradeDailyDO">
         select
         <include refid="Base_Column_List"/>
         from trade_daily
@@ -68,7 +62,7 @@
         where id = #{id,jdbcType=BIGINT}
     </delete>
 
-    <insert id="insertSelective" parameterType="com.guru.future.common.entity.dao.FutureDailyDO">
+    <insert id="insertSelective" parameterType="com.guru.future.common.entity.dao.TradeDailyDO">
         insert into trade_daily
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">
@@ -82,9 +76,6 @@
             </if>
             <if test="code != null">
                 code,
-            </if>
-            <if test="name != null">
-                `name`,
             </if>
             <if test="close != null">
                 `close`,
@@ -107,12 +98,6 @@
             <if test="low != null">
                 low,
             </if>
-            <if test="hlDiff != null">
-                hl_diff,
-            </if>
-            <if test="amplitude != null">
-                amplitude,
-            </if>
             <if test="preClose != null">
                 pre_close,
             </if>
@@ -125,17 +110,8 @@
             <if test="holdVol != null">
                 hold_vol,
             </if>
-            <if test="exchange != null">
-                exchange,
-            </if>
             <if test="code != null">
                 create_time,
-            </if>
-            <if test="code != null">
-                update_time,
-            </if>
-            <if test="remark != null">
-                remark,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -150,9 +126,6 @@
             </if>
             <if test="code != null">
                 #{code,jdbcType=VARCHAR},
-            </if>
-            <if test="name != null">
-                #{name,jdbcType=VARCHAR},
             </if>
             <if test="close != null">
                 #{close,jdbcType=DECIMAL},
@@ -175,12 +148,6 @@
             <if test="low != null">
                 #{low,jdbcType=DECIMAL},
             </if>
-            <if test="hlDiff != null">
-                #{hlDiff,jdbcType=DECIMAL},
-            </if>
-            <if test="amplitude != null">
-                #{amplitude,jdbcType=DECIMAL},
-            </if>
             <if test="preClose != null">
                 #{preClose,jdbcType=DECIMAL},
             </if>
@@ -193,22 +160,13 @@
             <if test="holdVol != null">
                 #{holdVol,jdbcType=INTEGER},
             </if>
-            <if test="exchange != null">
-                #{exchange,jdbcType=VARCHAR},
-            </if>
             <if test="code != null">
                 now(),
-            </if>
-            <if test="code != null">
-                now(),
-            </if>
-            <if test="remark != null">
-                #{remark,jdbcType=VARCHAR},
             </if>
         </trim>
     </insert>
 
-    <update id="updateByCodeTradeDateSelective" parameterType="com.guru.future.common.entity.dao.FutureDailyDO">
+    <update id="updateByCodeTradeDateSelective" parameterType="com.guru.future.common.entity.dao.TradeDailyDO">
         update trade_daily
         <set>
             <if test="close != null">
@@ -232,26 +190,11 @@
             <if test="low != null">
                 low = #{low,jdbcType=DECIMAL},
             </if>
-            <if test="hlDiff != null">
-                hl_diff = #{hlDiff,jdbcType=DECIMAL},
-            </if>
-            <if test="amplitude != null">
-                amplitude = #{amplitude,jdbcType=DECIMAL},
-            </if>
             <if test="dealVol != null">
                 deal_vol = #{dealVol,jdbcType=INTEGER},
             </if>
             <if test="holdVol != null">
                 hold_vol = #{holdVol,jdbcType=INTEGER},
-            </if>
-            <if test="exchange != null">
-                exchange = #{exchange,jdbcType=VARCHAR},
-            </if>
-            <if test="code != null">
-                update_time = now(),
-            </if>
-            <if test="remark != null">
-                remark = #{remark,jdbcType=VARCHAR},
             </if>
         </set>
         where code = #{code,jdbcType=VARCHAR} and trade_date = #{tradeDate,jdbcType=VARCHAR}

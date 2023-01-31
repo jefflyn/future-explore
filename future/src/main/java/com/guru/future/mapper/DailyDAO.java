@@ -1,19 +1,19 @@
 package com.guru.future.mapper;
 
 import com.guru.future.common.entity.query.FutureDailyQuery;
-import com.guru.future.common.entity.dao.FutureDailyDO;
+import com.guru.future.common.entity.dao.TradeDailyDO;
 
 import java.util.List;
 
 public interface DailyDAO {
     int deleteByPrimaryKey(Long id);
 
-    int insertSelective(FutureDailyDO futureDailyDO);
+    int insertSelective(TradeDailyDO tradeDailyDO);
 
-    FutureDailyDO selectByPrimaryKey(Long id);
+    TradeDailyDO selectByPrimaryKey(Long id);
 
-    List<FutureDailyDO> selectByQuery(FutureDailyQuery query);
+    List<TradeDailyDO> selectByQuery(FutureDailyQuery query);
 
-    int updateByCodeTradeDateSelective(FutureDailyDO futureDailyDO);
+    int updateByCodeTradeDateSelective(TradeDailyDO tradeDailyDO);
 
 }

@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Data
 @NoArgsConstructor
-public class FutureDailyDO {
+public class TradeDailyDO {
     private Long id;
 
     private String symbol;
@@ -18,47 +18,34 @@ public class FutureDailyDO {
 
     private String code;
 
-    private String name;
-
-    private BigDecimal close;
-
-    private BigDecimal closeChange;
-
-    private BigDecimal settle;
-
-    private BigDecimal settleChange;
-
     private BigDecimal open;
 
     private BigDecimal high;
 
     private BigDecimal low;
 
-    private BigDecimal hlDiff;
+    private BigDecimal close;
 
-    private BigDecimal amplitude;
+    private BigDecimal settle;
 
     private BigDecimal preClose;
 
     private BigDecimal preSettle;
 
+    private BigDecimal closeChange;
+
+    private BigDecimal settleChange;
+
     private Integer dealVol;
 
     private Integer holdVol;
 
-    private String exchange;
-
     private Date createTime;
 
-    private Date updateTime;
-
-    private String remark;
-
-    public FutureDailyDO(String symbol, String tradeDate, String code, String name, BigDecimal preClose) {
+    public TradeDailyDO(String symbol, String tradeDate, String code, String name, BigDecimal preClose) {
         this.symbol = symbol;
         this.tradeDate = tradeDate;
         this.code = code;
-        this.name = name;
         this.preClose = preClose;
     }
 
