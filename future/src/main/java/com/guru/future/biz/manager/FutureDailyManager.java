@@ -3,7 +3,7 @@ package com.guru.future.biz.manager;
 import com.guru.future.common.entity.query.FutureDailyQuery;
 import com.guru.future.common.entity.dao.TradeDailyDO;
 import com.guru.future.common.entity.dao.TsFutureDailyDO;
-import com.guru.future.mapper.DailyDAO;
+import com.guru.future.mapper.DailyMapper;
 import com.guru.future.mapper.TsDailyDAO;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,25 +22,25 @@ import java.util.stream.Collectors;
 @Component
 public class FutureDailyManager {
     @Resource
-    private DailyDAO dailyDAO;
+    private DailyMapper dailyMapper;
     @Resource
     private TsDailyDAO tsfutureDailyDAO;
 
     @Transactional(rollbackFor = Exception.class)
     public Boolean addFutureDaily(TradeDailyDO tradeDailyDO) {
-        return dailyDAO.insertSelective(tradeDailyDO) > 0;
+        return dailyMapper.insertSelective(tradeDailyDO) > 0;
     }
 
     @Transactional(rollbackFor = Exception.class)
     public Boolean updateFutureDaily(TradeDailyDO tradeDailyDO) {
-        return dailyDAO.updateByCodeTradeDateSelective(tradeDailyDO) > 0;
+        return dailyMapper.updateByCodeTradeDateSelective(tradeDailyDO) > 0;
     }
 
     public TradeDailyDO getFutureDaily(String tradeDate, String code) {
         FutureDailyQuery query = new FutureDailyQuery();
         query.setTradeDate(tradeDate);
         query.setCode(code);
-        List<TradeDailyDO> tradeDailyDOList = dailyDAO.selectByQuery(query);
+        List<TradeDailyDO> tradeDailyDOList = dailyMapper.selectByQuery(query);
         if (CollectionUtils.isEmpty(tradeDailyDOList)) {
             return null;
         }

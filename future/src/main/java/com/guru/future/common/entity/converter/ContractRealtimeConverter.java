@@ -42,7 +42,6 @@ public class ContractRealtimeConverter {
         dailyDO.setTradeDate(contractRealtimeDTO.getTradeDate());
 
         dailyDO.setCode(contractRealtimeDTO.getCode());
-        dailyDO.setName(contractRealtimeDTO.getName());
         dailyDO.setClose(contractRealtimeDTO.getPrice());
         dailyDO.setCloseChange(FutureUtil.calcChange(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getPreSettle()));
         if (contractRealtimeDTO.getSettle() == null || BigDecimal.ZERO.compareTo(contractRealtimeDTO.getSettle()) == 0) {
@@ -54,16 +53,9 @@ public class ContractRealtimeConverter {
         dailyDO.setOpen(contractRealtimeDTO.getOpen());
         dailyDO.setLow(contractRealtimeDTO.getLow());
         dailyDO.setHigh(contractRealtimeDTO.getHigh());
-        dailyDO.setHlDiff(contractRealtimeDTO.getHigh().subtract(contractRealtimeDTO.getLow()));
-        dailyDO.setAmplitude((contractRealtimeDTO.getHigh().subtract(contractRealtimeDTO.getLow()))
-                .multiply(BigDecimal.valueOf(100))
-                .divide(contractRealtimeDTO.getHigh(), 2, RoundingMode.HALF_UP));
         dailyDO.setPreSettle(contractRealtimeDTO.getPreSettle());
         dailyDO.setDealVol(contractRealtimeDTO.getDealVol());
         dailyDO.setHoldVol(contractRealtimeDTO.getHoldVol());
-        dailyDO.setExchange(contractRealtimeDTO.getExchange());
-        dailyDO.setRemark("");
-
         return dailyDO;
     }
 

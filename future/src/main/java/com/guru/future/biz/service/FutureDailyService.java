@@ -7,12 +7,12 @@ import com.guru.future.biz.manager.FutureCollectManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
-import com.guru.future.common.entity.dto.ContractRealtimeDTO;
-import com.guru.future.common.entity.vo.PositionCollectVO;
-import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.entity.dao.FutureBasicDO;
 import com.guru.future.common.entity.dao.FutureCollectDO;
 import com.guru.future.common.entity.dao.TradeDailyDO;
+import com.guru.future.common.entity.dto.ContractRealtimeDTO;
+import com.guru.future.common.entity.vo.PositionCollectVO;
+import com.guru.future.common.utils.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.scheduling.annotation.Async;
@@ -63,7 +63,6 @@ public class FutureDailyService {
                 log.info("update log >>> currentDailyDO={}, existedDailyDO={}", currentDailyDO, existedDailyDO);
                 if (!currentDailyDO.changFlag().equals(existedDailyDO.changFlag())) {
                     currentDailyDO.setTradeDate(tradeDate);
-                    currentDailyDO.setRemark("update current date");
                     futureDailyManager.updateFutureDaily(currentDailyDO);
                 }
                 if (DateUtil.dayClose()) {
@@ -84,13 +83,12 @@ public class FutureDailyService {
     private void addNextTradeDaily(String tradeDate, TradeDailyDO currentDailyDO) {
         TradeDailyDO nextDailyDO = new TradeDailyDO(currentDailyDO.getSymbol(),
                 DateUtil.getNextTradeDate(tradeDate),
-                currentDailyDO.getCode(), currentDailyDO.getName(), currentDailyDO.getClose());
+                currentDailyDO.getCode(), currentDailyDO.getClose());
         nextDailyDO.setClose(currentDailyDO.getClose());
         nextDailyDO.setOpen(currentDailyDO.getOpen());
         nextDailyDO.setHigh(currentDailyDO.getHigh());
         nextDailyDO.setLow(currentDailyDO.getLow());
         nextDailyDO.setPreSettle(currentDailyDO.getSettle());
-        nextDailyDO.setRemark("init next daily");
         try {
             TradeDailyDO existDaily = futureDailyManager.getFutureDaily(nextDailyDO.getTradeDate(), nextDailyDO.getCode());
             if (existDaily == null) {

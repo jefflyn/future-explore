@@ -42,7 +42,7 @@ public class TradeDailyDO {
 
     private Date createTime;
 
-    public TradeDailyDO(String symbol, String tradeDate, String code, String name, BigDecimal preClose) {
+    public TradeDailyDO(String symbol, String tradeDate, String code, BigDecimal preClose) {
         this.symbol = symbol;
         this.tradeDate = tradeDate;
         this.code = code;
