@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @author j
  */
 @Slf4j
-public class DateUtil {
+public class FutureDateUtil {
     public static boolean TRADE_TIME_TEST = false;
     private static final long SECOND_SCALE = 1000L;
     private static final long MINUTE_SCALE = 60L * SECOND_SCALE;
@@ -58,7 +58,7 @@ public class DateUtil {
     public static final String COMMON_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final String TIME_PATTERN = "HH:mm:ss";
 
-    private DateUtil() {
+    private FutureDateUtil() {
     }
 
     /**

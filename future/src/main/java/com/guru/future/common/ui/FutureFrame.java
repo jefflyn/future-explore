@@ -3,7 +3,7 @@ package com.guru.future.common.ui;
 import com.google.common.base.Strings;
 import com.guru.future.common.cache.LiveDataCache;
 import com.guru.future.common.entity.vo.FutureLiveVO;
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -110,7 +110,7 @@ public class FutureFrame {
             }
             buildTopModel();
             if (frame == null) {
-                frame = new JFrame(DateUtil.currentTime());
+                frame = new JFrame(FutureDateUtil.currentTime());
                 frame.setLayout(new FlowLayout());
                 frame.setBounds(0, 1000, 530, 430);
                 frame.addWindowListener(new WindowAdapter() {
@@ -147,7 +147,7 @@ public class FutureFrame {
      * 刷新内容窗格数据
      */
     private void refreshContentPane() {
-        frame.setTitle(DateUtil.currentTime() + " " + LiveDataCache.scInfo);
+        frame.setTitle(FutureDateUtil.currentTime() + " " + LiveDataCache.scInfo);
         Container c = frame.getContentPane();
         // tag窗体内容面板
         JTabbedPane tabbedPane = (JTabbedPane) c.getComponent(0);

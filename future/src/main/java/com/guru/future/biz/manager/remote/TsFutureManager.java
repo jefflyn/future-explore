@@ -2,7 +2,7 @@ package com.guru.future.biz.manager.remote;
 
 import com.alibaba.fastjson.JSON;
 import com.guru.future.common.enums.Exchange;
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import com.guru.future.common.utils.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.guru.future.common.utils.DateUtil.TRADE_DATE_PATTERN_FLAT;
+import static com.guru.future.common.utils.FutureDateUtil.TRADE_DATE_PATTERN_FLAT;
 
 /**
  * @author j
@@ -52,8 +52,8 @@ public class TsFutureManager {
      * @return
      */
     public String getDaily(String tsCode, String startDate, String endDate) {
-        startDate = ObjectUtils.defaultIfNull(startDate, DateUtil.getLastTradeDate(null, TRADE_DATE_PATTERN_FLAT));
-        endDate = ObjectUtils.defaultIfNull(endDate, DateUtil.getNextTradeDate(null, TRADE_DATE_PATTERN_FLAT));
+        startDate = ObjectUtils.defaultIfNull(startDate, FutureDateUtil.getLastTradeDate(null, TRADE_DATE_PATTERN_FLAT));
+        endDate = ObjectUtils.defaultIfNull(endDate, FutureDateUtil.getNextTradeDate(null, TRADE_DATE_PATTERN_FLAT));
         Map<String, Object> params = new HashMap<>();
         params.put("ts_code", tsCode);
         params.put("start_date", startDate);
@@ -70,8 +70,8 @@ public class TsFutureManager {
     }
 
     public String getHolding(String code, String startDate, String endDate) {
-        startDate = ObjectUtils.defaultIfNull(startDate, DateUtil.getLastTradeDate(null, TRADE_DATE_PATTERN_FLAT));
-        endDate = ObjectUtils.defaultIfNull(endDate, DateUtil.getNextTradeDate(null, TRADE_DATE_PATTERN_FLAT));
+        startDate = ObjectUtils.defaultIfNull(startDate, FutureDateUtil.getLastTradeDate(null, TRADE_DATE_PATTERN_FLAT));
+        endDate = ObjectUtils.defaultIfNull(endDate, FutureDateUtil.getNextTradeDate(null, TRADE_DATE_PATTERN_FLAT));
         Map<String, Object> params = new HashMap<>();
         params.put("symbol", code);
         params.put("start_date", startDate);

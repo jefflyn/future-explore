@@ -3,7 +3,7 @@ package com.guru.future.task;
 import com.guru.future.biz.manager.FutureCollectManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import com.guru.future.common.entity.dao.FutureCollectDO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -26,7 +26,7 @@ public class DailyCollectTask implements Runnable {
 
     @Override
     public void run() {
-        if (!DateUtil.isTradeTime()) {
+        if (!FutureDateUtil.isTradeTime()) {
             log.info("DailyCollectTask not in trade time, end!");
             throw new RuntimeException("DailyCollectTask not in trade time exception, end!");
         }
@@ -38,7 +38,7 @@ public class DailyCollectTask implements Runnable {
             for (ContractRealtimeDTO contractRealtimeDTO : realtimeDTOList) {
                 FutureCollectDO dailyCollectDO = ContractRealtimeConverter.convert2DailyCollectDO(dailyCollectManager.getCollectType(), contractRealtimeDTO);
                 FutureCollectDO lastDailyDO = dailyCollectManager.getLastDailyByCode(dailyCollectDO.getCode());
-                if (lastDailyDO == null || DateUtil.diff(lastDailyDO.getCreateTime(), new Date(), TimeUnit.MINUTES) > 5) {
+                if (lastDailyDO == null || FutureDateUtil.diff(lastDailyDO.getCreateTime(), new Date(), TimeUnit.MINUTES) > 5) {
                     dailyCollectManager.addDailyCollect(dailyCollectDO);
                     log.info("[DailyCollectTask] success! {}", dailyCollectDO);
                 }

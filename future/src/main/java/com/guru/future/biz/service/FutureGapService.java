@@ -7,13 +7,12 @@ import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.biz.manager.OpenGapManager;
 import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractOpenGapConverter;
-import com.guru.future.common.entity.dao.FutureBasicDO;
 import com.guru.future.common.entity.dao.TradeDailyDO;
 import com.guru.future.common.entity.dao.OpenGapDO;
 import com.guru.future.common.entity.domain.Basic;
 import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.NumberUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +34,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
-import static com.guru.future.common.utils.DateUtil.TRADE_DATE_PATTERN_FLAT;
+import static com.guru.future.common.utils.FutureDateUtil.TRADE_DATE_PATTERN_FLAT;
 import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
 
 /**
@@ -93,7 +92,7 @@ public class FutureGapService {
 
     public void monitorOpenGap() throws InterruptedException {
         LongAdder times = new LongAdder();
-        while (DateUtil.beforeBidTime()) {
+        while (FutureDateUtil.beforeBidTime()) {
             log.warn("monitorOpenGap before bid time !!!");
             TimeUnit.SECONDS.sleep(1L);
             times.increment();
@@ -114,10 +113,10 @@ public class FutureGapService {
         log.info("open gap start! realtime data size={}", contractRealtimeDTOList.size());
         Map<String, Basic> basicMap = basicManager.getBasicMap();
         String tradeDate;
-        if (DateUtil.isNight()) {
-            tradeDate = DateUtil.latestTradeDate(TRADE_DATE_PATTERN_FLAT);
+        if (FutureDateUtil.isNight()) {
+            tradeDate = FutureDateUtil.latestTradeDate(TRADE_DATE_PATTERN_FLAT);
         } else {
-            tradeDate = DateUtil.getLastTradeDate(new Date(), TRADE_DATE_PATTERN_FLAT);
+            tradeDate = FutureDateUtil.getLastTradeDate(new Date(), TRADE_DATE_PATTERN_FLAT);
         }
         List<String> tsCodes = contractManager.getContractCodes();
         Map<String, TradeDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, tsCodes);
@@ -130,7 +129,7 @@ public class FutureGapService {
             String code = realtimeDTO.getCode();
             Basic basic = basicMap.get(FutureUtil.code2Symbol(code));
             int nightTrade = basic.getNight();
-            if (DateUtil.isNight()) {
+            if (FutureDateUtil.isNight()) {
                 if (nightTrade == 0) {
                     log.warn("{} night trade not support", code);
                     continue;

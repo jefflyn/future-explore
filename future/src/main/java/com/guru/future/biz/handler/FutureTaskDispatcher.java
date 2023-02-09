@@ -6,7 +6,7 @@ import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.ui.FutureFrame;
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -56,14 +56,14 @@ public class FutureTaskDispatcher {
         while (keepRunning) {
             if (REFRESH) {
                 codeList = contractManager.getContractCodes();
-                DateUtil.TRADE_TIME_TEST = true;
+                FutureDateUtil.TRADE_TIME_TEST = true;
             } else {
-                DateUtil.TRADE_TIME_TEST = false;
+                FutureDateUtil.TRADE_TIME_TEST = false;
             }
             if (CollectionUtils.isEmpty(codeList)) {
                 return;
             }
-            if (!DateUtil.isTradeTime() && Boolean.FALSE.equals(REFRESH)) {
+            if (!FutureDateUtil.isTradeTime() && Boolean.FALSE.equals(REFRESH)) {
                 log.info(">>> music off, party over!");
                 times.increment();
                 if (times.intValue() > 5) {

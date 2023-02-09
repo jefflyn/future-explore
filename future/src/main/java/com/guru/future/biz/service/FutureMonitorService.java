@@ -5,7 +5,7 @@ import com.guru.future.biz.manager.base.FutureCacheManager;
 import com.guru.future.common.cache.PriceFlashCache;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.ui.FutureFrame;
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.NumberUtil;
 import com.guru.future.common.entity.dao.FutureLiveDO;
@@ -50,7 +50,7 @@ public class FutureMonitorService {
     private FutureLogManager futureLogManager;
 
     public void monitorPriceFlash(FutureLiveDO futureLiveDO, String histHighLowFlag) {
-        if (Boolean.TRUE.equals(DateUtil.isPriceMonitorTime())) {
+        if (Boolean.TRUE.equals(FutureDateUtil.isPriceMonitorTime())) {
             try {
                 for (Pair<Integer, Float> param : monitorParams) {
                     triggerPriceFlash(param, futureLiveDO, histHighLowFlag);
@@ -84,14 +84,14 @@ public class FutureMonitorService {
             // 保存上一次的价格和次数
             Map<BigDecimal, LongAdder> priceAdderMap = positionCount.get(positionKey);
             if (priceAdderMap == null) {
-                Integer cacheCount = NumberUtil.toInteger(futureCacheManager.get(DateUtil.currentTradeDate() + positionKey));
+                Integer cacheCount = NumberUtil.toInteger(futureCacheManager.get(FutureDateUtil.currentTradeDate() + positionKey));
                 priceAdderMap = new HashMap<>();
                 LongAdder adder = new LongAdder();
                 adder.add(cacheCount.longValue());
                 adder.increment();
                 priceAdderMap.put(futureLiveDO.getPrice(), adder);
                 positionCount.put(positionKey, priceAdderMap);
-                futureCacheManager.put(DateUtil.currentTradeDate() + positionKey, adder.intValue(), 6L, TimeUnit.HOURS);
+                futureCacheManager.put(FutureDateUtil.currentTradeDate() + positionKey, adder.intValue(), 6L, TimeUnit.HOURS);
                 addLog = true;
             } else {
                 LongAdder lastAdder = priceAdderMap.values().stream().findFirst().get();
@@ -106,13 +106,13 @@ public class FutureMonitorService {
                     priceAdderMap.clear();
                     priceAdderMap.put(futureLiveDO.getPrice(), adder);
                     positionCount.put(positionKey, priceAdderMap);
-                    futureCacheManager.put(DateUtil.currentTradeDate() + positionKey, adder.intValue(), 6L, TimeUnit.HOURS);
+                    futureCacheManager.put(FutureDateUtil.currentTradeDate() + positionKey, adder.intValue(), 6L, TimeUnit.HOURS);
                     addLog = true;
                 }
             }
             if (addLog) {
                 FutureLogDO futureLogDO = new FutureLogDO();
-                futureLogDO.setTradeDate(DateUtil.currentTradeDate());
+                futureLogDO.setTradeDate(FutureDateUtil.currentTradeDate());
                 futureLogDO.setCode(futureLiveDO.getCode());
                 futureLogDO.setFactor(priceAdderMap.values().stream().findFirst().orElse(new LongAdder()).intValue());
                 futureLogDO.setName(futureLiveDO.getName());
@@ -192,7 +192,7 @@ public class FutureMonitorService {
             StringBuilder content = new StringBuilder();
             content.append(positionStr + logType + (Strings.isNotBlank(positionStr) ? "!!!" : ""));
             FutureLogDO futureLogDO = new FutureLogDO();
-            futureLogDO.setTradeDate(DateUtil.currentTradeDate());
+            futureLogDO.setTradeDate(FutureDateUtil.currentTradeDate());
             futureLogDO.setCode(futureLiveDO.getCode());
             futureLogDO.setFactor(factor);
             futureLogDO.setDiff(change);
@@ -217,7 +217,7 @@ public class FutureMonitorService {
     @Async
     public void addNewHighLowLog(ContractRealtimeDTO contractRealtimeDTO, Boolean newHigh) {
         FutureLogDO futureLogDO = new FutureLogDO();
-        futureLogDO.setTradeDate(DateUtil.currentTradeDate());
+        futureLogDO.setTradeDate(FutureDateUtil.currentTradeDate());
         futureLogDO.setCode(contractRealtimeDTO.getCode());
         futureLogDO.setFactor(-1);
         futureLogDO.setName(contractRealtimeDTO.getName());
@@ -252,7 +252,7 @@ public class FutureMonitorService {
                 .append(futureLogDO.getPctChange()).append("%").append(" " + futureLogDO.getTemp());
         // show msg frame
         FutureFrame futureFrame = FutureFrame.buildFutureFrame(null);
-        futureFrame.createMsgFrame(DateUtil.currentTime() + " "
+        futureFrame.createMsgFrame(FutureDateUtil.currentTime() + " "
                 + futureLogDO.getName() + " " + content);
     }
 }

@@ -7,13 +7,12 @@ import com.guru.future.biz.manager.FutureCollectManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
-import com.guru.future.common.entity.dao.FutureBasicDO;
 import com.guru.future.common.entity.dao.FutureCollectDO;
 import com.guru.future.common.entity.dao.TradeDailyDO;
 import com.guru.future.common.entity.domain.Basic;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.PositionCollectVO;
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.scheduling.annotation.Async;
@@ -54,8 +53,8 @@ public class FutureDailyService {
 
     public void upsertTradeDaily(List<ContractRealtimeDTO> contractRealtimeDTOList) {
         Map<String, Basic> basicMap = basicManager.getBasicMap();
-        String tradeDate = DateUtil.currentTradeDate();
-        Map<String, TradeDailyDO> lastDailyMap = futureDailyManager.getFutureDailyMap(DateUtil.getLastTradeDate(tradeDate), new ArrayList<>(basicMap.keySet()));
+        String tradeDate = FutureDateUtil.currentTradeDate();
+        Map<String, TradeDailyDO> lastDailyMap = futureDailyManager.getFutureDailyMap(FutureDateUtil.getLastTradeDate(tradeDate), new ArrayList<>(basicMap.keySet()));
         Map<String, TradeDailyDO> existedDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             TradeDailyDO currentDailyDO = ContractRealtimeConverter.convert2DailyDO(contractRealtimeDTO);
@@ -66,7 +65,7 @@ public class FutureDailyService {
                     currentDailyDO.setTradeDate(tradeDate);
                     futureDailyManager.updateFutureDaily(currentDailyDO);
                 }
-                if (DateUtil.dayClose()) {
+                if (FutureDateUtil.dayClose()) {
                     this.addNextTradeDaily(contractRealtimeDTO.getTradeDate(), currentDailyDO);
                 }
             } else {
@@ -83,7 +82,7 @@ public class FutureDailyService {
 
     private void addNextTradeDaily(String tradeDate, TradeDailyDO currentDailyDO) {
         TradeDailyDO nextDailyDO = new TradeDailyDO(currentDailyDO.getSymbol(),
-                DateUtil.getNextTradeDate(tradeDate),
+                FutureDateUtil.getNextTradeDate(tradeDate),
                 currentDailyDO.getCode(), currentDailyDO.getClose());
         nextDailyDO.setClose(currentDailyDO.getClose());
         nextDailyDO.setOpen(currentDailyDO.getOpen());
@@ -102,20 +101,20 @@ public class FutureDailyService {
 
     public PositionCollectVO getCurrentPositionList(String tradeDate, List<String> codes) {
         if (Strings.isNullOrEmpty(tradeDate)) {
-            tradeDate = DateUtil.latestTradeDate();
+            tradeDate = FutureDateUtil.latestTradeDate();
         }
         if (CollectionUtils.isEmpty(codes)) {
             codes = Lists.newArrayList("AP2205", "CJ2205", "CF2205", "RU2205", "SA2205", "NI2202", "P2205", "EG2205", "UR2205", "J2205", "FU2205", "SF2205", "I2205", "RB2205");
         }
         List<FutureCollectDO> futureCollectDOList = futureCollectManager.getDailyCollect(tradeDate, codes);
         Map<String, List<FutureCollectDO>> collectMap = futureCollectDOList.stream()
-                .collect(Collectors.groupingBy(e -> DateUtil.toHourMinute(e.getCreateTime())));
+                .collect(Collectors.groupingBy(e -> FutureDateUtil.toHourMinute(e.getCreateTime())));
         Map<Integer, Integer> countMap = new HashMap<>();
         Map<Integer, Set<String>> sizeTimeMap = new HashMap<>();
         for (Map.Entry<String, List<FutureCollectDO>> entry : collectMap.entrySet()) {
             Integer size = entry.getValue().size();
             Set<String> sizeTimeList = ObjectUtils.defaultIfNull(sizeTimeMap.get(size), new HashSet<>());
-            List<String> times = entry.getValue().stream().map(e -> DateUtil.toHourMinute(e.getCreateTime())).collect(Collectors.toList());
+            List<String> times = entry.getValue().stream().map(e -> FutureDateUtil.toHourMinute(e.getCreateTime())).collect(Collectors.toList());
             sizeTimeList.addAll(times);
             sizeTimeMap.put(size, sizeTimeList);
             countMap.put(size, ObjectUtils.defaultIfNull(countMap.get(size), 0) + 1);
@@ -138,7 +137,7 @@ public class FutureDailyService {
             String name = entry.getKey();
             List<Integer> positions = new ArrayList<>();
             for (FutureCollectDO collectDO : entry.getValue()) {
-                String hourMinuteTime = DateUtil.toHourMinute(collectDO.getCreateTime());
+                String hourMinuteTime = FutureDateUtil.toHourMinute(collectDO.getCreateTime());
                 if (!mostTimes.contains(hourMinuteTime)) {
                     log.warn("不包含的时间={}, 跳过", hourMinuteTime);
                     continue;

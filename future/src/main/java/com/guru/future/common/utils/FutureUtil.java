@@ -2,6 +2,7 @@ package com.guru.future.common.utils;
 
 
 import cn.hutool.core.util.NumberUtil;
+import com.guru.future.common.entity.domain.Wave;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 
@@ -89,7 +90,7 @@ public class FutureUtil {
             return waveList.toString();
         }
         BigDecimal waveB;
-        if (c != null) {
+        if (c != null && d.compareTo(BigDecimal.ZERO) > 0) {
             waveB = c.subtract(b).multiply(BigDecimal.valueOf(100)).divide(b, 2, RoundingMode.HALF_UP);
 //            waveStr.append(getDirectionTag(waveB)).append(waveB).append(PERCENTAGE_SYMBOL);
             waveList.add(waveB + PERCENTAGE_SYMBOL);
@@ -100,7 +101,7 @@ public class FutureUtil {
             return waveList.toString();
         }
         BigDecimal waveC;
-        if (d != null) {
+        if (d != null && d.compareTo(BigDecimal.ZERO) > 0) {
             waveC = d.subtract(c).multiply(BigDecimal.valueOf(100)).divide(c, 2, RoundingMode.HALF_UP);
             BigDecimal waveD = price.subtract(d).multiply(BigDecimal.valueOf(100)).divide(d, 2, RoundingMode.HALF_UP);
             waveList.add(waveC + PERCENTAGE_SYMBOL);

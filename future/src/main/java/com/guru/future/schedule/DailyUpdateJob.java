@@ -3,10 +3,9 @@ package com.guru.future.schedule;
 import com.guru.future.biz.service.FutureDailyService;
 import com.guru.future.biz.service.TsFutureDailyService;
 import com.guru.future.biz.service.gene.HoldingService;
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.Resource;
 
@@ -34,8 +33,8 @@ public class DailyUpdateJob {
 
 //    @Scheduled(cron = "0 30 17,18 * * MON-FRI")
     public void updateTsDaily() {
-        String startDate = DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT);
-        String endDate = DateUtil.latestTradeDate(DateUtil.TRADE_DATE_PATTERN_FLAT);
+        String startDate = FutureDateUtil.latestTradeDate(FutureDateUtil.TRADE_DATE_PATTERN_FLAT);
+        String endDate = FutureDateUtil.latestTradeDate(FutureDateUtil.TRADE_DATE_PATTERN_FLAT);
         tsFutureDailyService.batchAddDaily(null, startDate, endDate);
 
         holdingService.batchAddHolding(null, startDate, endDate);

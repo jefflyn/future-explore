@@ -1,5 +1,6 @@
 package com.guru.future.common.entity.dto;
 
+import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.NumberUtil;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
@@ -9,6 +10,8 @@ import java.util.List;
 
 @Data
 public class ContractRealtimeDTO {
+    private String symbol;
+
     /**
      * 0：code
      */
@@ -108,6 +111,10 @@ public class ContractRealtimeDTO {
      * 28：今均价
      */
     private BigDecimal avgPrice;
+
+    public String getSymbol() {
+        return FutureUtil.code2Symbol(this.code);
+    }
 
     public static ContractRealtimeDTO convertFromHqList(List<String> list) {
         ContractRealtimeDTO contractRealtimeDTO = new ContractRealtimeDTO();

@@ -4,7 +4,7 @@ import com.guru.future.biz.manager.FutureCollectManager;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.enums.CollectType;
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import com.guru.future.common.entity.dao.FutureCollectDO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -52,7 +52,7 @@ public class FutureCollectService {
     }
 
     public void addTradeDailyCollect(CollectType collectType) {
-        if (Boolean.FALSE.equals(DateUtil.isTradeTime())){
+        if (Boolean.FALSE.equals(FutureDateUtil.isTradeTime())){
             log.warn("not trade time, data collect end!!!");
             return;
         }

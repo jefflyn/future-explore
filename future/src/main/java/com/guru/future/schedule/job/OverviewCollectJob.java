@@ -5,7 +5,7 @@ import com.guru.future.biz.service.FutureCollectService;
 import com.guru.future.biz.service.FutureLiveService;
 import com.guru.future.common.entity.vo.FutureOverviewVO;
 import com.guru.future.common.enums.CollectType;
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
@@ -38,21 +38,21 @@ public class OverviewCollectJob implements Job {
     @SneakyThrows
     @Override
     public void execute(JobExecutionContext jobExecutionContext) {
-        if (Boolean.FALSE.equals(DateUtil.isTradeTime())) {
+        if (Boolean.FALSE.equals(FutureDateUtil.isTradeTime())) {
             log.warn("OverviewCollectJob not in trade time, end ...");
             return;
         }
         dailyCollect();
         log.info("OverviewCollectJob start ...");
         FutureOverviewVO futureOverviewVO = futureLiveService.getMarketOverview();
-        String key = DateUtil.currentTradeDate() + "_overview";
+        String key = FutureDateUtil.currentTradeDate() + "_overview";
         RList<Map<String, String>> cacheList = redissonClient.getList(key);
         cacheList.expire(60, TimeUnit.DAYS);
         String overviewDesc = futureOverviewVO.getTotalAvgChangeStr();
         if (overviewDesc == null) {
             return;
         }
-        cacheList.add(MapUtil.of(DateUtil.toHourMinute(new Date()), overviewDesc));
+        cacheList.add(MapUtil.of(FutureDateUtil.toHourMinute(new Date()), overviewDesc));
         System.out.println("Market Overview >>>");
         for (Map<String, String> map : cacheList) {
             for (Map.Entry<String, String> entry : map.entrySet()) {

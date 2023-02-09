@@ -1,6 +1,6 @@
 package com.guru.future.biz.manager;
 
-import com.guru.future.common.utils.DateUtil;
+import com.guru.future.common.utils.FutureDateUtil;
 import com.guru.future.common.entity.dao.FutureLogDO;
 import com.guru.future.mapper.TradeLogDAO;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class FutureLogManager {
             return new ArrayList<>(LOG_CODES_CACHE);
         }
         // get from db
-        List<String> codes = tradeLogDAO.selectCodesByTradeDate(DateUtil.currentTradeDate());
+        List<String> codes = tradeLogDAO.selectCodesByTradeDate(FutureDateUtil.currentTradeDate());
         LOG_CODES_CACHE.addAll(codes);
         return codes;
     }
