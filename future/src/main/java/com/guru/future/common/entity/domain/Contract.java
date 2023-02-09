@@ -19,9 +19,9 @@ public class Contract {
 
     private BigDecimal high;
 
-    private Date lowTime;
+    private String lowTime;
 
-    private Date highTime;
+    private String highTime;
 
     private Integer selected;
 

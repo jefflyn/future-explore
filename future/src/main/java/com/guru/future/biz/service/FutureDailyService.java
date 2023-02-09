@@ -10,6 +10,7 @@ import com.guru.future.common.entity.converter.ContractRealtimeConverter;
 import com.guru.future.common.entity.dao.FutureBasicDO;
 import com.guru.future.common.entity.dao.FutureCollectDO;
 import com.guru.future.common.entity.dao.TradeDailyDO;
+import com.guru.future.common.entity.domain.Basic;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.PositionCollectVO;
 import com.guru.future.common.utils.DateUtil;
@@ -52,7 +53,7 @@ public class FutureDailyService {
     }
 
     public void upsertTradeDaily(List<ContractRealtimeDTO> contractRealtimeDTOList) {
-        Map<String, FutureBasicDO> basicMap = basicManager.getBasicMap();
+        Map<String, Basic> basicMap = basicManager.getBasicMap();
         String tradeDate = DateUtil.currentTradeDate();
         Map<String, TradeDailyDO> lastDailyMap = futureDailyManager.getFutureDailyMap(DateUtil.getLastTradeDate(tradeDate), new ArrayList<>(basicMap.keySet()));
         Map<String, TradeDailyDO> existedDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, new ArrayList<>(basicMap.keySet()));

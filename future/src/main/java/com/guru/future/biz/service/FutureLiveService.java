@@ -1,23 +1,30 @@
 package com.guru.future.biz.service;
 
 import cn.hutool.core.collection.CollUtil;
+import com.guru.future.biz.handler.FutureTaskDispatcher;
 import com.guru.future.biz.manager.BasicManager;
+import com.guru.future.biz.manager.ContractManager;
 import com.guru.future.biz.manager.FutureLiveManager;
 import com.guru.future.biz.manager.FutureMailManager;
+import com.guru.future.biz.manager.WaveManager;
 import com.guru.future.common.cache.LiveDataCache;
 import com.guru.future.common.entity.converter.ContractRealtimeConverter;
+import com.guru.future.common.entity.dao.ContractDO;
+import com.guru.future.common.entity.dao.FutureLiveDO;
+import com.guru.future.common.entity.domain.Basic;
+import com.guru.future.common.entity.domain.Contract;
+import com.guru.future.common.entity.domain.Wave;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.entity.vo.FutureLiveVO;
 import com.guru.future.common.entity.vo.FutureOverviewVO;
 import com.guru.future.common.utils.DateUtil;
 import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.NullUtil;
-import com.guru.future.common.entity.dao.FutureBasicDO;
-import com.guru.future.common.entity.dao.FutureLiveDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.math3.stat.StatUtils;
+import org.apache.http.client.utils.DateUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.redisson.api.RList;
 import org.redisson.api.RedissonClient;
@@ -32,6 +39,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +87,12 @@ public class FutureLiveService {
     private BasicManager basicManager;
 
     @Resource
+    private WaveManager waveManager;
+
+    @Resource
+    private ContractManager contractManager;
+
+    @Resource
     private FutureLiveManager futureLiveManager;
 
     @Resource
@@ -93,22 +107,24 @@ public class FutureLiveService {
     }
 
     @Async
-    public void reloadLiveCache(List<ContractRealtimeDTO> contractRealtimeDTOList, Map<String, FutureBasicDO> basicMap) {
+    public void reloadLiveCache(List<ContractRealtimeDTO> contractRealtimeDTOList, Map<String, Basic> basicMap,
+                                Map<String, Wave> waveMap) {
         List<FutureLiveVO> futureLiveVOList = new ArrayList<>();
         if (CollectionUtils.isEmpty(contractRealtimeDTOList)) {
             return;
         }
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
             String code = contractRealtimeDTO.getCode();
-            FutureBasicDO basicDO = basicMap.get(code);
+            Basic basicDO = basicMap.get(code);
             if (Boolean.TRUE.equals(DateUtil.isNight()) && basicDO.getNight() == 0) {
                 continue;
             }
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
             FutureLiveVO futureLiveVO = new FutureLiveVO();
             BeanUtils.copyProperties(futureLiveDO, futureLiveVO);
-//            futureLiveVO.setWave(FutureUtil.generateWave(basicDO.getA(), basicDO.getB(), basicDO.getC(), basicDO.getD(),
-//                    futureLiveVO.getPrice()));
+            Wave wave = waveMap.get(code);
+            futureLiveVO.setWave(FutureUtil.generateWave(wave.getA(), wave.getB(), wave.getC(), wave.getD(),
+                    futureLiveVO.getPrice()));
             futureLiveVOList.add(futureLiveVO);
             if (code.startsWith("SC")) {
                 LiveDataCache.scInfo = code + "【" + futureLiveDO.getLow() + "-" + futureLiveDO.getHigh() + "】"
@@ -135,17 +151,19 @@ public class FutureLiveService {
     }
 
     public void refreshLiveData(List<ContractRealtimeDTO> contractRealtimeDTOList, Boolean refresh) {
-        Map<String, FutureBasicDO> basicMap = basicManager.getBasicMap(refresh);
-        reloadLiveCache(contractRealtimeDTOList, basicMap);
+        Map<String, Basic> basicMap = basicManager.getBasicMap(refresh);
+        Map<String, Wave> waveMap = waveManager.getWaveMap();
+        Map<String, Contract> contractMap = contractManager.getContractMap();
+        reloadLiveCache(contractRealtimeDTOList, basicMap, waveMap);
         for (ContractRealtimeDTO contractRealtimeDTO : contractRealtimeDTOList) {
-            FutureBasicDO futureBasicDO = basicMap.get(contractRealtimeDTO.getCode());
-            if (futureBasicDO == null || (DateUtil.isNight() && futureBasicDO.getNight() == 0)) {
+            Basic basic = basicMap.get(contractRealtimeDTO.getCode());
+            if (basic == null || (DateUtil.isNight() && basic.getNight() == 0)) {
                 continue;
             }
             FutureLiveDO futureLiveDO = ContractRealtimeConverter.convert2LiveDO(contractRealtimeDTO);
-            futureLiveDO.setType(futureBasicDO.getType());
-            futureLiveDO.setTemp(futureBasicDO.getRelative());
-            Pair<BigDecimal, BigDecimal> highLow = updateHistHighLow(contractRealtimeDTO, futureBasicDO);
+            futureLiveDO.setType(basic.getType());
+            futureLiveDO.setTemp(basic.getRelative());
+            Pair<BigDecimal, BigDecimal> highLow = updateHistHighLow(contractRealtimeDTO, contractMap.get(futureLiveDO.getCode()));
             BigDecimal histHigh = highLow.getLeft();
             BigDecimal histLow = highLow.getRight();
 
@@ -175,29 +193,33 @@ public class FutureLiveService {
         }
     }
 
-    private Pair<BigDecimal, BigDecimal> updateHistHighLow(ContractRealtimeDTO contractRealtimeDTO, FutureBasicDO futureBasicDO) {
-        BigDecimal histHigh =  BigDecimal.ZERO;
-        BigDecimal histLow =  BigDecimal.ZERO;
-//        if (contractRealtimeDTO.getLow().compareTo(histLow) < 0) {
-//            FutureBasicDO updateBasicDO = new FutureBasicDO();
-//            updateBasicDO.setCode(contractRealtimeDTO.getCode());
-//            updateBasicDO.setLow(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
-//                    contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
-//            updateBasicDO.setRemark("合约新低@" + contractRealtimeDTO.getTradeDate());
-//            futureBasicManager.updateBasic(updateBasicDO);
-//            FutureTaskDispatcher.setRefresh();
-//            log.info("{} update hist low, refresh basic data", contractRealtimeDTO.getCode());
-//        }
-//        if (contractRealtimeDTO.getHigh().compareTo(histHigh) > 0) {
-//            FutureBasicDO updateBasicDO = new FutureBasicDO();
-//            updateBasicDO.setCode(contractRealtimeDTO.getCode());
-//            updateBasicDO.setHigh(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
-//                    contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
-//            updateBasicDO.setRemark("合约新高@" + contractRealtimeDTO.getTradeDate());
-//            futureBasicManager.updateBasic(updateBasicDO);
-//            FutureTaskDispatcher.setRefresh();
-//            log.info("{} update hist high, refresh basic data", contractRealtimeDTO.getCode());
-//        }
+    private Pair<BigDecimal, BigDecimal> updateHistHighLow(ContractRealtimeDTO contractRealtimeDTO, Contract contract) {
+        BigDecimal histHigh = BigDecimal.ZERO;
+        BigDecimal histLow = BigDecimal.ZERO;
+        if (contractRealtimeDTO.getLow().compareTo(histLow) < 0) {
+            ContractDO updateContractDO = new ContractDO();
+            updateContractDO.setCode(contractRealtimeDTO.getCode());
+            updateContractDO.setLow(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getLow()) < 0 ?
+                    contractRealtimeDTO.getPrice() : contractRealtimeDTO.getLow());
+            Date time = new Date();
+            updateContractDO.setLowTime(DateUtils.formatDate(time, "yyyy-MM-dd HH:mm:ss"));
+            updateContractDO.setUpdateTime(time);
+            contractManager.updateContract(updateContractDO);
+            FutureTaskDispatcher.setRefresh();
+            log.info("{} update hist low, refresh contract data", contractRealtimeDTO.getCode());
+        }
+        if (contractRealtimeDTO.getHigh().compareTo(histHigh) > 0) {
+            ContractDO updateContractDO = new ContractDO();
+            updateContractDO.setCode(contractRealtimeDTO.getCode());
+            updateContractDO.setHigh(contractRealtimeDTO.getPrice().compareTo(contractRealtimeDTO.getHigh()) > 0 ?
+                    contractRealtimeDTO.getPrice() : contractRealtimeDTO.getHigh());
+            Date time = new Date();
+            updateContractDO.setLowTime(DateUtils.formatDate(time, "yyyy-MM-dd HH:mm:ss"));
+            updateContractDO.setUpdateTime(time);
+            contractManager.updateContract(updateContractDO);
+            FutureTaskDispatcher.setRefresh();
+            log.info("{} update hist high, refresh contract data", contractRealtimeDTO.getCode());
+        }
         return Pair.of(histHigh, histLow);
     }
 

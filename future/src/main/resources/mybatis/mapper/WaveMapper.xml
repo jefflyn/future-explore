@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--suppress ALL -->
+<mapper namespace="com.guru.future.mapper.WaveMapper">
+    <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.WaveDO">
+        <id column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="a" jdbcType="DECIMAL" property="a"/>
+        <result column="b" jdbcType="DECIMAL" property="b"/>
+        <result column="c" jdbcType="DECIMAL" property="c"/>
+        <result column="d" jdbcType="DECIMAL" property="d"/>
+        <result column="ap" jdbcType="DECIMAL" property="ap"/>
+        <result column="bp" jdbcType="DECIMAL" property="bp"/>
+        <result column="cp" jdbcType="DECIMAL" property="cp"/>
+        <result column="dp" jdbcType="DECIMAL" property="dp"/>
+
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        code, a, b, c, d, ap, bp, cp, dp
+    </sql>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from wave
+    </select>
+
+</mapper>

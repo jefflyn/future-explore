@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guru.future.mapper.ContractMapper">
+    <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.ContractDO">
+        <id column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="symbol" jdbcType="VARCHAR" property="symbol"/>
+        <result column="ts_code" jdbcType="VARCHAR" property="tsCode"/>
+        <result column="main" jdbcType="TINYINT" property="main"/>
+        <result column="low" jdbcType="DECIMAL" property="low"/>
+        <result column="high" jdbcType="DECIMAL" property="high"/>
+        <result column="low_time" jdbcType="VARCHAR" property="lowTime"/>
+        <result column="high_time" jdbcType="VARCHAR" property="highTime"/>
+        <result column="selected" jdbcType="TINYINT" property="selected"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="deleted" jdbcType="TINYINT" property="deleted"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        code, symbol, ts_code, main, low, high, low_time, high_time, selected, create_time,
+    update_time, deleted
+    </sql>
+    <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from contract
+        where code = #{code,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectByQuery" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from contract
+        where deleted = 0
+        <if test="symbol != null">
+            and symbol = #{symbol}
+        </if>
+        <if test="codes != null and codes.size() > 0">
+            and code in
+            <foreach collection="codes" open="(" close=")" separator="," item="item">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+        delete
+        from contract
+        where code = #{code,jdbcType=VARCHAR}
+    </delete>
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.guru.future.common.entity.dao.ContractDO">
+        update contract
+        <set>
+            <if test="main != null">
+                main = #{main,jdbcType=TINYINT},
+            </if>
+            <if test="low != null">
+                low = #{low,jdbcType=DECIMAL},
+            </if>
+            <if test="high != null">
+                high = #{high,jdbcType=DECIMAL},
+            </if>
+            <if test="lowTime != null">
+                low_time = #{lowTime,jdbcType=VARCHAR},
+            </if>
+            <if test="highTime != null">
+                high_time = #{highTime,jdbcType=VARCHAR},
+            </if>
+            <if test="selected != null">
+                selected = #{selected,jdbcType=TINYINT},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="deleted != null">
+                deleted = #{deleted,jdbcType=TINYINT},
+            </if>
+        </set>
+        where code = #{code,jdbcType=VARCHAR}
+    </update>
+</mapper>

@@ -5,7 +5,7 @@ import com.guru.future.common.entity.dao.FutureBasicDO;
 
 import java.util.List;
 
-public interface BasicDAO {
+public interface BasicMapper {
     FutureBasicDO selectBySymbol(String symbol);
 
     int updateByCodeSelective(FutureBasicDO futureBasicDO);

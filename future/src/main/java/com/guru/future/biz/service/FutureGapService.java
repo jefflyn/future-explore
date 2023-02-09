@@ -10,6 +10,7 @@ import com.guru.future.common.entity.converter.ContractOpenGapConverter;
 import com.guru.future.common.entity.dao.FutureBasicDO;
 import com.guru.future.common.entity.dao.TradeDailyDO;
 import com.guru.future.common.entity.dao.OpenGapDO;
+import com.guru.future.common.entity.domain.Basic;
 import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.DateUtil;
@@ -111,7 +112,7 @@ public class FutureGapService {
 
     public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) throws Exception {
         log.info("open gap start! realtime data size={}", contractRealtimeDTOList.size());
-        Map<String, FutureBasicDO> basicMap = basicManager.getBasicMap();
+        Map<String, Basic> basicMap = basicManager.getBasicMap();
         String tradeDate;
         if (DateUtil.isNight()) {
             tradeDate = DateUtil.latestTradeDate(TRADE_DATE_PATTERN_FLAT);
@@ -127,8 +128,8 @@ public class FutureGapService {
         String openLowTag = "低开";
         for (ContractRealtimeDTO realtimeDTO : contractRealtimeDTOList) {
             String code = realtimeDTO.getCode();
-            FutureBasicDO basicDO = basicMap.get(FutureUtil.code2Symbol(code));
-            int nightTrade = basicDO.getNight();
+            Basic basic = basicMap.get(FutureUtil.code2Symbol(code));
+            int nightTrade = basic.getNight();
             if (DateUtil.isNight()) {
                 if (nightTrade == 0) {
                     log.warn("{} night trade not support", code);
@@ -217,7 +218,7 @@ public class FutureGapService {
                     + suggestTo.intValue() + "空";
             int calcPosition = FutureUtil.calcPosition(isUp, realtimeDTO.getOpen(), BigDecimal.ZERO, BigDecimal.ZERO);
             ContractOpenGapDTO openGapDTO = ContractOpenGapDTO.builder()
-                    .tradeDate(tradeDate).code(code).name(basicDO.getName()).category(basicDO.getType()).dayGap(isDayGap)
+                    .tradeDate(tradeDate).code(code).name(basic.getName()).category(basic.getType()).dayGap(isDayGap)
                     .preClose(preClose.setScale(1, RoundingMode.HALF_UP))
                     .preHigh(preHigh).preLow(preLow).open(currentOpen).openChange(openChange).gapRate(dayGap).contractPosition(calcPosition)
                     .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo).suggest(suggestPrice).build();
