@@ -38,4 +38,7 @@ public class OpenGapDO {
 
     private BigDecimal sellHigh;
 
+    private Integer suggest;
+
+    private BigDecimal suggestPrice;
 }

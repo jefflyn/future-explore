@@ -34,13 +34,17 @@ public class ContractOpenGapDTO implements Comparable<ContractOpenGapDTO> {
 
     private Integer contractPosition;
 
-    private String suggest;
-
     private String tradeDate;
 
     private BigDecimal buyLow;
 
     private BigDecimal sellHigh;
+
+    private String suggestStr;
+
+    private Integer suggest;
+
+    private BigDecimal suggestPrice;
 
     @Override
     public int compareTo(ContractOpenGapDTO contractOpenGapDTO) {

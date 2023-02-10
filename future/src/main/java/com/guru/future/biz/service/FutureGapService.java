@@ -236,7 +236,7 @@ public class FutureGapService {
                     .preHigh(preHigh).preLow(preLow).open(currentOpen)
                     .openChange(openSettleChange).gapRate(dayGap).contractPosition(calcPosition)
                     .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo)
-                    .suggest(suggestPrice).build();
+                    .suggestStr(suggestPrice).suggest(isUp ? 1 : -1).suggestPrice(isUp ? suggestFrom : suggestTo).build();
             openGapDTOList.add(openGapDTO);
         }
 
@@ -316,7 +316,7 @@ public class FutureGapService {
                         + "\n" + openGapDTO.getOpenChange() + PERCENTAGE_SYMBOL + "</td>");
                 stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getRemark() + "</td>");
                 stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getContractPosition() + "%" + "</td>");
-                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getSuggest() + "</td>");
+                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getSuggestStr() + "</td>");
                 stringBuilder.append("</tr>");
             }
         }

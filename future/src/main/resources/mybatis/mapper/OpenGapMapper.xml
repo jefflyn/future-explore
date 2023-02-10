@@ -16,17 +16,20 @@
         <result column="contract_position" jdbcType="INTEGER" property="contractPosition"/>
         <result column="buy_low" jdbcType="DECIMAL" property="buyLow"/>
         <result column="sell_high" jdbcType="DECIMAL" property="sellHigh"/>
+        <result column="suggest" jdbcType="INTEGER" property="suggest"/>
+        <result column="suggest_price" jdbcType="DECIMAL" property="suggestPrice"/>
     </resultMap>
 
     <insert id="insertBatch" parameterType="list">
         insert into open_gap
         (trade_date, code, name, category, pre_close, pre_settle, pre_high, pre_low, open, open_change,
-        gap_rate, day_gap, remark, contract_position, buy_low, sell_high)
+        gap_rate, day_gap, remark, contract_position, buy_low, sell_high, suggest, suggest_price)
         values
         <foreach collection="list" item="obj" index="index" separator=",">
             (
             #{obj.tradeDate}, #{obj.code}, #{obj.name}, #{obj.category}, #{obj.preClose}, #{obj.preSettle}, #{obj.preHigh}, #{obj.preLow},
             #{obj.open}, #{obj.openChange}, #{obj.gapRate}, #{obj.dayGap}, #{obj.remark}, #{obj.contractPosition}, #{obj.buyLow}, #{obj.sellHigh}
+            , #{obj.suggest}, #{obj.suggestPrice}
             )
         </foreach>
     </insert>
