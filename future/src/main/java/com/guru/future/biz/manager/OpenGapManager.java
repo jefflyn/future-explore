@@ -28,12 +28,6 @@ public class OpenGapManager {
         return openGapDAO.selectByCurrentDate();
     }
 
-    @Transactional
-    public Boolean addOpenGapLog(OpenGapDO openGapDO) {
-        return openGapDAO.insertSelective(openGapDO) > 0;
-    }
-
-    @Transactional
     public Boolean batchAddOpenGapLog(List<OpenGapDO> openGapDOList) {
         ListIterator<OpenGapDO> openGapIterator = openGapDOList.listIterator();
         while (openGapIterator.hasNext()) {

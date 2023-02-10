@@ -10,7 +10,5 @@ import java.util.List;
 public interface OpenGapDAO {
     int insertBatch(@Param("list") List<OpenGapDO> record);
 
-    int insertSelective(OpenGapDO record);
-
     List<OpenGapDO> selectByCurrentDate();
 }

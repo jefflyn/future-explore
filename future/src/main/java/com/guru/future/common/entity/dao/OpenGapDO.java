@@ -16,6 +16,8 @@ public class OpenGapDO {
 
     private BigDecimal preClose;
 
+    private BigDecimal preSettle;
+
     private BigDecimal preHigh;
 
     private BigDecimal preLow;

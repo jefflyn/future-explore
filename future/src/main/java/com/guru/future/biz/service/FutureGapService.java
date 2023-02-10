@@ -155,6 +155,7 @@ public class FutureGapService {
                 continue;
             }
             BigDecimal preClose = lastDailyDO.getClose();
+            BigDecimal preSettle = lastDailyDO.getSettle();
             BigDecimal preOpen = lastDailyDO.getOpen();
             BigDecimal preHigh = lastDailyDO.getHigh();
             BigDecimal preLow = lastDailyDO.getLow();
@@ -163,11 +164,13 @@ public class FutureGapService {
                 log.warn("{} 昨开等于今开 {}!!!", realtimeDTO.getName(), currentOpen);
                 continue;
             }
+            BigDecimal settleDiff = currentOpen.subtract(preSettle);
+            BigDecimal openSettleChange = settleDiff.multiply(BigDecimal.valueOf(100)).divide(preSettle, 2, RoundingMode.HALF_UP);
             BigDecimal priceDiff = currentOpen.subtract(preClose);
-            BigDecimal openChange = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
+            BigDecimal openCloseChange = priceDiff.multiply(BigDecimal.valueOf(100)).divide(preClose, 2, RoundingMode.HALF_UP);
             total += 1;
-            boolean isUp = priceDiff.compareTo(BigDecimal.ZERO) > 0;
-            if (priceDiff.compareTo(BigDecimal.ZERO) == 0) {
+            boolean isUp = settleDiff.compareTo(BigDecimal.ZERO) > 0;
+            if (settleDiff.compareTo(BigDecimal.ZERO) == 0) {
 //                Integer cnt = ObjectUtils.defaultIfNull(openStats.get("平开"), 0);
 //                openStats.put("平开", cnt + 1);
             } else if (isUp) {
@@ -178,7 +181,7 @@ public class FutureGapService {
                 openStats.put(openLowTag, cnt + 1);
             }
             //if (Math.abs(gapRate.floatValue()) >= 0.5) {
-            BigDecimal dayGap = BigDecimal.ZERO;
+            BigDecimal dayGap = openCloseChange;
             BigDecimal suggestFrom;
             BigDecimal suggestTo;
             StringBuilder remark = new StringBuilder("");
@@ -192,17 +195,17 @@ public class FutureGapService {
                     remark.append("跳空高开 ").append("+").append(dayGap).append("%");
                 } else {
                     suggestFrom = preClose.multiply(BigDecimal.valueOf(0.999));
-                    remark.append("高开 ").append("+").append(openChange).append("%");
+                    remark.append("高开 ").append("+").append(openCloseChange).append("%");
                 }
-                if (Math.abs(openChange.floatValue()) >= 0.6) {
+                if (Math.abs(openCloseChange.floatValue()) >= 0.6) {
                     suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.9964));
                 }
-                if (Math.abs(openChange.floatValue()) >= 5) {
+                if (Math.abs(openCloseChange.floatValue()) >= 5) {
                     suggestTo = BigDecimal.valueOf(999999);
-                } else if (Math.abs(openChange.floatValue()) >= 2) {
-                    BigDecimal factor = BigDecimal.ONE.add(openChange.divide(BigDecimal.valueOf(100)));
+                } else if (Math.abs(openCloseChange.floatValue()) >= 2) {
+                    BigDecimal factor = BigDecimal.ONE.add(openCloseChange.divide(BigDecimal.valueOf(100)));
                     suggestTo = currentOpen.multiply(factor);
-                } else if (Math.abs(openChange.floatValue()) >= 1) {
+                } else if (Math.abs(openCloseChange.floatValue()) >= 1) {
                     suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.0075));
                 } else {
                     suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.007));
@@ -216,7 +219,7 @@ public class FutureGapService {
                     remark.append("跳空低开 ").append(dayGap).append("%");
                 } else {
                     suggestFrom = currentOpen.multiply(BigDecimal.valueOf(0.999));
-                    remark.append("低开 ").append(openChange).append("%");
+                    remark.append("低开 ").append(openCloseChange).append("%");
                 }
                 suggestTo = currentOpen.multiply(BigDecimal.valueOf(1.007));
             }
@@ -229,9 +232,9 @@ public class FutureGapService {
             int calcPosition = FutureUtil.calcPosition(isUp, realtimeDTO.getOpen(), contract.getHigh(), contract.getLow());
             ContractOpenGapDTO openGapDTO = ContractOpenGapDTO.builder()
                     .tradeDate(tradeDate).code(code).name(basic.getName()).category(basic.getType()).dayGap(isDayGap)
-                    .preClose(preClose.setScale(1, RoundingMode.HALF_UP))
+                    .preClose(preClose.setScale(1, RoundingMode.HALF_UP)).preSettle(preSettle)
                     .preHigh(preHigh).preLow(preLow).open(currentOpen)
-                    .openChange(openChange).gapRate(dayGap).contractPosition(calcPosition)
+                    .openChange(openSettleChange).gapRate(dayGap).contractPosition(calcPosition)
                     .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo)
                     .suggest(suggestPrice).build();
             openGapDTOList.add(openGapDTO);
@@ -313,7 +316,7 @@ public class FutureGapService {
                         + "\n" + openGapDTO.getOpenChange() + PERCENTAGE_SYMBOL + "</td>");
                 stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getRemark() + "</td>");
                 stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getContractPosition() + "%" + "</td>");
-                stringBuilder.append("<td style=\"text-align:center\">" + openGapDTO.getSuggest() + "</td>");
+                stringBuilder.append("<td style=\"text-align:left\">" + openGapDTO.getSuggest() + "</td>");
                 stringBuilder.append("</tr>");
             }
         }
