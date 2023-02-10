@@ -1,15 +1,16 @@
 package com.guru.future.biz.service;
 
-import com.guru.future.biz.manager.ContractManager;
 import com.guru.future.biz.manager.BasicManager;
+import com.guru.future.biz.manager.ContractManager;
 import com.guru.future.biz.manager.FutureDailyManager;
 import com.guru.future.biz.manager.FutureMailManager;
 import com.guru.future.biz.manager.OpenGapManager;
 import com.guru.future.biz.manager.remote.FutureSinaManager;
 import com.guru.future.common.entity.converter.ContractOpenGapConverter;
-import com.guru.future.common.entity.dao.TradeDailyDO;
 import com.guru.future.common.entity.dao.OpenGapDO;
+import com.guru.future.common.entity.dao.TradeDailyDO;
 import com.guru.future.common.entity.domain.Basic;
+import com.guru.future.common.entity.domain.Contract;
 import com.guru.future.common.entity.dto.ContractOpenGapDTO;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
 import com.guru.future.common.utils.FutureDateUtil;
@@ -17,7 +18,9 @@ import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.NumberUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -34,7 +37,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
 
-import static com.guru.future.common.utils.FutureDateUtil.TRADE_DATE_PATTERN_FLAT;
 import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
 
 /**
@@ -43,6 +45,8 @@ import static com.guru.future.common.utils.FutureUtil.PERCENTAGE_SYMBOL;
 @Service
 @Slf4j
 public class FutureGapService {
+    @Resource
+    private Environment environment;
     @Resource
     private BasicManager basicManager;
     @Resource
@@ -92,7 +96,8 @@ public class FutureGapService {
 
     public void monitorOpenGap() throws InterruptedException {
         LongAdder times = new LongAdder();
-        while (FutureDateUtil.beforeBidTime()) {
+        String[] activeProfiles = environment.getActiveProfiles();
+        while (FutureDateUtil.beforeBidTime() && activeProfiles.length == 0) {
             log.warn("monitorOpenGap before bid time !!!");
             TimeUnit.SECONDS.sleep(1L);
             times.increment();
@@ -110,23 +115,28 @@ public class FutureGapService {
     }
 
     public void noticeOpenGap(List<ContractRealtimeDTO> contractRealtimeDTOList) throws Exception {
-        log.info("open gap start! realtime data size={}", contractRealtimeDTOList.size());
+        log.info("open gap start! realtime data size={}, {}", contractRealtimeDTOList.size(), contractRealtimeDTOList.get(0));
         Map<String, Basic> basicMap = basicManager.getBasicMap();
-        String tradeDate;
+        Map<String, Contract> contractMap = contractManager.getContractMap();
+        String preTradeDate;
         if (FutureDateUtil.isNight()) {
-            tradeDate = FutureDateUtil.latestTradeDate(TRADE_DATE_PATTERN_FLAT);
+            preTradeDate = FutureDateUtil.latestTradeDate();
         } else {
-            tradeDate = FutureDateUtil.getLastTradeDate(new Date(), TRADE_DATE_PATTERN_FLAT);
+            preTradeDate = FutureDateUtil.getLastTradeDate(new Date());
         }
-        List<String> tsCodes = contractManager.getContractCodes();
-        Map<String, TradeDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(tradeDate, tsCodes);
+        List<String> codes = contractManager.getContractCodes();
+        Map<String, TradeDailyDO> preDailyMap = futureDailyManager.getFutureDailyMap(preTradeDate, codes);
         List<ContractOpenGapDTO> openGapDTOList = new ArrayList<>();
         int total = 0;
         Map<String, Integer> openStats = new HashMap<>();
         String openHighTag = "高开";
         String openLowTag = "低开";
+        String tradeDate = "";
         for (ContractRealtimeDTO realtimeDTO : contractRealtimeDTOList) {
             String code = realtimeDTO.getCode();
+            if (Strings.isBlank(tradeDate)) {
+                tradeDate = realtimeDTO.getTradeDate();
+            }
             Basic basic = basicMap.get(FutureUtil.code2Symbol(code));
             int nightTrade = basic.getNight();
             if (FutureDateUtil.isNight()) {
@@ -141,10 +151,9 @@ public class FutureGapService {
             }
             TradeDailyDO lastDailyDO = preDailyMap.get(realtimeDTO.getCode());
             if (lastDailyDO == null) {
-                log.warn("{} last daily data missed! trade date:{}", realtimeDTO.getCode(), tradeDate);
+                log.warn("{} last daily data missed! trade date:{}", realtimeDTO.getCode(), preTradeDate);
                 continue;
             }
-//            log.info("lastDailyDO={}", lastDailyDO);
             BigDecimal preClose = lastDailyDO.getClose();
             BigDecimal preOpen = lastDailyDO.getOpen();
             BigDecimal preHigh = lastDailyDO.getHigh();
@@ -213,14 +222,18 @@ public class FutureGapService {
             }
             suggestFrom = suggestFrom.setScale(1, RoundingMode.HALF_UP);
             suggestTo = suggestTo.setScale(1, RoundingMode.HALF_UP);
-            String suggestPrice = suggestFrom.intValue() + "多\n"
-                    + suggestTo.intValue() + "空";
-            int calcPosition = FutureUtil.calcPosition(isUp, realtimeDTO.getOpen(), BigDecimal.ZERO, BigDecimal.ZERO);
+//            String suggestPrice = suggestFrom.intValue() + "多\n"
+//                    + suggestTo.intValue() + "空";
+            String suggestPrice = isUp ? suggestFrom.intValue() + "多" : suggestTo.intValue() + "空";
+            Contract contract = contractMap.get(code);
+            int calcPosition = FutureUtil.calcPosition(isUp, realtimeDTO.getOpen(), contract.getHigh(), contract.getLow());
             ContractOpenGapDTO openGapDTO = ContractOpenGapDTO.builder()
                     .tradeDate(tradeDate).code(code).name(basic.getName()).category(basic.getType()).dayGap(isDayGap)
                     .preClose(preClose.setScale(1, RoundingMode.HALF_UP))
-                    .preHigh(preHigh).preLow(preLow).open(currentOpen).openChange(openChange).gapRate(dayGap).contractPosition(calcPosition)
-                    .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo).suggest(suggestPrice).build();
+                    .preHigh(preHigh).preLow(preLow).open(currentOpen)
+                    .openChange(openChange).gapRate(dayGap).contractPosition(calcPosition)
+                    .remark(remark.toString()).buyLow(suggestFrom).sellHigh(suggestTo)
+                    .suggest(suggestPrice).build();
             openGapDTOList.add(openGapDTO);
         }
 

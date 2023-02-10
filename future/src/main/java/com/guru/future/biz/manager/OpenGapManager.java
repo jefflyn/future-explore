@@ -2,6 +2,7 @@ package com.guru.future.biz.manager;
 
 import com.guru.future.common.entity.dao.OpenGapDO;
 import com.guru.future.mapper.OpenGapDAO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -16,6 +17,7 @@ import java.util.Map;
  * @author j
  */
 @Component
+@Slf4j
 public class OpenGapManager {
     private static Map<String, Boolean> openGapMap = new HashMap<>();
 
@@ -42,6 +44,7 @@ public class OpenGapManager {
             }
         }
         if (!CollectionUtils.isEmpty(openGapDOList) && openGapDAO.insertBatch(openGapDOList) > 0) {
+            log.info("save open gap data successfully!");
             for (OpenGapDO openGapDO : openGapDOList) {
                 String key = openGapDO.getCode() + openGapDO.getTradeDate();
                 openGapMap.put(key, true);

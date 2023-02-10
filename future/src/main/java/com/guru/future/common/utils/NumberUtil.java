@@ -35,10 +35,13 @@ public class NumberUtil {
         String[] numberArr = numberStr.split("\\.");
         if (numberArr.length > 1) {
             String digit = numberArr[1];
+            int length = digit.length() > 2 ? 2 : digit.length();
+            if (length == 2) {
+                digit = digit.substring(0, 2);
+            }
             if (Integer.valueOf(digit) == 0) {
                 return numberArr[0];
             }
-            int length = digit.length() > 2 ? 2 : digit.length();
             String newDigitStr = digit.substring(0, length);
             if (Integer.valueOf(newDigitStr) > 0
                     && newDigitStr.lastIndexOf("0") == length - 1) {
@@ -47,6 +50,11 @@ public class NumberUtil {
             return numberArr[0] + "." + newDigitStr;
         }
         return numberArr[0];
+    }
+
+    public static BigDecimal toFuturePrice(BigDecimal numberVal) {
+        String priceStr = price2String(numberVal);
+        return new BigDecimal(priceStr);
     }
 
     public static BigDecimal string2Decimal(String numberVal) {
@@ -63,4 +71,8 @@ public class NumberUtil {
         return NumberUtils.convertNumberToTargetClass(Float.valueOf(numberVal), Integer.class);
     }
 
+    public static void main(String[] args) {
+        BigDecimal price = new BigDecimal(123.202D);
+        System.out.println(toFuturePrice(price));
+    }
 }
