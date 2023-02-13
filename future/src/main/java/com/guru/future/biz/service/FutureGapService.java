@@ -118,8 +118,10 @@ public class FutureGapService {
         log.info("open gap start! realtime data size={}, {}", contractRealtimeDTOList.size(), contractRealtimeDTOList.get(0));
         Map<String, Basic> basicMap = basicManager.getBasicMap();
         Map<String, Contract> contractMap = contractManager.getContractMap();
+        String tradeDate = "";
         String preTradeDate;
         if (FutureDateUtil.isNight()) {
+            tradeDate = FutureDateUtil.getNextTradeDate(new Date());
             preTradeDate = FutureDateUtil.latestTradeDate();
         } else {
             preTradeDate = FutureDateUtil.getLastTradeDate(new Date());
@@ -131,7 +133,6 @@ public class FutureGapService {
         Map<String, Integer> openStats = new HashMap<>();
         String openHighTag = "高开";
         String openLowTag = "低开";
-        String tradeDate = "";
         for (ContractRealtimeDTO realtimeDTO : contractRealtimeDTOList) {
             String code = realtimeDTO.getCode();
             if (Strings.isBlank(tradeDate)) {
