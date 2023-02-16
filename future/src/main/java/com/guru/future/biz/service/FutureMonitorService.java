@@ -220,28 +220,36 @@ public class FutureMonitorService {
     }
 
     @Async
-    public void triggerMa(FutureLiveDO futureLiveDO) {
+    public void monitorMa(FutureLiveDO futureLiveDO) {
         String code = futureLiveDO.getCode();
         NDayStat nDayStat = statManager.getDayStat(code);
         BigDecimal price = futureLiveDO.getPrice();
         if (nDayStat != null) {
             // avg-5
-            if (nDayStat.isMa5Up() && price.floatValue() < nDayStat.getAvg5d()) {
+            if (nDayStat.isMa5Up()) {
                 String key = code + LogType.MA_DOWN_5.getDesc();
-                if (futureCacheManager.get(code) != null) {
+                if (price.floatValue() < nDayStat.getAvg5d() && futureCacheManager.get(code) != null) {
                     FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_DOWN_5.getDesc(), OptionType.SELL_SHORT.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
                     this.msgNotice(futureLogDO);
                     futureLogManager.addFutureLog(futureLogDO);
-                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                    futureCacheManager.put(key, nDayStat.getAvg5d(), 100, TimeUnit.DAYS);
+                }
+            } else {
+                if (price.floatValue() > nDayStat.getAvg5d() && futureCacheManager.get(code) != null) {
+                    futureCacheManager.put(code + LogType.MA_DOWN_5.getDesc(), nDayStat.getAvg5d(), 1, TimeUnit.SECONDS);
                 }
             }
-            if (nDayStat.isMa5Down() && price.floatValue() > nDayStat.getAvg5d()) {
+            if (nDayStat.isMa5Down()) {
                 String key = code + LogType.MA_UP_5.getDesc();
-                if (futureCacheManager.get(code) != null) {
+                if (futureCacheManager.get(code) != null && price.floatValue() > nDayStat.getAvg5d()) {
                     FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_UP_5.getDesc(), OptionType.BUY_LONG.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
                     this.msgNotice(futureLogDO);
                     futureLogManager.addFutureLog(futureLogDO);
-                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                    futureCacheManager.put(key, price, 100, TimeUnit.DAYS);
+                }
+            } else {
+                if (futureCacheManager.get(code) != null && price.floatValue() < nDayStat.getAvg5d()) {
+                    futureCacheManager.put(code + LogType.MA_UP_5.getDesc(), nDayStat.getAvg5d(), 1, TimeUnit.SECONDS);
                 }
             }
             // avg-10
@@ -251,7 +259,7 @@ public class FutureMonitorService {
                     FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_DOWN_10.getDesc(), OptionType.SELL_SHORT.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
                     this.msgNotice(futureLogDO);
                     futureLogManager.addFutureLog(futureLogDO);
-                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                    futureCacheManager.put(key, price, 30, TimeUnit.MINUTES);
                 }
             }
             if (nDayStat.isMa10Down() && price.floatValue() > nDayStat.getAvg10d()) {
@@ -260,7 +268,7 @@ public class FutureMonitorService {
                     FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_UP_10.getDesc(), OptionType.BUY_LONG.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
                     this.msgNotice(futureLogDO);
                     futureLogManager.addFutureLog(futureLogDO);
-                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                    futureCacheManager.put(key, price, 30, TimeUnit.MINUTES);
                 }
             }
             // avg-60
@@ -271,7 +279,7 @@ public class FutureMonitorService {
                     FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_DOWN_60.getDesc(), OptionType.SELL_SHORT.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
                     this.msgNotice(futureLogDO);
                     futureLogManager.addFutureLog(futureLogDO);
-                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                    futureCacheManager.put(key, price, 30, TimeUnit.MINUTES);
                 }
             }
             if (price.floatValue() > nDayStat.getAvg60d()
@@ -281,7 +289,7 @@ public class FutureMonitorService {
                     FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_UP_60.getDesc(), OptionType.BUY_LONG.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
                     this.msgNotice(futureLogDO);
                     futureLogManager.addFutureLog(futureLogDO);
-                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                    futureCacheManager.put(key, price, 30, TimeUnit.MINUTES);
                 }
             }
         }

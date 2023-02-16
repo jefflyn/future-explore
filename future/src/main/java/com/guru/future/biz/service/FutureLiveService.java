@@ -176,6 +176,7 @@ public class FutureLiveService {
             }
             monitorService.monitorPriceFlash(futureLiveDO, histHighLowFlag);
             monitorService.addPositionLog(futureLiveDO, histHighLowFlag);
+            monitorService.monitorMa(futureLiveDO);
             if (histHigh.compareTo(histLow) > 0) {
                 BigDecimal lowChange = (futureLiveDO.getPrice().subtract(histLow)).multiply(BigDecimal.valueOf(100))
                         .divide(histLow, 2, RoundingMode.HALF_UP);
