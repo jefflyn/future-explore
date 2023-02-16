@@ -1,15 +1,19 @@
 package com.guru.future.biz.service;
 
 import com.guru.future.biz.manager.FutureLogManager;
+import com.guru.future.biz.manager.StatManager;
 import com.guru.future.biz.manager.base.FutureCacheManager;
 import com.guru.future.common.cache.PriceFlashCache;
+import com.guru.future.common.entity.dao.FutureLiveDO;
+import com.guru.future.common.entity.dao.FutureLogDO;
+import com.guru.future.common.entity.domain.NDayStat;
 import com.guru.future.common.entity.dto.ContractRealtimeDTO;
+import com.guru.future.common.enums.LogType;
+import com.guru.future.common.enums.OptionType;
 import com.guru.future.common.ui.FutureFrame;
 import com.guru.future.common.utils.FutureDateUtil;
 import com.guru.future.common.utils.FutureUtil;
 import com.guru.future.common.utils.NumberUtil;
-import com.guru.future.common.entity.dao.FutureLiveDO;
-import com.guru.future.common.entity.dao.FutureLogDO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.javatuples.Pair;
@@ -48,6 +52,9 @@ public class FutureMonitorService {
 
     @Resource
     private FutureLogManager futureLogManager;
+
+    @Resource
+    private StatManager statManager;
 
     public void monitorPriceFlash(FutureLiveDO futureLiveDO, String histHighLowFlag) {
         if (Boolean.TRUE.equals(FutureDateUtil.isPriceMonitorTime())) {
@@ -118,10 +125,10 @@ public class FutureMonitorService {
                 futureLogDO.setName(futureLiveDO.getName());
                 String type = "日内低点";
                 if (position == 0) {
-                    futureLogDO.setOption("做空");
+                    futureLogDO.setOption(OptionType.SELL_SHORT.getDesc());
                 } else {
                     type = "日内高点";
-                    futureLogDO.setOption("做多");
+                    futureLogDO.setOption(OptionType.BUY_LONG.getDesc());
                 }
                 String content = Strings.isNotBlank(histHighLowFlag) ? histHighLowFlag : type;
                 futureLogDO.setType(type);
@@ -130,8 +137,7 @@ public class FutureMonitorService {
                 futureLogDO.setSuggest(futureLiveDO.getPrice());
                 futureLogDO.setPctChange(futureLiveDO.getChange());
                 futureLogDO.setPosition(futureLiveDO.getPosition());
-                futureLogDO.setTemp(futureLiveDO.getTemp());
-                this.msgNotice(position == 100, futureLogDO);
+                this.msgNotice(futureLogDO);
 //            futureLogManager.deleteLogByType(futureLogDO.getCode(), futureLogDO.getTradeDate(), futureLogDO.getType());
                 futureLogManager.addFutureLog(futureLogDO);
                 log.info("add position log >>> {}, {}, {}", futureLogDO.getName(), futureLogDO.getPosition(), futureLogDO.getSuggest());
@@ -187,7 +193,7 @@ public class FutureMonitorService {
             boolean isUp = price.compareTo(lastPrice) > 0;
             BigDecimal suggestPrice = lastPrice;
             String logType = (isUp ? "上涨" : "下跌") + blastTip;
-            String suggestParam = (isUp ? "做多" : "做空");
+            String suggestParam = (isUp ? OptionType.BUY_LONG.getDesc() : OptionType.SELL_SHORT.getDesc());
             String positionStr = futureLiveDO.getPosition() > 85 ? "高位" : futureLiveDO.getPosition() < 15 ? "低位" : "";
             StringBuilder content = new StringBuilder();
             content.append(positionStr + logType + (Strings.isNotBlank(positionStr) ? "!!!" : ""));
@@ -204,14 +210,95 @@ public class FutureMonitorService {
             futureLogDO.setPctChange(futureLiveDO.getChange());
             futureLogDO.setPosition(futureLiveDO.getPosition());
             futureLogDO.setRemark(logType + " " + histHighLowFlag);
-            futureLogDO.setTemp(futureLiveDO.getTemp());
-            this.msgNotice(isUp, futureLogDO);
+            this.msgNotice(futureLogDO);
             futureLogManager.addFutureLog(futureLogDO);
             log.info("add price flash log >>> {}, {}, {}, {}", logType, futureLogDO.getName(), futureLogDO.getDiff(), futureLogDO.getSuggest());
 //            collectService.scheduleTradeDailyCollect(Lists.newArrayList(code), CollectType.COLLECT_SCHEDULE);
             // 删除价格列表，重新获取
             PriceFlashCache.delete(cachedKey);
         }
+    }
+
+    @Async
+    public void triggerMa(FutureLiveDO futureLiveDO) {
+        String code = futureLiveDO.getCode();
+        NDayStat nDayStat = statManager.getDayStat(code);
+        BigDecimal price = futureLiveDO.getPrice();
+        if (nDayStat != null) {
+            // avg-5
+            if (nDayStat.isMa5Up() && price.floatValue() < nDayStat.getAvg5d()) {
+                String key = code + LogType.MA_DOWN_5.getDesc();
+                if (futureCacheManager.get(code) != null) {
+                    FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_DOWN_5.getDesc(), OptionType.SELL_SHORT.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
+                    this.msgNotice(futureLogDO);
+                    futureLogManager.addFutureLog(futureLogDO);
+                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                }
+            }
+            if (nDayStat.isMa5Down() && price.floatValue() > nDayStat.getAvg5d()) {
+                String key = code + LogType.MA_UP_5.getDesc();
+                if (futureCacheManager.get(code) != null) {
+                    FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_UP_5.getDesc(), OptionType.BUY_LONG.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
+                    this.msgNotice(futureLogDO);
+                    futureLogManager.addFutureLog(futureLogDO);
+                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                }
+            }
+            // avg-10
+            if (nDayStat.isMa10Up() && price.floatValue() < nDayStat.getAvg10d()) {
+                String key = code + LogType.MA_DOWN_10.getDesc();
+                if (futureCacheManager.get(code) != null) {
+                    FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_DOWN_10.getDesc(), OptionType.SELL_SHORT.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
+                    this.msgNotice(futureLogDO);
+                    futureLogManager.addFutureLog(futureLogDO);
+                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                }
+            }
+            if (nDayStat.isMa10Down() && price.floatValue() > nDayStat.getAvg10d()) {
+                String key = code + LogType.MA_UP_10.getDesc();
+                if (futureCacheManager.get(code) != null) {
+                    FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_UP_10.getDesc(), OptionType.BUY_LONG.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
+                    this.msgNotice(futureLogDO);
+                    futureLogManager.addFutureLog(futureLogDO);
+                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                }
+            }
+            // avg-60
+            if (price.floatValue() < nDayStat.getAvg60d()
+                    && NumberUtil.changeDiff(price.floatValue(), nDayStat.getAvg60d().floatValue()) <= 0.15) {
+                String key = code + LogType.MA_DOWN_60.getDesc();
+                if (futureCacheManager.get(code) != null) {
+                    FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_DOWN_60.getDesc(), OptionType.SELL_SHORT.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
+                    this.msgNotice(futureLogDO);
+                    futureLogManager.addFutureLog(futureLogDO);
+                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                }
+            }
+            if (price.floatValue() > nDayStat.getAvg60d()
+                    && NumberUtil.changeDiff(price.floatValue(), nDayStat.getAvg60d().floatValue()) <= 0.15) {
+                String key = code + LogType.MA_UP_60.getDesc();
+                if (futureCacheManager.get(code) != null) {
+                    FutureLogDO futureLogDO = buildMaFutureLogDO(futureLiveDO, LogType.MA_UP_60.getDesc(), OptionType.BUY_LONG.getDesc(), new BigDecimal(nDayStat.getAvg5d()));
+                    this.msgNotice(futureLogDO);
+                    futureLogManager.addFutureLog(futureLogDO);
+                    futureCacheManager.put(key, price, 1, TimeUnit.HOURS);
+                }
+            }
+        }
+    }
+
+    private FutureLogDO buildMaFutureLogDO(FutureLiveDO futureLiveDO, String logType, String option, BigDecimal suggestPrice) {
+        FutureLogDO futureLogDO = new FutureLogDO();
+        futureLogDO.setTradeDate(FutureDateUtil.currentTradeDate());
+        futureLogDO.setCode(futureLiveDO.getCode());
+        futureLogDO.setOption(option);
+        futureLogDO.setName(futureLiveDO.getName());
+        futureLogDO.setType(logType);
+        futureLogDO.setContent(logType);
+        futureLogDO.setSuggest(suggestPrice);
+        futureLogDO.setPctChange(futureLiveDO.getChange());
+        futureLogDO.setPosition(futureLiveDO.getPosition());
+        return futureLogDO;
     }
 
     @Async
@@ -224,22 +311,22 @@ public class FutureMonitorService {
         if (Boolean.TRUE.equals(newHigh)) {
             futureLogDO.setType("波段新高");
             futureLogDO.setContent("波段新高");
-            futureLogDO.setOption("做多");
+            futureLogDO.setOption(OptionType.BUY_LONG.getDesc());
         } else {
             futureLogDO.setType("波段新低");
             futureLogDO.setContent("波段新低");
-            futureLogDO.setOption("做空");
+            futureLogDO.setOption(OptionType.SELL_SHORT.getDesc());
         }
         futureLogDO.setSuggest(contractRealtimeDTO.getPrice());
         futureLogDO.setPctChange(FutureUtil.calcChange(contractRealtimeDTO.getPrice(), contractRealtimeDTO.getPreSettle()));
         futureLogDO.setPosition(FutureUtil.calcPosition(futureLogDO.getPctChange().floatValue() > 0, contractRealtimeDTO.getPrice(),
                 contractRealtimeDTO.getHigh(), contractRealtimeDTO.getLow()));
-        msgNotice(newHigh, futureLogDO);
+        msgNotice(futureLogDO);
         futureLogManager.addFutureLog(futureLogDO);
         log.info("add wave log >>> {}, {}", futureLogDO.getName(), futureLogDO.getContent());
     }
 
-    private void msgNotice(boolean isUp, FutureLogDO futureLogDO) {
+    private void msgNotice(FutureLogDO futureLogDO) {
         String diffStr = Objects.isNull(futureLogDO.getDiff()) ? ""
                 : " " + String.format("%.2f", futureLogDO.getDiff()) + "%";
         String factorStr = futureLogDO.getType().contains("日内") ? futureLogDO.getFactor() + "+"
@@ -249,7 +336,7 @@ public class FutureMonitorService {
                 .append("【").append(futureLogDO.getContent()).append("】")
                 .append(futureLogDO.getOption()).append(" ").append(price2String(futureLogDO.getSuggest()))
                 .append("【").append(futureLogDO.getPosition()).append("】")
-                .append(futureLogDO.getPctChange()).append("%").append(" " + futureLogDO.getTemp());
+                .append(futureLogDO.getPctChange()).append("%");
         // show msg frame
         FutureFrame futureFrame = FutureFrame.buildFutureFrame(null);
         futureFrame.createMsgFrame(FutureDateUtil.currentTime() + " "

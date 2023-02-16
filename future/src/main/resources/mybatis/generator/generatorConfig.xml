@@ -94,22 +94,22 @@
         <!--               enableSelectByExample="false"-->
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
-<!--                <table tableName="basic"-->
-<!--                       domainObjectName="FutureBasicDO" mapperName="FutureBasicDAO"-->
-<!--                       enableCountByExample="false"-->
-<!--                       enableUpdateByExample="false"-->
-<!--                       enableDeleteByExample="false"-->
-<!--                       enableSelectByExample="false"-->
-<!--                       selectByExampleQueryId="false">-->
-<!--                </table>-->
-                <table tableName="trade_daily"
-                       domainObjectName="DailyDO" mapperName="DailyMapper"
-                       enableCountByExample="false"
-                       enableUpdateByExample="false"
-                       enableDeleteByExample="false"
-                       enableSelectByExample="false"
-                       selectByExampleQueryId="false">
-                </table>
+        <!--                <table tableName="basic"-->
+        <!--                       domainObjectName="FutureBasicDO" mapperName="FutureBasicDAO"-->
+        <!--                       enableCountByExample="false"-->
+        <!--                       enableUpdateByExample="false"-->
+        <!--                       enableDeleteByExample="false"-->
+        <!--                       enableSelectByExample="false"-->
+        <!--                       selectByExampleQueryId="false">-->
+        <!--                </table>-->
+        <!--                <table tableName="trade_daily"-->
+        <!--                       domainObjectName="DailyDO" mapperName="DailyMapper"-->
+        <!--                       enableCountByExample="false"-->
+        <!--                       enableUpdateByExample="false"-->
+        <!--                       enableDeleteByExample="false"-->
+        <!--                       enableSelectByExample="false"-->
+        <!--                       selectByExampleQueryId="false">-->
+        <!--                </table>-->
         <!--        <table tableName="open_gap"-->
         <!--               domainObjectName="OpenGapDO" mapperName="OpenGapMapper"-->
         <!--               enableCountByExample="false"-->
@@ -128,45 +128,53 @@
         <!--               selectByExampleQueryId="false">-->
         <!--        </table>-->
 
-<!--        <table tableName="collect"-->
-<!--               domainObjectName="FutureCollectDO" mapperName="FutureCollectMapper"-->
-<!--               enableCountByExample="false"-->
-<!--               enableUpdateByExample="false"-->
-<!--               enableDeleteByExample="false"-->
-<!--               enableSelectByExample="false"-->
-<!--               selectByExampleQueryId="false">-->
-<!--        </table>-->
-<!--        <table tableName="ts_contract"-->
-<!--               domainObjectName="TsFutureContractDO" mapperName="TsFutureContractMapper"-->
-<!--               enableCountByExample="false"-->
-<!--               enableUpdateByExample="false"-->
-<!--               enableDeleteByExample="false"-->
-<!--               enableSelectByExample="false"-->
-<!--               selectByExampleQueryId="false">-->
-<!--        </table>-->
-<!--        <table tableName="ts_trade_daily"-->
-<!--               domainObjectName="TsFutureDailyDO" mapperName="TsFutureDailyMapper"-->
-<!--               enableCountByExample="false"-->
-<!--               enableUpdateByExample="false"-->
-<!--               enableDeleteByExample="false"-->
-<!--               enableSelectByExample="false"-->
-<!--               selectByExampleQueryId="false">-->
-<!--        </table>-->
-<!--        <table tableName="ts_holding"-->
-<!--               domainObjectName="TsFutureHoldingDO" mapperName="TsFutureHoldingMapper"-->
-<!--               enableCountByExample="false"-->
-<!--               enableUpdateByExample="false"-->
-<!--               enableDeleteByExample="false"-->
-<!--               enableSelectByExample="false"-->
-<!--               selectByExampleQueryId="false">-->
-<!--        </table>-->
-<!--        <table tableName="contract"-->
-<!--               domainObjectName="ContractDO" mapperName="ContractMapper"-->
-<!--               enableCountByExample="false"-->
-<!--               enableUpdateByExample="false"-->
-<!--               enableDeleteByExample="false"-->
-<!--               enableSelectByExample="false"-->
-<!--               selectByExampleQueryId="false">-->
-<!--        </table>-->
+        <!--        <table tableName="collect"-->
+        <!--               domainObjectName="FutureCollectDO" mapperName="FutureCollectMapper"-->
+        <!--               enableCountByExample="false"-->
+        <!--               enableUpdateByExample="false"-->
+        <!--               enableDeleteByExample="false"-->
+        <!--               enableSelectByExample="false"-->
+        <!--               selectByExampleQueryId="false">-->
+        <!--        </table>-->
+        <!--        <table tableName="ts_contract"-->
+        <!--               domainObjectName="TsFutureContractDO" mapperName="TsFutureContractMapper"-->
+        <!--               enableCountByExample="false"-->
+        <!--               enableUpdateByExample="false"-->
+        <!--               enableDeleteByExample="false"-->
+        <!--               enableSelectByExample="false"-->
+        <!--               selectByExampleQueryId="false">-->
+        <!--        </table>-->
+        <!--        <table tableName="ts_trade_daily"-->
+        <!--               domainObjectName="TsFutureDailyDO" mapperName="TsFutureDailyMapper"-->
+        <!--               enableCountByExample="false"-->
+        <!--               enableUpdateByExample="false"-->
+        <!--               enableDeleteByExample="false"-->
+        <!--               enableSelectByExample="false"-->
+        <!--               selectByExampleQueryId="false">-->
+        <!--        </table>-->
+        <!--        <table tableName="ts_holding"-->
+        <!--               domainObjectName="TsFutureHoldingDO" mapperName="TsFutureHoldingMapper"-->
+        <!--               enableCountByExample="false"-->
+        <!--               enableUpdateByExample="false"-->
+        <!--               enableDeleteByExample="false"-->
+        <!--               enableSelectByExample="false"-->
+        <!--               selectByExampleQueryId="false">-->
+        <!--        </table>-->
+        <!--        <table tableName="contract"-->
+        <!--               domainObjectName="ContractDO" mapperName="ContractMapper"-->
+        <!--               enableCountByExample="false"-->
+        <!--               enableUpdateByExample="false"-->
+        <!--               enableDeleteByExample="false"-->
+        <!--               enableSelectByExample="false"-->
+        <!--               selectByExampleQueryId="false">-->
+        <!--        </table>-->
+        <table tableName="n_stat"
+            domainObjectName="NDayStatDO" mapperName="NDayStatMapper"
+            enableCountByExample="false"
+            enableUpdateByExample="false"
+            enableDeleteByExample="false"
+            enableSelectByExample="false"
+            selectByExampleQueryId="false">
+        </table>
     </context>
 </generatorConfiguration>

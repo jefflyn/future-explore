@@ -5,6 +5,8 @@ import org.springframework.util.NumberUtils;
 
 import java.math.BigDecimal;
 
+import static java.lang.Math.abs;
+
 public class NumberUtil {
 
     private NumberUtil() {
@@ -22,6 +24,10 @@ public class NumberUtil {
             return "+" + change;
         }
         return change.toString();
+    }
+
+    public static float changeDiff(float a, float b) {
+        return abs(a - b) * 100 / b;
     }
 
     /**

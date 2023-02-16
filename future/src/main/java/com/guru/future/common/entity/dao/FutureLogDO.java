@@ -35,5 +35,4 @@ public class FutureLogDO {
 
     private String remark;
 
-    private String temp;
 }

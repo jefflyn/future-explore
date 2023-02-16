@@ -23,7 +23,7 @@ public class BizAsyncConfigurer implements AsyncConfigurer {
         // 当前线程数
         threadPool.setCorePoolSize(5);
         // 最大线程数
-        threadPool.setMaxPoolSize(100);
+        threadPool.setMaxPoolSize(10);
         // 线程池所使用的缓冲队列
         threadPool.setQueueCapacity(100);
         // 等待任务在关机时完成--表明等待所有线程执行完

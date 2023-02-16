@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.guru.future.mapper.NDayStatMapper">
+    <resultMap id="BaseResultMap" type="com.guru.future.common.entity.dao.NDayStatDO">
+        <result column="code" jdbcType="VARCHAR" property="code"/>
+        <result column="close_change" jdbcType="DOUBLE" property="closeChange"/>
+        <result column="settle_change" jdbcType="DOUBLE" property="settleChange"/>
+        <result column="up" jdbcType="INTEGER" property="up"/>
+        <result column="days" jdbcType="INTEGER" property="days"/>
+        <result column="3d_change" jdbcType="DOUBLE" property="thrDChange"/>
+        <result column="5d_change" jdbcType="DOUBLE" property="fvDChange"/>
+        <result column="7d_change" jdbcType="DOUBLE" property="svDChange"/>
+        <result column="price" jdbcType="INTEGER" property="price"/>
+        <result column="avg5d" jdbcType="INTEGER" property="avg5d"/>
+        <result column="avg10d" jdbcType="INTEGER" property="avg10d"/>
+        <result column="avg20d" jdbcType="INTEGER" property="avg20d"/>
+        <result column="avg60d" jdbcType="INTEGER" property="avg60d"/>
+        <result column="p5t10" jdbcType="DOUBLE" property="p5t10"/>
+        <result column="pt5" jdbcType="DOUBLE" property="pt5"/>
+        <result column="pt10" jdbcType="DOUBLE" property="pt10"/>
+        <result column="pt20" jdbcType="DOUBLE" property="pt20"/>
+        <result column="pt60" jdbcType="DOUBLE" property="pt60"/>
+        <result column="trend_up" jdbcType="BIT" property="trendUp"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select *
+        from n_stat
+    </select>
+</mapper>
