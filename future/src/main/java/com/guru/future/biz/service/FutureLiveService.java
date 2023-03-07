@@ -39,6 +39,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -124,6 +125,10 @@ public class FutureLiveService {
             FutureLiveVO futureLiveVO = new FutureLiveVO();
             BeanUtils.copyProperties(futureLiveDO, futureLiveVO);
             Wave wave = waveMap.get(code);
+            if (wave == null) {
+                log.warn("{} wave cannot be null", code);
+                continue;
+            }
             futureLiveVO.setWave(FutureUtil.generateWave(wave.getAp(), wave.getBp(), wave.getCp(), wave.getDp(),
                     futureLiveVO.getPrice()));
             futureLiveVOList.add(futureLiveVO);
@@ -143,7 +148,7 @@ public class FutureLiveService {
         LiveDataCache.setPositionHighTop10(highTop10List);
         LiveDataCache.setPositionLowTop10(lowTop10List);
         // change
-        Collections.sort(futureLiveVOList, (o1, o2) -> o1.getChange().compareTo(o2.getChange()));
+        Collections.sort(futureLiveVOList, Comparator.comparing(FutureLiveVO::getChange));
         List<FutureLiveVO> changeLowTop10List = futureLiveVOList.subList(0, topN);
         List<FutureLiveVO> changeHighTop10List = futureLiveVOList.subList(size - topN, size);
         Collections.reverse(changeHighTop10List);
