@@ -132,7 +132,7 @@ public class FutureMonitorService {
                 }
                 String content = Strings.isNotBlank(histHighLowFlag) ? histHighLowFlag : type;
                 futureLogDO.setType(type);
-                futureLogDO.setContent(content + "!!!");
+                futureLogDO.setContent(content);
 
                 futureLogDO.setSuggest(futureLiveDO.getPrice());
                 futureLogDO.setPctChange(futureLiveDO.getChange());

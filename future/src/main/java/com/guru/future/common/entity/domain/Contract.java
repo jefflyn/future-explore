@@ -30,4 +30,8 @@ public class Contract {
     private Date updateTime;
 
     private Integer deleted;
+
+    public boolean isMain() {
+        return this.main == 1;
+    }
 }

@@ -175,9 +175,9 @@ public class FutureLiveService {
             BigDecimal histLow = highLow.getRight();
             String histHighLowFlag = "";
             if (futureLiveDO.getHigh().compareTo(histHigh) >= 0) {
-                histHighLowFlag = "合约新高";
+                histHighLowFlag = "合约新高!!!";
             } else if (futureLiveDO.getLow().compareTo(histLow) <= 0) {
-                histHighLowFlag = "合约新低";
+                histHighLowFlag = "合约新低!!!";
             }
             monitorService.monitorPriceFlash(futureLiveDO, histHighLowFlag);
             monitorService.addPositionLog(futureLiveDO, histHighLowFlag);
@@ -253,7 +253,7 @@ public class FutureLiveService {
         Map<String, Contract> contractMap = contractManager.getContractMap();
         for (FutureLiveDO liveDO : futureLiveDOList) {
             Contract contract = contractMap.get(liveDO.getCode());
-            if (contract.getMain() == 0) {
+            if (contract == null || Boolean.FALSE.equals(contract.isMain())) {
                 continue;
             }
             BigDecimal change = liveDO.getChange();
